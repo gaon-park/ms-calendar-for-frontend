@@ -18,6 +18,8 @@ export const PutJsonUserProfile = (req: PutJsonRequest) => {
   );
 };
 
-interface MultiPartFileRequest {
-  avatarImg: Blob;
+export const DeleteAccount = () => {
+  return MsBackendAxios.delete(
+    MS_BACKEND_API_PATH.DELETE_ACCOUNT,
+  )
 }
