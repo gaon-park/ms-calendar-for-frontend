@@ -17,9 +17,6 @@ import Typography from '@mui/material/Typography'
 // ** Icon Imports
 import Icon from 'src/@core/components/icon'
 
-// ** Context
-import { useAuth } from 'src/hooks/useAuth'
-
 // ** Type Imports
 import { Settings } from 'src/@core/context/settingsContext'
 
@@ -45,7 +42,6 @@ const UserDropdown = (props: Props) => {
 
   // ** Hooks
   const router = useRouter()
-  const { logout } = useAuth()
 
   // ** Vars
   const { direction } = settings
@@ -77,7 +73,6 @@ const UserDropdown = (props: Props) => {
   }
 
   const handleLogout = () => {
-    logout()
     handleDropdownClose()
   }
 

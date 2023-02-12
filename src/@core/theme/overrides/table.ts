@@ -40,7 +40,7 @@ const Table = (theme: Theme) => {
     MuiTableRow: {
       styleOverrides: {
         root: {
-          '& .MuiTableCell-head:not(.MuiTableCell-paddingCheckbox):first-child, & .MuiTableCell-root:not(.MuiTableCell-paddingCheckbox):first-child ':
+          '& .MuiTableCell-head:not(.MuiTableCell-paddingCheckbox):first-of-type, & .MuiTableCell-root:not(.MuiTableCell-paddingCheckbox):first-of-type ':
             {
               paddingLeft: theme.spacing(5)
             },

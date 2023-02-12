@@ -224,6 +224,4 @@ const ForgotPassword = () => {
 
 ForgotPassword.getLayout = (page: ReactNode) => <BlankLayout>{page}</BlankLayout>
 
-ForgotPassword.guestGuard = true
-
 export default ForgotPassword
