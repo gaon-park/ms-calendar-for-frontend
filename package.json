@@ -51,6 +51,7 @@
     "nprogress": "0.2.0",
     "payment": "2.4.6",
     "prismjs": "1.29.0",
+    "qs": "^6.11.0",
     "react": "18.2.0",
     "react-apexcharts": "1.4.0",
     "react-chartjs-2": "4.3.1",
@@ -66,8 +67,10 @@
     "react-popper": "2.3.0",
     "react-redux": "8.0.4",
     "recharts": "^2.1.16",
+    "recoil": "^0.7.6",
     "stylis": "4.1.3",
     "stylis-plugin-rtl": "2.1.1",
+    "universal-cookie": "^4.0.4",
     "yup": "0.32.11"
   },
   "devDependencies": {
@@ -83,6 +86,7 @@
     "@types/nprogress": "0.2.0",
     "@types/payment": "2.1.4",
     "@types/prismjs": "1.26.0",
+    "@types/qs": "^6.9.7",
     "@types/react": "18.0.24",
     "@types/react-credit-cards": "0.8.1",
     "@types/react-datepicker": "4.8.0",
