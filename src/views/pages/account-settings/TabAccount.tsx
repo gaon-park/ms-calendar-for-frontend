@@ -77,7 +77,7 @@ const TabAccount = () => {
   const [open, setOpen] = useState<boolean>(false)
   const [resultMessage, setResultMessage] = useState<string>('')
   const [formData, setFormData] = useState<PutJsonRequest>(initialData)
-  const [imgSrc, setImgSrc] = useState<string>(profile?.avatarImg ?? '/images/avatars/1.png')
+  const [imgSrc, setImgSrc] = useState<string>('/images/avatars/1.png')
   const [result, setResult] = useState<boolean>(true)
   const [savedDialogOpen, setSavedDialogOpen] = useState<boolean>(false)
   const [saveBtn, setSaveBtn] = useState<boolean>(true)
@@ -94,7 +94,9 @@ const TabAccount = () => {
       job: profile.job,
       jobDetail: profile.jobDetail,
     })
-    setImgSrc(formData.avatarImg)
+    if (imgSrc === '/images/avatars/1.png' && profile.avatarImg !== null) {
+      setImgSrc(profile.avatarImg!)
+    }
   }, [profile])
 
   // ** Hooks
@@ -103,6 +105,28 @@ const TabAccount = () => {
     handleSubmit,
     formState: { errors }
   } = useForm({ defaultValues: { checkbox: false } })
+
+  const handleAccountIdChange = (event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    const blank_pattern = /[\s]/g
+    const allow_pattern = /[^A-Za-z,-_.]/ig
+    setFormData({
+      ...formData,
+      ['accountId']: event.target.value
+        .replace(blank_pattern, '')
+        .replace(allow_pattern, '')
+    })
+  }
+
+  const handleNickNameChange = (event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    const blank_pattern = /[\s]/g
+    const special_pattern = /[~!@\#$%^&*\()\=+'\;\/\`:\"\\,\[\]?|{}]/gi
+    setFormData({
+      ...formData,
+      ['nickName']: event.target.value
+        .replace(blank_pattern, '')
+        .replace(special_pattern, '')
+    })
+  }
 
   const handleClose = () => setOpen(false)
 
@@ -191,7 +215,7 @@ const TabAccount = () => {
                     label='AccountID'
                     placeholder='AccountID'
                     value={formData.accountId}
-                    onChange={e => setFormData({ ...formData, ['accountId']: e.target.value })}
+                    onChange={e => handleAccountIdChange(e)}
                   />
                 </Grid>
                 <Grid item xs={12} sm={6}>
@@ -201,7 +225,7 @@ const TabAccount = () => {
                     label='NickName'
                     placeholder='NickName'
                     value={formData.nickName}
-                    onChange={e => setFormData({ ...formData, ['nickName']: e.target.value })}
+                    onChange={e => handleNickNameChange(e)}
                   />
                 </Grid>
                 <Grid item xs={12} sm={6}>
