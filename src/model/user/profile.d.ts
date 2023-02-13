@@ -10,7 +10,8 @@ export interface IProfileResponse {
     world: string;
     job: string;
     jobDetail: string;
-    role: string
+    holderFlg: boolean;
+    status: string;
 }
 
 export interface PutJsonRequest {

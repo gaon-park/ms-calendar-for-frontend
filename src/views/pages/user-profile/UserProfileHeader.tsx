@@ -1,7 +1,3 @@
-// ** React Imports
-import { useState } from 'react'
-import cookie from 'react-cookies'
-
 // ** MUI Components
 import Box from '@mui/material/Box'
 import Card from '@mui/material/Card'
@@ -15,8 +11,9 @@ import CardContent from '@mui/material/CardContent'
 import Icon from 'src/@core/components/icon'
 
 // ** Types
-import { ProfileHeaderType } from 'src/@fake-db/types'
-import { useAuth } from 'src/hooks/useAuth'
+import { ProfileHeaderType } from 'src/common/types'
+
+import friendStatus from 'src/model/friendStatus'
 
 const ProfilePicture = styled('img')(({ theme }) => ({
   width: 120,
@@ -28,14 +25,9 @@ const ProfilePicture = styled('img')(({ theme }) => ({
   }
 }))
 
-const UserProfileHeader = () => {
-  // ** State
-  const [data, setData] = useState<ProfileHeaderType | null>(null)
-  const {user} = useAuth();
-
-  const designationIcon = data?.designationIcon || 'mdi:briefcase-outline'
-
-  return user !== null ? (
+const UserProfileHeader = ({ data }: { data: ProfileHeaderType }) => {
+  const FS = friendStatus.find((fs) => fs.status === data.friendStatus)
+  return (
     <Card>
       <CardMedia
         component='img'
@@ -56,7 +48,7 @@ const UserProfileHeader = () => {
           justifyContent: { xs: 'center', md: 'flex-start' }
         }}
       >
-        <ProfilePicture src={user.avatarImg ?? '/images/avatars/1.png'} alt='profile-picture' />
+        <ProfilePicture src={data.avatarImg !== '' ? data.avatarImg : '/images/avatars/1.png'} alt='profile-picture' />
         <Box
           sx={{
             width: '100%',
@@ -69,7 +61,7 @@ const UserProfileHeader = () => {
         >
           <Box sx={{ mb: [6, 0], display: 'flex', flexDirection: 'column', alignItems: ['center', 'flex-start'] }}>
             <Typography variant='h5' sx={{ mb: 4 }}>
-              {user.nickName}
+              {data.nickName}
             </Typography>
             <Box
               sx={{
@@ -79,29 +71,36 @@ const UserProfileHeader = () => {
               }}
             >
               <Box sx={{ mr: 5, display: 'flex', alignItems: 'center', '& svg': { mr: 1, color: 'text.secondary' } }}>
-                <Icon icon={designationIcon} />
-                <Typography sx={{ ml: 1, color: 'text.secondary', fontWeight: 600 }}>{user.jobDetail ?? user.job}</Typography>
+                <Icon icon='mdi:briefcase-outline' />
+                <Typography sx={{ ml: 1, color: 'text.secondary', fontWeight: 600 }}>{data.job}</Typography>
               </Box>
               <Box sx={{ mr: 5, display: 'flex', alignItems: 'center', '& svg': { mr: 1, color: 'text.secondary' } }}>
                 <Icon icon='mdi:map-marker-outline' />
-                <Typography sx={{ ml: 1, color: 'text.secondary', fontWeight: 600 }}>{user.world}</Typography>
+                <Typography sx={{ ml: 1, color: 'text.secondary', fontWeight: 600 }}>{data.world}</Typography>
               </Box>
               <Box sx={{ display: 'flex', alignItems: 'center', '& svg': { mr: 1, color: 'text.secondary' } }}>
                 <Icon icon='mdi:calendar-blank' />
                 <Typography sx={{ ml: 1, color: 'text.secondary', fontWeight: 600 }}>
-                  Joined {new Date(user.createdAt).toDateString()}
+                  Joined {new Date(data.createdAt).toDateString()}
                 </Typography>
               </Box>
             </Box>
           </Box>
-          {/* todo follow status if/else */}
-          <Button variant='contained' startIcon={<Icon icon='mdi:account-check-outline' fontSize={20} />}>
-            FOLLOW
-          </Button>
+          {
+            (data.holderFlg === false && FS) ? (
+              <Button variant='contained' startIcon={<Icon icon={FS.profile_friend_request_icon} fontSize={20} />}>
+                {FS.profile_friend_request_str}
+              </Button>
+            ) : (
+              <Button variant='contained' startIcon={<Icon icon='mdi:cog-outline' fontSize={20} />}>
+                ACCOUNT_EDIT
+              </Button>
+            )
+          }
         </Box>
       </CardContent>
     </Card>
-  ) : null
+  )
 }
 
 export default UserProfileHeader
