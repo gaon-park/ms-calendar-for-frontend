@@ -1,14 +1,21 @@
-import { MS_BACKEND_API_PATH } from "~/constants/msbackend";
-import { IUserResponse } from "~/model/user/user";
+import { MS_BACKEND_API_PATH } from "src/constants/msbackend";
+import { IUserResponse } from "src/model/user/user";
 import { MsBackendAxios } from "../axiosUtil";
 
 interface Request {
-    keyword: string;
+    keyword: string
+    world: string
+    job: string
+    jobDetail: string
+}
+
+export interface SearchUserResponse {
+    users: IUserResponse[]
+    fullHit: number
 }
 
 export const SearchUser = (req: Request) => {
-    if (req.keyword.length === 0) return;
-    return MsBackendAxios.get<IUserResponse[]>(
+    return MsBackendAxios.get<SearchUserResponse>(
         MS_BACKEND_API_PATH.GET_SEARCH_USER,
         { params : req}
     );

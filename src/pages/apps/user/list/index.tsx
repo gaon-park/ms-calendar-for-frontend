@@ -1,6 +1,5 @@
 // ** React Imports
 import { useState, useEffect, MouseEvent, useCallback } from 'react'
-import cookie from 'react-cookies'
 
 // ** Next Imports
 import Link from 'next/link'
@@ -10,7 +9,7 @@ import Box from '@mui/material/Box'
 import Card from '@mui/material/Card'
 import Menu from '@mui/material/Menu'
 import Grid from '@mui/material/Grid'
-import { DataGrid } from '@mui/x-data-grid'
+import { DataGrid, gridPageCountSelector, gridPageSelector, useGridApiContext, useGridSelector } from '@mui/x-data-grid'
 import { styled } from '@mui/material/styles'
 import MenuItem from '@mui/material/MenuItem'
 import IconButton from '@mui/material/IconButton'
@@ -35,16 +34,12 @@ import { getInitials } from 'src/@core/utils/get-initials'
 import useSWR from "swr"
 
 // ** Types Imports
-import { Avatar } from '@mui/material'
-import { IUser } from 'src/model/user/user'
+import { Avatar, TablePagination } from '@mui/material'
+import { IUserResponse } from 'src/model/user/user'
 
 // ** Custom Table Components Imports
 import TableHeader from 'src/views/apps/user/list/TableHeader'
-import { SearchUser } from 'src/api/msBackend/search'
-
-// ** Config
-import authConfig from 'src/configs/auth'
-
+import { SearchUser } from 'src/common/api/msBackend/search'
 
 // ** data
 import worldData from 'src/model/worldData'
@@ -60,7 +55,7 @@ const worldIcon = (world: string) => {
 }
 
 interface CellType {
-  row: IUser
+  row: IUserResponse
 }
 
 const StyledLink = styled(Link)(({ theme }) => ({
@@ -75,7 +70,7 @@ const StyledLink = styled(Link)(({ theme }) => ({
 }))
 
 // ** renders client column
-const renderClient = (row: IUser) => {
+const renderClient = (row: IUserResponse) => {
   if (row.avatarImg !== '') {
     return <CustomAvatar src={row.avatarImg} sx={{ mr: 3, width: 30, height: 30 }} />
   } else {
@@ -105,7 +100,7 @@ const RowOptions = (row: CellType) => {
   }
 
   const handleRequest = (
-    user: IUser,
+    user: IUserResponse,
     afterStatus: string,
     apiFunction: Function,
     updateUser: Function
@@ -113,8 +108,6 @@ const RowOptions = (row: CellType) => {
     const apiRequest = async () => {
       await apiFunction({
         personalKey: user.id
-      }, {
-        code: cookie.load(authConfig.storageTokenKeyName)
       })
     }
     user.status = afterStatus
@@ -262,14 +255,19 @@ const UserList = () => {
   const [job, setJob] = useState<string>('')
   const [jobDetail, setJobDetail] = useState<string>('')
   const [keyword, setKeyword] = useState<string>('')
-  
+
   const [pageSize, setPageSize] = useState<number>(10)
   const [addUserOpen, setAddUserOpen] = useState<boolean>(false)
 
   // 검색
   const { data } = useSWR(
-    (keyword !== '') ? keyword : { },
-    () => SearchUser({ keyword: keyword ?? ''}, { token: cookie.load(authConfig.storageTokenKeyName) }),
+    {keyword, world, job, jobDetail},
+    () => SearchUser({
+      keyword,
+      world,
+      job,
+      jobDetail
+    }),
     {
       revalidateIfStale: false,
       revalidateOnFocus: true,
@@ -372,11 +370,12 @@ const UserList = () => {
           <TableHeader value={keyword ?? ''} setKeyword={setKeyword} toggle={toggleAddUserDrawer} />
           <DataGrid
             autoHeight
-            rows={data?.data ?? []}
+            rows={data?.data.users ?? []}
+            rowCount={data?.data.fullHit}
+            rowsPerPageOptions={[10, 20, 30]}
             columns={columns}
+            pagination
             pageSize={pageSize}
-            disableSelectionOnClick
-            rowsPerPageOptions={[10, 25, 50]}
             onPageSizeChange={(newPageSize: number) => setPageSize(newPageSize)}
           />
         </Card>
