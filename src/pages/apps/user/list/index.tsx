@@ -34,7 +34,7 @@ import { getInitials } from 'src/@core/utils/get-initials'
 import useSWR from "swr"
 
 // ** Types Imports
-import { Avatar, TablePagination } from '@mui/material'
+import { Avatar, ChipPropsColorOverrides, TablePagination } from '@mui/material'
 import { IUserResponse } from 'src/model/user/user'
 
 // ** Custom Table Components Imports
@@ -44,6 +44,8 @@ import { SearchUser } from 'src/common/api/msBackend/search'
 // ** data
 import worldData from 'src/model/worldData'
 import jobDetailData from 'src/model/jobDetailData'
+import friendStatus from 'src/model/friendStatus'
+import { FriendAccept, FriendDelete, FriendRefuse, FriendRequest } from 'src/common/api/msBackend/user/friend'
 
 const worldIcon = (world: string) => {
   for (let i = 0; i < worldData.length; i++) {
@@ -69,187 +71,24 @@ const StyledLink = styled(Link)(({ theme }) => ({
   }
 }))
 
-// ** renders client column
-const renderClient = (row: IUserResponse) => {
-  if (row.avatarImg !== '') {
-    return <CustomAvatar src={row.avatarImg} sx={{ mr: 3, width: 30, height: 30 }} />
-  } else {
-    return (
-      <CustomAvatar
-        skin='light'
-        color='primary'
-        sx={{ mr: 3, width: 30, height: 30, fontSize: '.875rem' }}
-      >
-        {getInitials(row.nickName)}
-      </CustomAvatar>
-    )
-  }
-}
-
-const RowOptions = (row: CellType) => {
-  // ** State
-  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null)
-
-  const rowOptionsOpen = Boolean(anchorEl)
-
-  const handleRowOptionsClick = (event: MouseEvent<HTMLElement>) => {
-    setAnchorEl(event.currentTarget)
-  }
-  const handleRowOptionsClose = () => {
-    setAnchorEl(null)
-  }
-
-  const handleRequest = (
-    user: IUserResponse,
-    afterStatus: string,
-    apiFunction: Function,
-    updateUser: Function
-  ) => {
-    const apiRequest = async () => {
-      await apiFunction({
-        personalKey: user.id
-      })
-    }
-    user.status = afterStatus
-    updateUser(user)
-  }
-
-  return (
-    <>
-      <IconButton size='small' onClick={handleRowOptionsClick}>
-        <Icon icon='mdi:dots-vertical' />
-      </IconButton>
-      <Menu
-        keepMounted
-        anchorEl={anchorEl}
-        open={rowOptionsOpen}
-        onClose={handleRowOptionsClose}
-        anchorOrigin={{
-          vertical: 'bottom',
-          horizontal: 'right'
-        }}
-        transformOrigin={{
-          vertical: 'top',
-          horizontal: 'right'
-        }}
-        PaperProps={{ style: { minWidth: '8rem' } }}
-      >
-        <MenuItem
-          component={Link}
-          sx={{ '& svg': { mr: 2 } }}
-          onClick={handleRowOptionsClose}
-          href='/apps/user/view/overview/'
-        >
-          <Icon icon='mdi:eye-outline' fontSize={20} />
-          보기
-        </MenuItem>
-        <MenuItem onClick={handleRowOptionsClose} sx={{ '& svg': { mr: 2 } }}>
-          <Icon icon='mdi:pencil-outline' fontSize={20} />
-          친구 취소(친구 맺기)
-        </MenuItem>
-      </Menu>
-    </>
-  )
-}
-
-const columns = [
-  {
-    flex: 0.15,
-    minWidth: 200,
-    field: 'user',
-    headerName: 'User',
-    renderCell: ({ row }: CellType) => {
+const UserList = () => {
+  // ** renders client column
+  const renderClient = (row: IUserResponse) => {
+    if (row.avatarImg !== '') {
+      return <CustomAvatar src={row.avatarImg} sx={{ mr: 3, width: 30, height: 30 }} />
+    } else {
       return (
-        <Box sx={{ display: 'flex', alignItems: 'center' }}>
-          {renderClient(row)}
-          <Box sx={{ display: 'flex', alignItems: 'flex-start', flexDirection: 'column' }}>
-            <StyledLink href='/apps/user/view/overview/'>{row.nickName}</StyledLink>
-            <Typography noWrap variant='caption'>
-              {`@${row.accountId}`}
-            </Typography>
-          </Box>
-        </Box>
+        <CustomAvatar
+          skin='light'
+          color='primary'
+          sx={{ mr: 3, width: 30, height: 30, fontSize: '.875rem' }}
+        >
+          {getInitials(row.nickName)}
+        </CustomAvatar>
       )
     }
-  },
-  {
-    flex: 0.1,
-    field: 'world',
-    minWidth: 60,
-    headerName: 'World',
-    renderCell: ({ row }: CellType) => {
-      if (row.world !== '') {
-        return (
-          <Box sx={{ display: 'flex', alignItems: 'center' }}>
-            <Avatar alt='worldIcon' sx={{ width: 18, height: 18 }} src={worldIcon(row.world)} />
-            <Typography noWrap sx={{ color: 'text.secondary', textTransform: 'capitalize' }}>
-              {row.world}
-            </Typography>
-          </Box>
-        )
-      }
-    }
-  },
-  {
-    flex: 0.1,
-    minWidth: 60,
-    headerName: 'Job',
-    field: 'job',
-    renderCell: ({ row }: CellType) => {
-      if (row.job !== '') {
-        return (
-          <Typography noWrap sx={{ color: 'text.secondary', textTransform: 'capitalize' }}>
-            {row.job}
-          </Typography>
-        )
-      }
-    }
-  },
-  {
-    flex: 0.1,
-    minWidth: 110,
-    headerName: 'JobDetail',
-    field: 'jobDetail',
-    renderCell: ({ row }: CellType) => {
-      if (row.jobDetail !== '') {
-        return (
-          <Typography noWrap sx={{ color: 'text.secondary', textTransform: 'capitalize' }}>
-            {row.jobDetail}
-          </Typography>
-        )
-      }
-    }
-  },
-  {
-    flex: 0.15,
-    minWidth: 120,
-    field: 'status',
-    headerName: 'Status',
-    renderCell: ({ row }: CellType) => {
-      if (row.status !== undefined) {
-        return (
-          <CustomChip
-            skin='light'
-            size='small'
-            label={row.status}
-            color={'success'}
-            sx={{ textTransform: 'capitalize' }}
-          />
-        )
-      }
-    }
-  },
-  {
-    flex: 0.1,
-    minWidth: 90,
-    sortable: false,
-    field: 'actions',
-    headerName: 'Actions',
-    renderCell: ({ row }: CellType) => <RowOptions row={row} />
   }
-]
 
-const UserList = () => {
   // ** State
   const [world, setWorld] = useState<string>('')
   const [job, setJob] = useState<string>('')
@@ -259,9 +98,11 @@ const UserList = () => {
   const [pageSize, setPageSize] = useState<number>(10)
   const [addUserOpen, setAddUserOpen] = useState<boolean>(false)
 
+  const [reqId, setReqId] = useState<number>(0)
+
   // 검색
   const { data } = useSWR(
-    {keyword, world, job, jobDetail},
+    { keyword, world, job, jobDetail, reqId },
     () => SearchUser({
       keyword,
       world,
@@ -274,6 +115,15 @@ const UserList = () => {
       revalidateOnReconnect: true
     }
   )
+
+  const [users, setUsers] = useState<IUserResponse[]>([])
+  const [fullHit, setFullHit] = useState<number>(0)
+
+  useEffect(() => {
+    if (typeof data === 'undefined') return
+    setUsers(data.data.users)
+    setFullHit(data.data.fullHit)
+  }, [data])
 
   const handleWorldChange = useCallback((e: SelectChangeEvent) => {
     setWorld(e.target.value)
@@ -288,6 +138,208 @@ const UserList = () => {
   }, [])
 
   const toggleAddUserDrawer = () => setAddUserOpen(!addUserOpen)
+
+  const RowOptions = (row: CellType) => {
+    // ** State
+    const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null)
+
+    const rowOptionsOpen = Boolean(anchorEl)
+
+    const handleRowOptionsClick = (event: MouseEvent<HTMLElement>) => {
+      setAnchorEl(event.currentTarget)
+    }
+    const handleRowOptionsClose = () => {
+      setAnchorEl(null)
+    }
+
+    const request = (
+      user: IUserResponse,
+      apiFunction: Function,
+    ) => {
+      handleRowOptionsClose()
+      const apiRequest = async () => {
+        await apiFunction({
+          personalKey: user.id
+        })
+      }
+      apiRequest()
+      setReqId(reqId + 1)
+    }
+
+    interface ActionRequest {
+      text: string
+      icon: string
+      apiRequest: Function
+    }
+
+    const renderActionItemValues = (user: IUserResponse): ActionRequest[] => {
+      switch (user.status) {
+        case null:
+          return [{ text: '친구 맺기', icon: 'mdi:account-plus-outline', apiRequest: FriendRequest }]
+        case 'WAITING_MY_RESPONSE':
+          return [
+            { text: '친구 맺기', icon: 'mdi:account-plus-outline', apiRequest: FriendAccept },
+            { text: '친구 거절', icon: 'mdi:account-minus-outline', apiRequest: FriendRefuse },
+          ]
+        case 'WAITING_OPP_RESPONSE':
+          return [{ text: '요청 취소', icon: 'mdi:account-minus-outline', apiRequest: FriendDelete }]
+        case 'FRIEND':
+          return [{ text: '친구 삭제', icon: 'mdi:account-minus-outline', apiRequest: FriendDelete }]
+      }
+      return []
+    }
+
+    const renderRequestItem = (user: IUserResponse) => {
+      if (user.holderFlg) return
+      const values = renderActionItemValues(user)
+      return (
+        values.map((value, index) => (
+          <MenuItem key={`${user.id}_${index + 1}`} onClick={() => request(
+            user, value.apiRequest
+          )} sx={{ '& svg': { mr: 2 } }}>
+            <Icon icon={value.icon} fontSize={20} />
+            {value.text}
+          </MenuItem>
+        ))
+      )
+    }
+
+    return (
+      <>
+        <IconButton size='small' onClick={handleRowOptionsClick}>
+          <Icon icon='mdi:dots-vertical' />
+        </IconButton>
+        <Menu
+          keepMounted
+          anchorEl={anchorEl}
+          open={rowOptionsOpen}
+          onClose={handleRowOptionsClose}
+          anchorOrigin={{
+            vertical: 'bottom',
+            horizontal: 'right'
+          }}
+          transformOrigin={{
+            vertical: 'top',
+            horizontal: 'right'
+          }}
+          PaperProps={{ style: { minWidth: '8rem' } }}
+        >
+          <MenuItem
+            key={`${row.row.id}_0`}
+            component={Link}
+            sx={{ '& svg': { mr: 2 } }}
+            onClick={handleRowOptionsClose}
+            href='/apps/user/view/overview/'
+          >
+            <Icon icon='mdi:eye-outline' fontSize={20} />
+            프로필 보기
+          </MenuItem>
+          {renderRequestItem(row.row)}
+        </Menu>
+      </>
+    )
+  }
+
+  const columns = [
+    {
+      flex: 0.15,
+      minWidth: 200,
+      field: 'user',
+      headerName: 'User',
+      renderCell: ({ row }: CellType) => {
+        return (
+          <Box sx={{ display: 'flex', alignItems: 'center' }}>
+            {renderClient(row)}
+            <Box sx={{ display: 'flex', alignItems: 'flex-start', flexDirection: 'column' }}>
+              <StyledLink href='/apps/user/view/overview/'>{row.nickName}</StyledLink>
+              <Typography noWrap variant='caption'>
+                {`@${row.accountId}`}
+              </Typography>
+            </Box>
+          </Box>
+        )
+      }
+    },
+    {
+      flex: 0.1,
+      field: 'world',
+      minWidth: 60,
+      headerName: 'World',
+      renderCell: ({ row }: CellType) => {
+        if (row.world !== '') {
+          return (
+            <Box sx={{ display: 'flex', alignItems: 'center' }}>
+              <Avatar alt='worldIcon' sx={{ width: 18, height: 18 }} src={worldIcon(row.world)} />
+              <Typography noWrap sx={{ color: 'text.secondary', textTransform: 'capitalize' }}>
+                {row.world}
+              </Typography>
+            </Box>
+          )
+        }
+      }
+    },
+    {
+      flex: 0.1,
+      minWidth: 60,
+      headerName: 'Job',
+      field: 'job',
+      renderCell: ({ row }: CellType) => {
+        if (row.job !== '') {
+          return (
+            <Typography noWrap sx={{ color: 'text.secondary', textTransform: 'capitalize' }}>
+              {row.job}
+            </Typography>
+          )
+        }
+      }
+    },
+    {
+      flex: 0.1,
+      minWidth: 110,
+      headerName: 'Job Detail',
+      field: 'jobDetail',
+      renderCell: ({ row }: CellType) => {
+        if (row.jobDetail !== '') {
+          return (
+            <Typography noWrap sx={{ color: 'text.secondary', textTransform: 'capitalize' }}>
+              {row.jobDetail}
+            </Typography>
+          )
+        }
+      }
+    },
+    {
+      flex: 0.11,
+      minWidth: 100,
+      field: 'friend status',
+      headerName: 'Friend Status',
+      renderCell: ({ row }: CellType) => {
+        if (row.holderFlg) return
+        const FS = friendStatus.find((fs) => fs.status === row.status)
+        return FS && FS.korean !== '' ? (
+          <CustomChip
+            skin='light'
+            size='small'
+            label={FS.korean}
+            color={(row.status === 'FRIEND' ? 'success' : (
+              row.status === 'WAITING_MY_RESPONSE' ? 'primary' : (
+                row.status === 'WAITING_OPP_RESPONSE' ? 'secondary' : 'default'
+              )
+            ))}
+            sx={{ textTransform: 'capitalize' }}
+          />
+        ) : null
+      }
+    },
+    {
+      flex: 0.1,
+      minWidth: 90,
+      sortable: false,
+      field: 'actions',
+      headerName: 'Actions',
+      renderCell: ({ row }: CellType) => <RowOptions row={row} />
+    }
+  ]
 
   return (
     <Grid container spacing={6}>
@@ -370,8 +422,8 @@ const UserList = () => {
           <TableHeader value={keyword ?? ''} setKeyword={setKeyword} toggle={toggleAddUserDrawer} />
           <DataGrid
             autoHeight
-            rows={data?.data.users ?? []}
-            rowCount={data?.data.fullHit}
+            rows={users}
+            rowCount={fullHit}
             rowsPerPageOptions={[10, 20, 30]}
             columns={columns}
             pagination

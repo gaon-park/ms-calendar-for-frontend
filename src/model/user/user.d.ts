@@ -9,6 +9,7 @@ export interface IUserResponse {
   job: string;
   jobDetail: string;
   status: string;
+  holderFlg: boolean;
 }
 
 export interface ILoginResponse {
