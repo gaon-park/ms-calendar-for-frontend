@@ -49,7 +49,7 @@ type ThemeConfig = {
 
 const themeConfig: ThemeConfig = {
   // ** Layout Configs
-  templateName: 'Materio' /* App Name */,
+  templateName: 'MS-HERO' /* App Name */,
   layout: 'vertical' /* vertical | horizontal */,
   mode: 'light' as Mode /* light | dark | semi-dark /*! Note: semi-dark value will only work for Vertical Layout */,
   direction: 'ltr' /* ltr | rtl */,
@@ -80,7 +80,7 @@ const themeConfig: ThemeConfig = {
   // ** Other Configs
   responsiveFontSizes: true /* true | false */,
   disableRipple: false /* true | false */,
-  disableCustomizer: true /* true | false */,
+  disableCustomizer: false /* true | false */,
   toastPosition: 'top-right' /* top-left | top-center | top-right | bottom-left | bottom-center | bottom-right */
 }
 

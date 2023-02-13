@@ -23,6 +23,7 @@ import HorizontalAppBarContent from './components/horizontal/AppBarContent'
 
 // ** Hook Import
 import { useSettings } from 'src/@core/hooks/useSettings'
+import { Box, Typography } from '@mui/material'
 
 interface Props {
   children: ReactNode
@@ -51,6 +52,17 @@ const UserLayout = ({ children, contentHeightFixed }: Props) => {
     settings.layout = 'vertical'
   }
 
+  const AppBrand = () => {
+    return (
+      <Box sx={{ display: 'flex', alignItems: 'center' }}>
+        <img src='/images/apple-touch-icon.png' alt='logo' width='30' height='30' />
+        <Typography variant='h6' sx={{ ml: 2 }}>
+          MS HERO
+        </Typography>
+      </Box>
+    )
+  }
+
   return (
     <Layout
       hidden={hidden}
@@ -59,7 +71,8 @@ const UserLayout = ({ children, contentHeightFixed }: Props) => {
       contentHeightFixed={contentHeightFixed}
       verticalLayoutProps={{
         navMenu: {
-          navItems: VerticalNavItems()
+          navItems: VerticalNavItems(),
+          branding: () => <AppBrand />
 
           // Uncomment the below line when using server-side menu in vertical layout and comment the above line
           // navItems: verticalMenuItems
@@ -78,14 +91,15 @@ const UserLayout = ({ children, contentHeightFixed }: Props) => {
       {...(settings.layout === 'horizontal' && {
         horizontalLayoutProps: {
           navMenu: {
-            navItems: HorizontalNavItems()
+            navItems: HorizontalNavItems(),
 
             // Uncomment the below line when using server-side menu in horizontal layout and comment the above line
             // navItems: horizontalMenuItems
           },
           appBar: {
-            content: () => <HorizontalAppBarContent settings={settings} saveSettings={saveSettings} />
-          }
+            content: () => <HorizontalAppBarContent settings={settings} saveSettings={saveSettings} />,
+            branding: () => <AppBrand />
+          },
         }
       })}
     >
