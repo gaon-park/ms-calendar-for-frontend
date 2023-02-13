@@ -52,17 +52,6 @@ const UserLayout = ({ children, contentHeightFixed }: Props) => {
     settings.layout = 'vertical'
   }
 
-  const AppBrand = () => {
-    return (
-      <Box sx={{ display: 'flex', alignItems: 'center' }}>
-        <img src='/images/apple-touch-icon.png' alt='logo' width='30' height='30' />
-        <Typography variant='h6' sx={{ ml: 2 }}>
-          MS HERO
-        </Typography>
-      </Box>
-    )
-  }
-
   return (
     <Layout
       hidden={hidden}
@@ -72,7 +61,6 @@ const UserLayout = ({ children, contentHeightFixed }: Props) => {
       verticalLayoutProps={{
         navMenu: {
           navItems: VerticalNavItems(),
-          branding: () => <AppBrand />
 
           // Uncomment the below line when using server-side menu in vertical layout and comment the above line
           // navItems: verticalMenuItems
@@ -98,7 +86,6 @@ const UserLayout = ({ children, contentHeightFixed }: Props) => {
           },
           appBar: {
             content: () => <HorizontalAppBarContent settings={settings} saveSettings={saveSettings} />,
-            branding: () => <AppBrand />
           },
         }
       })}
