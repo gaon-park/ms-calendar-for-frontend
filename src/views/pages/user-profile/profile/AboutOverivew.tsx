@@ -9,7 +9,7 @@ import CardContent from '@mui/material/CardContent'
 import Icon from 'src/@core/components/icon'
 
 // ** Type Import
-import { ProfileOverviewType } from 'src/common/types'
+import { ProfileOverviewType } from 'src/common/types/types'
 
 import friendStatus from 'src/model/friendStatus'
 

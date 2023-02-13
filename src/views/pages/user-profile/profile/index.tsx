@@ -5,7 +5,7 @@ import Grid from '@mui/material/Grid'
 import AboutOverivew from 'src/views/pages/user-profile/profile/AboutOverivew'
 
 // ** Types
-import { ProfileTabType } from 'src/common/types'
+import { ProfileTabType } from 'src/common/types/types'
 
 const ProfileTab = ({ data }: { data: ProfileTabType }) => {
   return data && Object.values(data).length ? (

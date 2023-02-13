@@ -11,7 +11,7 @@ import CardContent from '@mui/material/CardContent'
 import Icon from 'src/@core/components/icon'
 
 // ** Types
-import { ProfileHeaderType } from 'src/common/types'
+import { ProfileHeaderType } from 'src/common/types/types'
 
 import friendStatus from 'src/model/friendStatus'
 
