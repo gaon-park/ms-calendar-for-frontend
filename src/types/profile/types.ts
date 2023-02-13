@@ -1,5 +1,3 @@
-import { ThemeColor } from "src/@core/layouts/types"
-
 // User Profile pages
 //-------------------
 export type ProfileHeaderType = {

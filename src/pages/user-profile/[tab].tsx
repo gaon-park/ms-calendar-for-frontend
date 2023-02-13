@@ -5,7 +5,7 @@ import { GetStaticProps, GetStaticPaths, GetStaticPropsContext, InferGetStaticPr
 import UserProfile from 'src/views/pages/user-profile/UserProfile'
 
 // ** Types
-import { ProfileHeaderType, ProfileOverviewType, UserProfileActiveTab } from 'src/common/types/types'
+import { ProfileHeaderType, ProfileOverviewType, UserProfileActiveTab } from 'src/types/profile/types'
 import { useProfile } from 'src/hooks/useProfile'
 import { useEffect, useState } from 'react'
 

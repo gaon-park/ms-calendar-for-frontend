@@ -20,7 +20,7 @@ import CircularProgress from '@mui/material/CircularProgress'
 import {
   ProfileTabType,
   UserProfileActiveTab
-} from 'src/common/types/types'
+} from 'src/types/profile/types'
 
 // ** Icon Imports
 import Icon from 'src/@core/components/icon'
