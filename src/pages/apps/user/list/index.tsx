@@ -187,7 +187,7 @@ const UserList = () => {
         res.push({ text: '팔로우 취소', icon: 'mdi:account-plus-outline', apiRequest: FollowCancel })
       }
       if (user.heFollowMe !== null) {
-        res.push({ text: '내 팔로워에서 삭제', icon: 'mdi:account-plus-outline', apiRequest: FollowerDelete })
+        res.push({ text: '내 팔로워에서 삭제', icon: 'mdi:account-minus-outline', apiRequest: FollowerDelete })
       }
       return res
     }

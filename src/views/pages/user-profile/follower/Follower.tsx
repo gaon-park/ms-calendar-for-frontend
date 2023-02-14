@@ -3,7 +3,7 @@ import { DataGrid } from "@mui/x-data-grid"
 import { useRouter } from "next/router"
 import { MouseEvent, useState } from "react"
 import { getInitials } from "src/@core/utils/get-initials"
-import { FollowRequest, FollowCancel, FollowerDelete } from "src/common/api/msBackend/user/follow"
+import { FollowRequest, FollowCancel, FollowerDelete, FollowAccept } from "src/common/api/msBackend/user/follow"
 import worldData from "src/model/worldData"
 import CustomAvatar from 'src/@core/components/mui/avatar'
 import CustomChip from 'src/@core/components/mui/chip'
@@ -108,8 +108,11 @@ const Follower = (props: Props) => {
             else {
                 res.push({ text: '팔로우 취소', icon: 'mdi:account-plus-outline', apiRequest: FollowCancel })
             }
+            if (user.heFollowMe === 'WAITING') {
+                res.push({ text: '팔로우 요청 수락', icon: 'mdi:account-plus-outline', apiRequest: FollowAccept })
+            }
             if (user.heFollowMe !== null) {
-                res.push({ text: '내 팔로워에서 삭제', icon: 'mdi:account-plus-outline', apiRequest: FollowerDelete })
+                res.push({ text: '내 팔로워에서 삭제', icon: 'mdi:account-minus-outline', apiRequest: FollowerDelete })
             }
             return res
         }
