@@ -44,7 +44,7 @@ const UserProfileTab = ({ tab }: InferGetStaticPropsType<typeof getStaticProps>)
           nickName: profileData.nickName,
           avatarImg: profileData.avatarImg ?? '',
           world: profileData.world,
-          createdAt: profileData.createdAt,
+          job: profileData.jobDetail !== '' ? profileData.jobDetail : profileData.job,
           holdFlg: profile?.profile?.id === profileData.id,
           ifollowHim: profileData.ifollowHim,
           heFollowMe: profileData.heFollowMe,
@@ -55,14 +55,14 @@ const UserProfileTab = ({ tab }: InferGetStaticPropsType<typeof getStaticProps>)
       }
       )
     } else if (typeof profile !== 'undefined') {
-      const profiledata = profile.profile
+      const profileData = profile.profile
       setData({
         header: {
-          id: profiledata.id,
-          nickName: profiledata.nickName,
-          avatarImg: profiledata.avatarImg ?? '',
-          world: profiledata.world,
-          createdAt: profiledata.createdAt,
+          id: profileData.id,
+          nickName: profileData.nickName,
+          avatarImg: profileData.avatarImg ?? '',
+          world: profileData.world,
+          job: profileData.jobDetail !== '' ? profileData.jobDetail : profileData.job,
           holdFlg: true,
           ifollowHim: null,
           heFollowMe: null,

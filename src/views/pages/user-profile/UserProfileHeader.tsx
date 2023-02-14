@@ -113,13 +113,12 @@ const UserProfileHeader = ({ data }: { data: ProfileHeaderType }) => {
               }}
             >
               <Box sx={{ mr: 5, display: 'flex', alignItems: 'center', '& svg': { mr: 1, color: 'text.secondary' } }}>
-              <Avatar alt='worldIcon' sx={{ width: 18, height: 18 }} src={worldIcon(data.world)} />
+              <Avatar alt='worldIcon' sx={{ width: 20, height: 20 }} src={worldIcon(data.world)} />
                 <Typography sx={{ ml: 1, color: 'text.secondary', fontWeight: 600 }}>{data.world}</Typography>
               </Box>
-              <Box sx={{ display: 'flex', alignItems: 'center', '& svg': { mr: 1, color: 'text.secondary' } }}>
-                <Typography sx={{ ml: 1, color: 'text.secondary', fontWeight: 600 }}>
-                  Joined {new Date(data.createdAt[0], data.createdAt[1] - 1, data.createdAt[2]).toLocaleDateString()}
-                </Typography>
+              <Box sx={{ mr: 5, display: 'flex', alignItems: 'center', '& svg': { mr: 1, color: 'text.secondary' } }}>
+              <Icon icon='mdi:briefcase-outline' />
+                <Typography sx={{ ml: 1, color: 'text.secondary', fontWeight: 600 }}>{data.job}</Typography>
               </Box>
             </Box>
           </Box>

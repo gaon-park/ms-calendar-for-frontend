@@ -9,7 +9,7 @@ export type ProfileHeaderType = {
   // coverImg: string
   avatarImg: string
   world: string
-  createdAt: number[]
+  job: string
   holdFlg: boolean
   ifollowHim: 'FOLLOW' | 'WAITING' | null
   heFollowMe: 'FOLLOW' | 'WAITING' | null
