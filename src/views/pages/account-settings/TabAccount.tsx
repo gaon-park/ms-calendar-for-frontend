@@ -40,6 +40,7 @@ import jobDetailData from 'src/model/jobDetailData'
 import { DeleteAccount, PutJsonUserProfile } from 'src/common/api/msBackend/user/profile'
 import { useProfile } from 'src/hooks/useProfile'
 import { useRouter } from 'next/router'
+import { Switch } from '@mui/material'
 
 const ProfilePicture = styled(CustomAvatar)<CustomAvatarProps>(({ theme }) => ({
   width: 120,
@@ -300,6 +301,12 @@ const TabAccount = () => {
                       }
                     </Select>
                   </FormControl>
+                </Grid>
+                <Grid item xs={12} sm={6}>
+                  <FormControlLabel 
+                  label='Public Flg' 
+                  labelPlacement='end'
+                  control={<Switch checked={formData.isPublic} onChange={e => setFormData({...formData, ['isPublic']: e.target.checked})}/>}/>
                 </Grid>
                 <Grid item xs={12}>
                   <Button disabled={!saveBtn} variant='contained' sx={{ mr: 4 }} onClick={putUserProfile}>
