@@ -1,24 +1,5 @@
 import { MS_BACKEND_API_PATH } from "src/constants/msbackend";
 import { MsBackendAxios } from "../../axiosUtil";
-import { SearchUserResponse } from "src/model/search";
-
-export const GetFollow = (req: Request) => {
-    return MsBackendAxios.get<SearchUserResponse>(
-        MS_BACKEND_API_PATH.GET_USER_FOLLOW,
-        {
-            params: req,
-        }
-    );
-};
-
-export const GetFollower = (req: Request) => {
-    return MsBackendAxios.get<SearchUserResponse>(
-        MS_BACKEND_API_PATH.GET_USER_FOLLOWER,
-        {
-            params: req,
-        }
-    );
-};
 
 interface Request {
     personalKey: string;
