@@ -85,7 +85,7 @@ const shortcuts: ShortcutsType[] = [
     title: 'Settings',
     icon: 'mdi:cog-outline',
     subtitle: 'Account Settings',
-    url: '/pages/account-settings/account'
+    url: '/account-settings/account'
   }
 ]
 
