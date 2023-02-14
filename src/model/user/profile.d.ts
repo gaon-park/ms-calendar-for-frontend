@@ -35,6 +35,6 @@ export interface IProfile {
     world: string;
     job: string;
     jobDetail: string;
-    heFollowMe: 1 | 0
-    ifollowHim: 1 | 0
+    heFollowMe: 'FOLLOW' | 'WAITING' | null
+    ifollowHim: 'FOLLOW' | 'WAITING' | null
 }

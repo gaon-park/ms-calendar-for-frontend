@@ -9,7 +9,7 @@ import Box from '@mui/material/Box'
 import Card from '@mui/material/Card'
 import Menu from '@mui/material/Menu'
 import Grid from '@mui/material/Grid'
-import { DataGrid, gridPageCountSelector, gridPageSelector, useGridApiContext, useGridSelector } from '@mui/x-data-grid'
+import { DataGrid } from '@mui/x-data-grid'
 import { styled } from '@mui/material/styles'
 import MenuItem from '@mui/material/MenuItem'
 import IconButton from '@mui/material/IconButton'
@@ -34,8 +34,7 @@ import { getInitials } from 'src/@core/utils/get-initials'
 import useSWR from "swr"
 
 // ** Types Imports
-import { Avatar, ChipPropsColorOverrides, TablePagination } from '@mui/material'
-import { IUserResponse } from 'src/model/user/user'
+import { Avatar } from '@mui/material'
 
 // ** Custom Table Components Imports
 import TableHeader from 'src/views/apps/user/list/TableHeader'
@@ -44,8 +43,7 @@ import { SearchUser } from 'src/common/api/msBackend/search'
 // ** data
 import worldData from 'src/model/worldData'
 import jobDetailData from 'src/model/jobDetailData'
-import friendStatus from 'src/model/friendStatus'
-import { FriendAccept, FriendDelete, FriendRefuse, FriendRequest } from 'src/common/api/msBackend/user/friend'
+import { FollowCancel, FollowerDelete, FollowRequest } from 'src/common/api/msBackend/user/follow'
 import { IProfile } from 'src/model/user/profile'
 
 const worldIcon = (world: string) => {
@@ -173,23 +171,32 @@ const UserList = () => {
       apiRequest: Function
     }
 
-    const renderActionItemValue = (user: IProfile): ActionRequest => {
-      if (user.ifollowHim === 1) {
-        return { text: '팔로우 취소', icon: 'mdi:account-plus-outline', apiRequest: FriendAccept }
+    const renderActionItemValue = (user: IProfile): ActionRequest[] => {
+      let res: ActionRequest[] = []
+      if (user.ifollowHim === null) {
+        res.push({ text: '팔로우 하기', icon: 'mdi:account-plus-outline', apiRequest: FollowRequest })
+      } 
+      else {
+        res.push({ text: '팔로우 취소', icon: 'mdi:account-plus-outline', apiRequest: FollowCancel })
       }
-      return { text: '팔로우 하기', icon: 'mdi:account-plus-outline', apiRequest: FriendRequest }
+      if (user.heFollowMe !== null) {
+        res.push({ text: '내 팔로워에서 삭제', icon: 'mdi:account-plus-outline', apiRequest: FollowerDelete })
+      }
+      return res
     }
 
     const renderRequestItem = (user: IProfile) => {
-      const value = renderActionItemValue(user)
+      const values = renderActionItemValue(user)
       return (
-          <MenuItem key={`${user.id}_1`} onClick={() => request(
+        values.map((value, index) => (
+          <MenuItem key={`action_${user.id}_${index}`} onClick={() => request(
             user, value.apiRequest
           )} sx={{ '& svg': { mr: 2 } }}>
             <Icon icon={value.icon} fontSize={20} />
             {value.text}
           </MenuItem>
-        )
+        ))
+      )
     }
 
     return (
@@ -303,15 +310,15 @@ const UserList = () => {
       headerName: 'Follow',
       renderCell: ({ row }: CellType) => {
         return (
-          row.ifollowHim === 1 ? 
+          row.ifollowHim === 'FOLLOW' || row.ifollowHim === 'WAITING' ? 
           <CustomChip
             skin='light'
             size='small'
-            label='팔로우중'
-            color='success'
+            label={row.ifollowHim}
+            color={row.ifollowHim === 'FOLLOW' ? 'success' : 'primary'}
             sx={{ textTransform: 'capitalize' }}
           /> : null
-        )
+        ) 
       }
     },
     {
