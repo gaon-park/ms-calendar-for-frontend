@@ -49,6 +49,7 @@ import 'src/iconify-bundle/icons-bundle-react'
 // ** Global css styles
 import '../../styles/globals.css'
 import { store } from 'src/store'
+import { RecoilRoot } from 'recoil'
 
 // ** Extend App Props with Emotion
 type ExtendedAppProps = AppProps & {
@@ -82,6 +83,7 @@ const App = (props: ExtendedAppProps) => {
 
   const setConfig = Component.setConfig ?? undefined
   return (
+    <RecoilRoot>
     <Provider store={store}>
       <CacheProvider value={emotionCache}>
         <Head>
@@ -114,6 +116,7 @@ const App = (props: ExtendedAppProps) => {
         </AuthProvider>
       </CacheProvider>
     </Provider>
+    </RecoilRoot>
   )
 }
 

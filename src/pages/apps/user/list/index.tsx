@@ -45,6 +45,7 @@ import worldData from 'src/model/worldData'
 import jobDetailData from 'src/model/jobDetailData'
 import { FollowCancel, FollowerDelete, FollowRequest } from 'src/common/api/msBackend/user/follow'
 import { IProfile } from 'src/model/user/profile'
+import { useProfile } from 'src/hooks/useProfile'
 
 const worldIcon = (world: string) => {
   for (let i = 0; i < worldData.length; i++) {
@@ -71,6 +72,9 @@ const StyledLink = styled(Link)(({ theme }) => ({
 }))
 
 const UserList = () => {
+  // ** Hooks
+  useProfile()
+
   // ** renders client column
   const renderClient = (row: IProfile) => {
     if (row.avatarImg !== '' && row.avatarImg !== null) {

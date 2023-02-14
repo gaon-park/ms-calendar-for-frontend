@@ -4,8 +4,12 @@ import Grid from '@mui/material/Grid'
 import Typography from '@mui/material/Typography'
 import CardHeader from '@mui/material/CardHeader'
 import CardContent from '@mui/material/CardContent'
+import { useProfile } from 'src/hooks/useProfile'
+import { useRouter } from 'next/router'
 
 const Home = () => {
+  useProfile()
+  
   return (
     <Grid container spacing={6}>
       <Grid item xs={12}>

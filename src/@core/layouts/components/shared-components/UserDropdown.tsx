@@ -9,6 +9,7 @@ import Box from '@mui/material/Box'
 import Menu from '@mui/material/Menu'
 import Badge from '@mui/material/Badge'
 import Avatar from '@mui/material/Avatar'
+import CustomAvatar from 'src/@core/components/mui/avatar'
 import Divider from '@mui/material/Divider'
 import MenuItem from '@mui/material/MenuItem'
 import { styled } from '@mui/material/styles'
@@ -19,6 +20,12 @@ import Icon from 'src/@core/components/icon'
 
 // ** Type Imports
 import { Settings } from 'src/@core/context/settingsContext'
+import { useRecoilValue } from 'recoil'
+import { myProfile } from 'src/store/profile/user'
+import { Button } from '@mui/material'
+
+// ** Utils Import
+import { getInitials } from 'src/@core/utils/get-initials'
 
 interface Props {
   settings: Settings
@@ -45,6 +52,7 @@ const UserDropdown = (props: Props) => {
 
   // ** Vars
   const { direction } = settings
+  const profile = useRecoilValue(myProfile)
 
   const handleDropdownOpen = (event: SyntheticEvent) => {
     setAnchorEl(event.currentTarget)
@@ -74,9 +82,14 @@ const UserDropdown = (props: Props) => {
 
   const handleLogout = () => {
     handleDropdownClose()
+    router.push('/logout')
   }
 
-  return (
+  const handleLogin = () => {
+    router.push('/login')
+  }
+
+  return profile !== undefined ? (
     <Fragment>
       <Badge
         overlap='circular'
@@ -88,12 +101,24 @@ const UserDropdown = (props: Props) => {
           horizontal: 'right'
         }}
       >
-        <Avatar
-          alt='John Doe'
-          onClick={handleDropdownOpen}
-          sx={{ width: 40, height: 40 }}
-          src='/images/avatars/1.png'
-        />
+        {
+          profile.avatarImg !== null ? (
+            <Avatar
+              alt={`${profile.nickName}_img`}
+              onClick={handleDropdownOpen}
+              sx={{ width: 40, height: 40 }}
+              src={profile.avatarImg}
+            />
+          ) : (
+            <CustomAvatar
+              skin='light'
+              color='primary'
+              sx={{ width: 40, height: 40, fontSize: '.875rem' }}
+            >
+              {getInitials(profile.nickName)}
+            </CustomAvatar>
+          )
+        }
       </Badge>
       <Menu
         anchorEl={anchorEl}
@@ -113,52 +138,36 @@ const UserDropdown = (props: Props) => {
                 horizontal: 'right'
               }}
             >
-              <Avatar alt='John Doe' src='/images/avatars/1.png' sx={{ width: '2.5rem', height: '2.5rem' }} />
+              {
+                profile.avatarImg !== null ? (
+                  <Avatar alt={`${profile.nickName}_img`} src={profile.avatarImg} sx={{ width: '2.5rem', height: '2.5rem' }} />
+                )
+                  : (
+                    <CustomAvatar skin='light' color='primary' sx={{ width: '2.5rem', height: '2.5rem' }} >
+                      {getInitials(profile.nickName)}
+                    </CustomAvatar>
+                  )
+              }
             </Badge>
             <Box sx={{ display: 'flex', ml: 3, alignItems: 'flex-start', flexDirection: 'column' }}>
-              <Typography sx={{ fontWeight: 600 }}>John Doe</Typography>
+              <Typography sx={{ fontWeight: 600 }}>{profile.nickName}</Typography>
               <Typography variant='body2' sx={{ fontSize: '0.8rem', color: 'text.disabled' }}>
-                Admin
+                {`@${profile.accountId}`}
               </Typography>
             </Box>
           </Box>
         </Box>
         <Divider sx={{ mt: '0 !important' }} />
-        <MenuItem sx={{ p: 0 }} onClick={() => handleDropdownClose()}>
+        <MenuItem sx={{ p: 0 }} onClick={() => handleDropdownClose('/user-profile/profile/')}>
           <Box sx={styles}>
             <Icon icon='mdi:account-outline' />
             Profile
           </Box>
         </MenuItem>
-        <MenuItem sx={{ p: 0 }} onClick={() => handleDropdownClose()}>
-          <Box sx={styles}>
-            <Icon icon='mdi:email-outline' />
-            Inbox
-          </Box>
-        </MenuItem>
-        <MenuItem sx={{ p: 0 }} onClick={() => handleDropdownClose()}>
-          <Box sx={styles}>
-            <Icon icon='mdi:message-outline' />
-            Chat
-          </Box>
-        </MenuItem>
-        <Divider />
-        <MenuItem sx={{ p: 0 }} onClick={() => handleDropdownClose()}>
+        <MenuItem sx={{ p: 0 }} onClick={() => handleDropdownClose('/account-settings/account/')}>
           <Box sx={styles}>
             <Icon icon='mdi:cog-outline' />
             Settings
-          </Box>
-        </MenuItem>
-        <MenuItem sx={{ p: 0 }} onClick={() => handleDropdownClose()}>
-          <Box sx={styles}>
-            <Icon icon='mdi:currency-usd' />
-            Pricing
-          </Box>
-        </MenuItem>
-        <MenuItem sx={{ p: 0 }} onClick={() => handleDropdownClose()}>
-          <Box sx={styles}>
-            <Icon icon='mdi:help-circle-outline' />
-            FAQ
           </Box>
         </MenuItem>
         <Divider />
@@ -172,6 +181,17 @@ const UserDropdown = (props: Props) => {
       </Menu>
     </Fragment>
   )
+    : (
+      <Fragment>
+        <Button
+          onClick={handleLogin}
+          sx={{ py: 2, '& svg': { mr: 2, fontSize: '1.375rem', color: 'text.primary' } }}
+        >
+          Login
+        </Button>
+        {/* </Menu> */}
+      </Fragment>
+    )
 }
 
 export default UserDropdown

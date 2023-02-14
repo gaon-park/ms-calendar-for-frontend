@@ -49,4 +49,9 @@ export const useAuth = () => {
     };
 };
 
-
+export const useLogoutAuth = () => {
+    const setIsAuth = useSetRecoilState<boolean>(isAuthenticated)
+    const router = useRouter();
+    new AuthCookie().clearCookies()
+    setIsAuth(false)
+}

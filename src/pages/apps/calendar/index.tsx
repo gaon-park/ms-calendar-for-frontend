@@ -32,6 +32,7 @@ import {
   handleAllCalendars,
   handleCalendarsUpdate
 } from 'src/store/apps/calendar'
+import { useProfile } from 'src/hooks/useProfile'
 
 // ** CalendarColors
 const calendarsColor: CalendarColors = {
@@ -49,6 +50,7 @@ const AppCalendar = () => {
   const [addEventSidebarOpen, setAddEventSidebarOpen] = useState<boolean>(false)
 
   // ** Hooks
+  useProfile()
   const { settings } = useSettings()
   const dispatch = useDispatch<AppDispatch>()
   const store = useSelector((state: RootState) => state.calendar)
