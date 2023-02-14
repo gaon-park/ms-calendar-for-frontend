@@ -23,3 +23,18 @@ export interface PutJsonRequest {
     job: string;
     jobDetail: string;
 }
+
+export interface IProfile {
+    id: string;
+    nickName: string;
+    accountId: string;
+    createdAt: string;
+    updatedAt: string;
+    isPublic: boolean;
+    avatarImg: string?;
+    world: string;
+    job: string;
+    jobDetail: string;
+    heFollowMe: 1 | 0
+    ifollowHim: 1 | 0
+}

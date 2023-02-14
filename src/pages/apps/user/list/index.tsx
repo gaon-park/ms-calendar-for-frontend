@@ -46,6 +46,7 @@ import worldData from 'src/model/worldData'
 import jobDetailData from 'src/model/jobDetailData'
 import friendStatus from 'src/model/friendStatus'
 import { FriendAccept, FriendDelete, FriendRefuse, FriendRequest } from 'src/common/api/msBackend/user/friend'
+import { IProfile } from 'src/model/user/profile'
 
 const worldIcon = (world: string) => {
   for (let i = 0; i < worldData.length; i++) {
@@ -57,7 +58,7 @@ const worldIcon = (world: string) => {
 }
 
 interface CellType {
-  row: IUserResponse
+  row: IProfile
 }
 
 const StyledLink = styled(Link)(({ theme }) => ({
@@ -73,8 +74,8 @@ const StyledLink = styled(Link)(({ theme }) => ({
 
 const UserList = () => {
   // ** renders client column
-  const renderClient = (row: IUserResponse) => {
-    if (row.avatarImg !== '') {
+  const renderClient = (row: IProfile) => {
+    if (row.avatarImg !== '' && row.avatarImg !== null) {
       return <CustomAvatar src={row.avatarImg} sx={{ mr: 3, width: 30, height: 30 }} />
     } else {
       return (
@@ -116,7 +117,7 @@ const UserList = () => {
     }
   )
 
-  const [users, setUsers] = useState<IUserResponse[]>([])
+  const [users, setUsers] = useState<IProfile[]>([])
   const [fullHit, setFullHit] = useState<number>(0)
 
   useEffect(() => {
@@ -153,7 +154,7 @@ const UserList = () => {
     }
 
     const request = (
-      user: IUserResponse,
+      user: IProfile,
       apiFunction: Function,
     ) => {
       handleRowOptionsClose()
@@ -172,36 +173,23 @@ const UserList = () => {
       apiRequest: Function
     }
 
-    const renderActionItemValues = (user: IUserResponse): ActionRequest[] => {
-      switch (user.status) {
-        case null:
-          return [{ text: '친구 맺기', icon: 'mdi:account-plus-outline', apiRequest: FriendRequest }]
-        case 'WAITING_MY_RESPONSE':
-          return [
-            { text: '친구 맺기', icon: 'mdi:account-plus-outline', apiRequest: FriendAccept },
-            { text: '친구 거절', icon: 'mdi:account-minus-outline', apiRequest: FriendRefuse },
-          ]
-        case 'WAITING_OPP_RESPONSE':
-          return [{ text: '요청 취소', icon: 'mdi:account-minus-outline', apiRequest: FriendDelete }]
-        case 'FRIEND':
-          return [{ text: '친구 삭제', icon: 'mdi:account-minus-outline', apiRequest: FriendDelete }]
+    const renderActionItemValue = (user: IProfile): ActionRequest => {
+      if (user.ifollowHim === 1) {
+        return { text: '팔로우 취소', icon: 'mdi:account-plus-outline', apiRequest: FriendAccept }
       }
-      return []
+      return { text: '팔로우 하기', icon: 'mdi:account-plus-outline', apiRequest: FriendRequest }
     }
 
-    const renderRequestItem = (user: IUserResponse) => {
-      if (user.holderFlg) return
-      const values = renderActionItemValues(user)
+    const renderRequestItem = (user: IProfile) => {
+      const value = renderActionItemValue(user)
       return (
-        values.map((value, index) => (
-          <MenuItem key={`${user.id}_${index + 1}`} onClick={() => request(
+          <MenuItem key={`${user.id}_1`} onClick={() => request(
             user, value.apiRequest
           )} sx={{ '& svg': { mr: 2 } }}>
             <Icon icon={value.icon} fontSize={20} />
             {value.text}
           </MenuItem>
-        ))
-      )
+        )
     }
 
     return (
@@ -309,31 +297,26 @@ const UserList = () => {
       }
     },
     {
-      flex: 0.11,
-      minWidth: 100,
-      field: 'friend status',
-      headerName: 'Friend Status',
+      flex: 0.08,
+      minWidth: 80,
+      field: 'follow',
+      headerName: 'Follow',
       renderCell: ({ row }: CellType) => {
-        if (row.holderFlg) return
-        const FS = friendStatus.find((fs) => fs.status === row.status)
-        return FS && FS.korean !== '' ? (
+        return (
+          row.ifollowHim === 1 ? 
           <CustomChip
             skin='light'
             size='small'
-            label={FS.korean}
-            color={(row.status === 'FRIEND' ? 'success' : (
-              row.status === 'WAITING_MY_RESPONSE' ? 'primary' : (
-                row.status === 'WAITING_OPP_RESPONSE' ? 'secondary' : 'default'
-              )
-            ))}
+            label='팔로우중'
+            color='success'
             sx={{ textTransform: 'capitalize' }}
-          />
-        ) : null
+          /> : null
+        )
       }
     },
     {
-      flex: 0.1,
-      minWidth: 90,
+      flex: 0.05,
+      minWidth: 50,
       sortable: false,
       field: 'actions',
       headerName: 'Actions',
@@ -428,6 +411,7 @@ const UserList = () => {
             columns={columns}
             pagination
             pageSize={pageSize}
+            disableSelectionOnClick
             onPageSizeChange={(newPageSize: number) => setPageSize(newPageSize)}
           />
         </Card>

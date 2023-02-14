@@ -1,4 +1,5 @@
 import { MS_BACKEND_API_PATH } from "src/constants/msbackend";
+import { IProfile } from "src/model/user/profile";
 import { IUserResponse } from "src/model/user/user";
 import { MsBackendAxios } from "../axiosUtil";
 
@@ -10,7 +11,7 @@ interface Request {
 }
 
 export interface SearchUserResponse {
-    users: IUserResponse[]
+    users: IProfile[]
     fullHit: number
 }
 
