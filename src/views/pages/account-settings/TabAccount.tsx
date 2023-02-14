@@ -28,6 +28,11 @@ import { useForm, Controller } from 'react-hook-form'
 // ** Icon Imports
 import Icon from 'src/@core/components/icon'
 
+import CustomAvatar from 'src/@core/components/mui/avatar'
+import { CustomAvatarProps } from 'src/@core/components/mui/avatar/types'
+
+// ** Utils Import
+import { getInitials } from 'src/@core/utils/get-initials'
 
 import { PutJsonRequest } from 'src/model/user/profile'
 import worldData from 'src/model/worldData'
@@ -36,11 +41,18 @@ import { DeleteAccount, PutJsonUserProfile } from 'src/common/api/msBackend/user
 import { useProfile } from 'src/hooks/useProfile'
 import { useRouter } from 'next/router'
 
-const ImgStyled = styled('img')(({ theme }) => ({
+const ProfilePicture = styled(CustomAvatar)<CustomAvatarProps>(({ theme }) => ({
   width: 120,
   height: 120,
-  borderRadius: 4,
-  marginRight: theme.spacing(5)
+  borderRadius: theme.shape.borderRadius,
+  border: `5px solid ${theme.palette.common.white}`,
+  [theme.breakpoints.down('md')]: {
+    marginBottom: theme.spacing(4)
+  },
+  backgroundColor: theme.palette.background.default,
+  '& svg': {
+    fontSize: '1.75rem'
+  },
 }))
 
 const ButtonStyled = styled(Button)<ButtonProps & { component?: ElementType; htmlFor?: string }>(({ theme }) => ({
@@ -77,7 +89,7 @@ const TabAccount = () => {
   const [open, setOpen] = useState<boolean>(false)
   const [resultMessage, setResultMessage] = useState<string>('')
   const [formData, setFormData] = useState<PutJsonRequest>(initialData)
-  const [imgSrc, setImgSrc] = useState<string>('/images/avatars/1.png')
+  const [imgSrc, setImgSrc] = useState<string>('')
   const [result, setResult] = useState<boolean>(true)
   const [savedDialogOpen, setSavedDialogOpen] = useState<boolean>(false)
   const [saveBtn, setSaveBtn] = useState<boolean>(true)
@@ -94,7 +106,7 @@ const TabAccount = () => {
       job: profile.job,
       jobDetail: profile.jobDetail,
     })
-    if (imgSrc === '/images/avatars/1.png' && profile.avatarImg !== null) {
+    if (imgSrc === '' && profile.avatarImg !== null) {
       setImgSrc(profile.avatarImg!)
     }
   }, [profile])
@@ -149,12 +161,12 @@ const TabAccount = () => {
   }
   const handleInputImageReset = () => {
     setInputValue('')
-    setImgSrc(profile?.avatarImg ?? '/images/avatars/1.png')
-    setFormData({ ...formData, ['avatarImg']: profile?.avatarImg ?? '/images/avatars/1.png' })
+    setImgSrc(profile?.avatarImg ?? '')
+    setFormData({ ...formData, ['avatarImg']: profile?.avatarImg ?? '' })
   }
 
   const putUserProfile = async () => {
-    await PutJsonUserProfile({ ...formData, avatarImg: (imgSrc === '/images/avatars/1.png' ? '' : imgSrc) })
+    await PutJsonUserProfile({ ...formData, avatarImg: (imgSrc) })
       .then(() => {
         setResult(true)
         setResultMessage('저장 완료!')
@@ -184,7 +196,11 @@ const TabAccount = () => {
           <form>
             <CardContent sx={{ pb: theme => `${theme.spacing(10)}` }}>
               <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                <ImgStyled src={imgSrc} alt='Profile Pic' />
+                {
+                  imgSrc !== '' ? (<ProfilePicture src={imgSrc} alt='Profile Pic' />)
+                  : (<ProfilePicture alt='Profile Pic' skin='light'>{getInitials(formData.nickName)}</ProfilePicture>)
+                }
+                
                 <div>
                   <ButtonStyled component='label' variant='contained' htmlFor='account-settings-upload-image'>
                     Upload New Photo

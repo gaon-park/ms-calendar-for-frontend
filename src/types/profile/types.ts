@@ -8,8 +8,6 @@ export type ProfileHeaderType = {
   job: string
   world: string
   createdAt: string
-  holderFlg: boolean;
-  friendStatus: string;
 }
 
 export type ProfileOverviewType = {
@@ -23,19 +21,15 @@ export type ProfileOverviewType = {
   world: string
   job: string
   jobDetail: string
-  holderFlg: boolean;
-  friendStatus: string;
 }
 
-export type ProfileFriendsTabType = {
+export type ProfileFollowTabType = {
   name: string
   avatar: string
-  isFriend: boolean
-  connections: string
 }
 
 export type ProfileTabType = {
   header: ProfileHeaderType
   overview: ProfileOverviewType
 }
-export type UserProfileActiveTab = ProfileTabType | ProfileFriendsTabType[]
+export type UserProfileActiveTab = ProfileTabType | ProfileFollowTabType[]

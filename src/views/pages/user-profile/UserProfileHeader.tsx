@@ -6,27 +6,36 @@ import { styled } from '@mui/material/styles'
 import CardMedia from '@mui/material/CardMedia'
 import Typography from '@mui/material/Typography'
 import CardContent from '@mui/material/CardContent'
+import CustomAvatar from 'src/@core/components/mui/avatar'
 
 // ** Icon Imports
 import Icon from 'src/@core/components/icon'
 
 // ** Types
 import { ProfileHeaderType } from 'src/types/profile/types'
+import { useRouter } from 'next/router'
+import { CustomAvatarProps } from 'src/@core/components/mui/avatar/types'
 
-import friendStatus from 'src/model/friendStatus'
+// ** Utils Import
+import { getInitials } from 'src/@core/utils/get-initials'
 
-const ProfilePicture = styled('img')(({ theme }) => ({
+const ProfilePicture = styled(CustomAvatar)<CustomAvatarProps>(({ theme }) => ({
   width: 120,
   height: 120,
   borderRadius: theme.shape.borderRadius,
   border: `5px solid ${theme.palette.common.white}`,
   [theme.breakpoints.down('md')]: {
     marginBottom: theme.spacing(4)
-  }
+  },
+  backgroundColor: theme.palette.background.default,
+  '& svg': {
+    fontSize: '1.75rem'
+  },
 }))
 
 const UserProfileHeader = ({ data }: { data: ProfileHeaderType }) => {
-  const FS = friendStatus.find((fs) => fs.status === data.friendStatus)
+  const router = useRouter()
+
   return (
     <Card>
       <CardMedia
@@ -48,7 +57,17 @@ const UserProfileHeader = ({ data }: { data: ProfileHeaderType }) => {
           justifyContent: { xs: 'center', md: 'flex-start' }
         }}
       >
-        <ProfilePicture src={data.avatarImg !== '' ? data.avatarImg : '/images/avatars/1.png'} alt='profile-picture' />
+        {
+          data.avatarImg !== '' && data.avatarImg !== null ? (
+            <ProfilePicture src={data.avatarImg} alt='profile-picture' />
+          )
+            : (
+              <ProfilePicture alt='profile-picture' skin='light' color='primary' >
+                {getInitials(data.nickName)}
+              </ProfilePicture>
+            )
+        }
+
         <Box
           sx={{
             width: '100%',
@@ -86,17 +105,9 @@ const UserProfileHeader = ({ data }: { data: ProfileHeaderType }) => {
               </Box>
             </Box>
           </Box>
-          {
-            (data.holderFlg === false && FS) ? (
-              <Button variant='contained' startIcon={<Icon icon={FS.profile_friend_request_icon} fontSize={20} />}>
-                {FS.profile_friend_request_str}
-              </Button>
-            ) : (
-              <Button variant='contained' startIcon={<Icon icon='mdi:cog-outline' fontSize={20} />}>
-                ACCOUNT_EDIT
-              </Button>
-            )
-          }
+          <Button variant='contained' startIcon={<Icon icon='mdi:cog-outline' fontSize={20} />} onClick={() => router.push('/account-settings/account/')}>
+            ACCOUNT_EDIT
+          </Button>
         </Box>
       </CardContent>
     </Card>

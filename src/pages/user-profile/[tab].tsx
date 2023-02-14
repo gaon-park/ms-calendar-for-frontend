@@ -20,8 +20,6 @@ const initialOvervieType: ProfileOverviewType = {
   world: '',
   job: '',
   jobDetail: '',
-  holderFlg: false,
-  friendStatus: '',
 }
 
 const initialHeaderType: ProfileHeaderType = {
@@ -31,8 +29,6 @@ const initialHeaderType: ProfileHeaderType = {
   job: '',
   world: '',
   createdAt: '',
-  holderFlg: false,
-  friendStatus: ''
 }
 
 const initialData: UserProfileActiveTab = {
@@ -54,8 +50,6 @@ const UserProfileTab = ({ tab }: InferGetStaticPropsType<typeof getStaticProps>)
         job: (profile.jobDetail !== '') ? profile.jobDetail : profile.job,
         world: profile.world,
         createdAt: profile.createdAt,
-        holderFlg: profile.holderFlg,
-        friendStatus: profile.status
       },
       overview: {
         id: profile.id,
@@ -68,8 +62,6 @@ const UserProfileTab = ({ tab }: InferGetStaticPropsType<typeof getStaticProps>)
         world: profile.world,
         job: profile.job,
         jobDetail: profile.jobDetail,
-        holderFlg: profile.holderFlg,
-        friendStatus: profile.status
       }
     })
   }, [profile])

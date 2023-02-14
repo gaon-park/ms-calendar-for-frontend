@@ -27,7 +27,6 @@ import Icon from 'src/@core/components/icon'
 
 // ** Components
 import Profile from 'src/views/pages/user-profile/profile'
-import Connections from 'src/views/pages/user-profile/connections'
 import UserProfileHeader from 'src/views/pages/user-profile/UserProfileHeader'
 
 const TabList = styled(MuiTabList)<TabListProps>(({ theme }) => ({

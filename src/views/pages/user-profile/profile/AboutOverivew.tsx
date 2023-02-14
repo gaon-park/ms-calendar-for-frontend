@@ -11,20 +11,18 @@ import Icon from 'src/@core/components/icon'
 // ** Type Import
 import { ProfileOverviewType } from 'src/types/profile/types'
 
-import friendStatus from 'src/model/friendStatus'
-
 const renderOverview = (profile: ProfileOverviewType) => {
 
   const overview = [
-    { property: 'Account Id', value: profile.accountId, icon: 'mdi:account-outline' },
-    { property: 'NickName', value: profile.nickName, icon: 'mdi:account-outline' },
-    { property: 'Friend Status', value: '', icon: 'mdi:check' },
-    { property: 'World', value: profile.world, icon: 'mdi:account-group-outline' },
-    { property: 'Job', value: profile.jobDetail ?? profile.job, icon: 'mdi:briefcase-outline' }
+    { property: 'Account Id', value: profile.accountId, icon: 'openmoji:id-button' },
+    { property: 'NickName', value: profile.nickName, icon: 'openmoji:european-name-badge' },
+    { property: 'World', value: profile.world, icon: 'clarity:world-line' },
+    { property: 'Job', value: profile.jobDetail ?? profile.job, icon: 'mdi:briefcase-outline' },
+    { property: 'Follow', value: '', icon: 'fluent-mdl2:follow-user' },
+    { property: 'Follower', value: '', icon: 'fluent-mdl2:follow-user' },
   ]
 
   return overview.map((item, index) => {
-    if (item.property === 'Friend Status' && profile.holderFlg) return null
     return (
       <Box
         key={index}
@@ -35,8 +33,10 @@ const renderOverview = (profile: ProfileOverviewType) => {
           '& svg': { color: 'text.secondary' }
         }}
       >
-        <Icon icon={item.icon} />
-
+        {
+          item.property === 'Follower' ? <Icon icon={item.icon} hFlip/> : <Icon icon={item.icon} />
+        }
+        
         <Typography sx={{ mx: 2, fontWeight: 600, color: 'text.secondary' }}>
           {`${item.property.charAt(0).toUpperCase() + item.property.slice(1)}:`}
         </Typography>
