@@ -111,6 +111,12 @@ const TabAccount = () => {
     }
   }, [profile])
 
+  useEffect(() => {
+    if (formData.accountId.replace(' ', '') === '') setSaveBtn(false)
+    else if (formData.nickName.replace(' ', '') === '') setSaveBtn(false)
+    else setSaveBtn(true)
+  }, [formData])
+
   // ** Hooks
   const {
     control,
