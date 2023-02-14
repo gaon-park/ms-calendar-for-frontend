@@ -7,19 +7,20 @@ import CardContent from '@mui/material/CardContent'
 
 // ** Icon Imports
 import Icon from 'src/@core/components/icon'
-
-// ** Type Import
 import { ProfileOverviewType } from 'src/types/profile/types'
 
-const renderOverview = (profile: ProfileOverviewType) => {
+// ** Type Import
 
+
+const renderOverview = (overviewType: ProfileOverviewType) => {
+  const {profile, followCount, followerCount} = overviewType
   const overview = [
     { property: 'Account Id', value: profile.accountId, icon: 'openmoji:id-button' },
     { property: 'NickName', value: profile.nickName, icon: 'openmoji:european-name-badge' },
     { property: 'World', value: profile.world, icon: 'clarity:world-line' },
     { property: 'Job', value: profile.jobDetail ?? profile.job, icon: 'mdi:briefcase-outline' },
-    { property: 'Follow', value: profile.followCount, icon: 'fluent-mdl2:follow-user' },
-    { property: 'Follower', value: profile.followerCount, icon: 'fluent-mdl2:follow-user' },
+    { property: 'Follow', value: followCount, icon: 'fluent-mdl2:follow-user' },
+    { property: 'Follower', value: followerCount, icon: 'fluent-mdl2:follow-user' },
   ]
 
   return overview.map((item, index) => {

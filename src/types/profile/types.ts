@@ -1,4 +1,7 @@
 // User Profile pages
+
+import { IProfile, IProfileResponse } from "src/model/user/profile"
+
 //-------------------
 export type ProfileHeaderType = {
   id: string
@@ -14,27 +17,14 @@ export type ProfileHeaderType = {
 }
 
 export type ProfileOverviewType = {
-  id: string
-  nickName: string
-  accountId: string
-  createdAt: number[]
-  updatedAt: number[]
-  isPublic: boolean
-  avatarImg: string
-  world: string
-  job: string
-  jobDetail: string
+  profile: IProfile
   followCount: number
   followerCount: number
-}
-
-export type ProfileFollowTabType = {
-  name: string
-  avatar: string
 }
 
 export type ProfileTabType = {
   header: ProfileHeaderType
   overview: ProfileOverviewType
+  follows: IProfile[]
+  followers: IProfile[]
 }
-export type UserProfileActiveTab = ProfileTabType | ProfileFollowTabType[]

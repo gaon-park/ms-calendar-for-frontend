@@ -18,8 +18,7 @@ import CircularProgress from '@mui/material/CircularProgress'
 
 // ** Type Import
 import {
-  ProfileTabType,
-  UserProfileActiveTab
+  ProfileTabType
 } from 'src/types/profile/types'
 
 // ** Icon Imports
@@ -28,6 +27,8 @@ import Icon from 'src/@core/components/icon'
 // ** Components
 import Profile from 'src/views/pages/user-profile/profile'
 import UserProfileHeader from 'src/views/pages/user-profile/UserProfileHeader'
+import Follower from './follower'
+import Follow from './follow'
 
 const TabList = styled(MuiTabList)<TabListProps>(({ theme }) => ({
   '& .MuiTabs-indicator': {
@@ -49,7 +50,7 @@ const TabList = styled(MuiTabList)<TabListProps>(({ theme }) => ({
   }
 }))
 
-const UserProfile = ({ tab, data }: { tab: string; data: UserProfileActiveTab | null }) => {
+const UserProfile = ({ tab, data }: { tab: string; data: ProfileTabType | null }) => {
   // ** State
   const [activeTab, setActiveTab] = useState<string>(tab)
   const [isLoading, setIsLoading] = useState<boolean>(true)
@@ -84,7 +85,8 @@ const UserProfile = ({ tab, data }: { tab: string; data: UserProfileActiveTab | 
 
   const tabContentList: { [key: string]: ReactElement } = {
     profile: <Profile data={data as ProfileTabType} />,
-    // connections: <Connections data={data as ConnectionsTabType[]} />
+    follow: <Follow data={data as ProfileTabType} />,
+    follower: <Follower data={data as ProfileTabType} />
   }
 
   return data !== null ? (
@@ -113,11 +115,20 @@ const UserProfile = ({ tab, data }: { tab: string; data: UserProfileActiveTab | 
                     }
                   />
                   <Tab
-                    value='connections'
+                    value='follow'
                     label={
                       <Box sx={{ display: 'flex', alignItems: 'center', ...(!hideText && { '& svg': { mr: 2 } }) }}>
                         <Icon fontSize={20} icon='mdi:link' />
-                        {!hideText && 'Connections'}
+                        {!hideText && 'Follow'}
+                      </Box>
+                    }
+                  />
+                  <Tab
+                    value='follower'
+                    label={
+                      <Box sx={{ display: 'flex', alignItems: 'center', ...(!hideText && { '& svg': { mr: 2 } }) }}>
+                        <Icon fontSize={20} icon='mdi:link' />
+                        {!hideText && 'Follower'}
                       </Box>
                     }
                   />

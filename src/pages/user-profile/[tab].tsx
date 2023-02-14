@@ -5,7 +5,7 @@ import { GetStaticProps, GetStaticPaths, GetStaticPropsContext, InferGetStaticPr
 import UserProfile from 'src/views/pages/user-profile/UserProfile'
 
 // ** Types
-import { UserProfileActiveTab } from 'src/types/profile/types'
+import { ProfileTabType } from 'src/types/profile/types'
 import { useProfile } from 'src/hooks/useProfile'
 import { useEffect, useState } from 'react'
 import { useRouter } from 'next/router'
@@ -32,7 +32,7 @@ const UserProfileTab = ({ tab }: InferGetStaticPropsType<typeof getStaticProps>)
   )
 
   const { profile } = useProfile()
-  const [data, setData] = useState<UserProfileActiveTab | null>(null)
+  const [data, setData] = useState<ProfileTabType | null>(null)
 
   useEffect(() => {
     if (typeof profile === 'undefined' && typeof otherData === 'undefined') return
@@ -50,21 +50,11 @@ const UserProfileTab = ({ tab }: InferGetStaticPropsType<typeof getStaticProps>)
           ifollowHim: profileData.ifollowHim,
           heFollowMe: profileData.heFollowMe,
         },
-        overview: {
-          id: profileData.id,
-          nickName: profileData.nickName,
-          accountId: profileData.accountId,
-          createdAt: profileData.createdAt,
-          updatedAt: profileData.updatedAt,
-          isPublic: profileData.isPublic,
-          avatarImg: profileData.avatarImg ?? '',
-          world: profileData.world,
-          job: profileData.job,
-          jobDetail: profileData.jobDetail,
-          followCount: otherData.data.acceptedFollowCount,
-          followerCount: otherData.data.acceptedFollowerCount
-        }
-      })
+        overview: { profile: otherData.data.profile, followCount: otherData.data.acceptedFollowCount, followerCount: otherData.data.acceptedFollowerCount },
+        follows: otherData.data.follow,
+        followers: otherData.data.follower,
+      }
+      )
     } else if (typeof profile !== 'undefined') {
       const profiledata = profile.profile
       setData({
@@ -79,20 +69,9 @@ const UserProfileTab = ({ tab }: InferGetStaticPropsType<typeof getStaticProps>)
           ifollowHim: null,
           heFollowMe: null,
         },
-        overview: {
-          id: profiledata.id,
-          nickName: profiledata.nickName,
-          accountId: profiledata.accountId,
-          createdAt: profiledata.createdAt,
-          updatedAt: profiledata.updatedAt,
-          isPublic: profiledata.isPublic,
-          avatarImg: profiledata.avatarImg ?? '',
-          world: profiledata.world,
-          job: profiledata.job,
-          jobDetail: profiledata.jobDetail,
-          followCount: profile.acceptedFollowCount,
-          followerCount: profile.acceptedFollowerCount
-        }
+        overview: { profile: profile.profile, followCount: profile.acceptedFollowCount, followerCount: profile.acceptedFollowerCount },
+        follows: profile.follow,
+        followers: profile.follower
       })
     }
   }, [profile, otherData])
@@ -104,7 +83,8 @@ export const getStaticPaths: GetStaticPaths = () => {
   return {
     paths: [
       { params: { tab: 'profile' } },
-      { params: { tab: 'friends' } }
+      { params: { tab: 'follow' } },
+      { params: { tab: 'follower' } },
     ],
     fallback: false
   }

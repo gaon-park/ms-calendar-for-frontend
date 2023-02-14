@@ -255,7 +255,7 @@ const UserList = () => {
           <Box sx={{ display: 'flex', alignItems: 'center' }}>
             {renderClient(row)}
             <Box sx={{ display: 'flex', alignItems: 'flex-start', flexDirection: 'column' }}>
-              <StyledLink href='/apps/user/view/overview/'>{row.nickName}</StyledLink>
+              <StyledLink href={`/user-profile/profile/?accountId=${row.accountId}`}>{row.nickName}</StyledLink>
               <Typography noWrap variant='caption'>
                 {`@${row.accountId}`}
               </Typography>
@@ -323,7 +323,7 @@ const UserList = () => {
             <CustomChip
               skin='light'
               size='small'
-              label={row.ifollowHim}
+              label={row.ifollowHim === 'FOLLOW' ? '팔로우 하는중' : '상대 응답 대기'}
               color={row.ifollowHim === 'FOLLOW' ? 'success' : 'primary'}
               sx={{ textTransform: 'capitalize' }}
             /> : null
