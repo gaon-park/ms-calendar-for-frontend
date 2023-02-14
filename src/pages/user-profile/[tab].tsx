@@ -5,66 +5,97 @@ import { GetStaticProps, GetStaticPaths, GetStaticPropsContext, InferGetStaticPr
 import UserProfile from 'src/views/pages/user-profile/UserProfile'
 
 // ** Types
-import { ProfileHeaderType, ProfileOverviewType, UserProfileActiveTab } from 'src/types/profile/types'
+import { UserProfileActiveTab } from 'src/types/profile/types'
 import { useProfile } from 'src/hooks/useProfile'
 import { useEffect, useState } from 'react'
+import { useRouter } from 'next/router'
 
-const initialOvervieType: ProfileOverviewType = {
-  id: '',
-  nickName: '',
-  accountId: '',
-  createdAt: '',
-  updatedAt: '',
-  isPublic: false,
-  avatarImg: '',
-  world: '',
-  job: '',
-  jobDetail: '',
-}
-
-const initialHeaderType: ProfileHeaderType = {
-  id: '',
-  nickName: '',
-  avatarImg: '',
-  job: '',
-  world: '',
-  createdAt: '',
-}
-
-const initialData: UserProfileActiveTab = {
-  header: initialHeaderType,
-  overview: initialOvervieType
-}
+import useSWR from "swr"
+import { SearchUserProfile } from 'src/common/api/msBackend/search'
 
 const UserProfileTab = ({ tab }: InferGetStaticPropsType<typeof getStaticProps>) => {
+  const router = useRouter()
+  const { accountId } = router.query
+
+  const { data: otherData } = useSWR(
+    (
+      typeof accountId === 'string' && accountId.replaceAll(' ', '') !== ''
+    ) ? { accountId } : null,
+    () => SearchUserProfile({
+      accountId: accountId as string
+    }),
+    {
+      revalidateIfStale: false,
+      revalidateOnFocus: true,
+      revalidateOnReconnect: true
+    }
+  )
+
   const { profile } = useProfile()
-  const [data, setData] = useState<UserProfileActiveTab>(initialData)
+  const [data, setData] = useState<UserProfileActiveTab | null>(null)
 
   useEffect(() => {
-    if (typeof profile === 'undefined') return
-    setData({
-      header: {
-        id: profile.id,
-        nickName: profile.nickName,
-        avatarImg: profile.avatarImg ?? '',
-        job: (profile.jobDetail !== '') ? profile.jobDetail : profile.job,
-        world: profile.world,
-        createdAt: profile.createdAt,
-      },
-      overview: {
-        id: profile.id,
-        nickName: profile.nickName,
-        accountId: profile.accountId,
-        createdAt: profile.createdAt,
-        updatedAt: profile.updatedAt,
-        isPublic: profile.isPublic,
-        avatarImg: profile.avatarImg ?? '',
-        world: profile.world,
-        job: profile.job,
-        jobDetail: profile.jobDetail,
-      }
-    })
-  }, [profile])
+    if (typeof profile === 'undefined' && typeof otherData === 'undefined') return
+    if (typeof otherData !== 'undefined' && typeof otherData?.data === 'object' && typeof otherData?.data !== 'string') {
+      const profileData = otherData.data.profile
+      setData({
+        header: {
+          id: profileData.id,
+          nickName: profileData.nickName,
+          avatarImg: profileData.avatarImg ?? '',
+          job: (profileData.jobDetail !== '') ? profileData.jobDetail : profileData.job,
+          world: profileData.world,
+          createdAt: profileData.createdAt,
+          holdFlg: profile?.profile?.id === profileData.id,
+          ifollowHim: profileData.ifollowHim,
+          heFollowMe: profileData.heFollowMe,
+        },
+        overview: {
+          id: profileData.id,
+          nickName: profileData.nickName,
+          accountId: profileData.accountId,
+          createdAt: profileData.createdAt,
+          updatedAt: profileData.updatedAt,
+          isPublic: profileData.isPublic,
+          avatarImg: profileData.avatarImg ?? '',
+          world: profileData.world,
+          job: profileData.job,
+          jobDetail: profileData.jobDetail,
+          followCount: otherData.data.follow.length,
+          followerCount: otherData.data.follower.length
+        }
+      })
+    } else if (typeof profile !== 'undefined') {
+      const profiledata = profile.profile
+      setData({
+        header: {
+          id: profiledata.id,
+          nickName: profiledata.nickName,
+          avatarImg: profiledata.avatarImg ?? '',
+          job: (profiledata.jobDetail !== '') ? profiledata.jobDetail : profiledata.job,
+          world: profiledata.world,
+          createdAt: profiledata.createdAt,
+          holdFlg: true,
+          ifollowHim: null,
+          heFollowMe: null,
+        },
+        overview: {
+          id: profiledata.id,
+          nickName: profiledata.nickName,
+          accountId: profiledata.accountId,
+          createdAt: profiledata.createdAt,
+          updatedAt: profiledata.updatedAt,
+          isPublic: profiledata.isPublic,
+          avatarImg: profiledata.avatarImg ?? '',
+          world: profiledata.world,
+          job: profiledata.job,
+          jobDetail: profiledata.jobDetail,
+          followCount: profile.follow.length,
+          followerCount: profile.follower.length
+        }
+      })
+    }
+  }, [profile, otherData])
 
   return <UserProfile tab={tab} data={data} />
 }

@@ -1,6 +1,6 @@
 import { MS_BACKEND_API_PATH } from "src/constants/msbackend";
-import { IProfile } from "src/model/user/profile";
-import { IUserResponse } from "src/model/user/user";
+import { SearchUserResponse } from "src/model/search";
+import { IProfileResponse } from "src/model/user/profile";
 import { MsBackendAxios } from "../axiosUtil";
 
 interface Request {
@@ -10,14 +10,22 @@ interface Request {
     jobDetail: string
 }
 
-export interface SearchUserResponse {
-    users: IProfile[]
-    fullHit: number
-}
-
 export const SearchUser = (req: Request) => {
     return MsBackendAxios.get<SearchUserResponse>(
         MS_BACKEND_API_PATH.GET_SEARCH_USER,
-        { params : req}
+        { params: req }
     );
 };
+
+interface SearchUserProfileRequest {
+    accountId: string
+}
+
+export const SearchUserProfile = (req: SearchUserProfileRequest) => {
+    return MsBackendAxios.get<IProfileResponse>(
+        MS_BACKEND_API_PATH.GET_SEARCH_USER_PROFILE,
+        {
+            params: req
+        }
+    )
+}

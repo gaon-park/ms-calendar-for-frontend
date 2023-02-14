@@ -3,12 +3,12 @@ import useSWR from "swr";
 import { GetUserProfile } from "src/common/api/msBackend/user/profile";
 import { AuthCookie } from "src/common/cookie/cookies";
 import { MS_BACKEND_API_PATH } from "src/constants/msbackend";
-import { IProfile } from "src/model/user/profile";
+import { IProfile, IProfileResponse } from "src/model/user/profile";
 import { useSetRecoilState } from "recoil";
 import { myProfile } from "src/store/profile/user";
 
 export const useProfile = () => {
-  const [profile, setProfile] = useState<IProfile>();
+  const [profile, setProfile] = useState<IProfileResponse>();
   const option = {
     revalidateIfStale: false,
     revalidateOnFocus: true,
@@ -28,7 +28,7 @@ export const useProfile = () => {
     if (!profile) return;
     if (data.config.url !== MS_BACKEND_API_PATH.GET_USER_PROFILE) return;
     setProfile(profile);
-    setMyProfile(profile)
+    setMyProfile(profile.profile)
   }, [data, error]);
 
   return {

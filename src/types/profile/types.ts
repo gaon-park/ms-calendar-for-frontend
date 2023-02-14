@@ -7,20 +7,25 @@ export type ProfileHeaderType = {
   avatarImg: string
   job: string
   world: string
-  createdAt: string
+  createdAt: number[]
+  holdFlg: boolean
+  ifollowHim: 'FOLLOW' | 'WAITING' | null
+  heFollowMe: 'FOLLOW' | 'WAITING' | null
 }
 
 export type ProfileOverviewType = {
   id: string
   nickName: string
   accountId: string
-  createdAt: string
-  updatedAt: string
+  createdAt: number[]
+  updatedAt: number[]
   isPublic: boolean
   avatarImg: string
   world: string
   job: string
   jobDetail: string
+  followCount: number
+  followerCount: number
 }
 
 export type ProfileFollowTabType = {

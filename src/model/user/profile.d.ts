@@ -12,8 +12,8 @@ export interface IProfile {
     id: string;
     nickName: string;
     accountId: string;
-    createdAt: string;
-    updatedAt: string;
+    createdAt: number[];
+    updatedAt: number[];
     isPublic: boolean;
     avatarImg: string?;
     world: string;
@@ -21,4 +21,12 @@ export interface IProfile {
     jobDetail: string;
     heFollowMe: 'FOLLOW' | 'WAITING' | null
     ifollowHim: 'FOLLOW' | 'WAITING' | null
+}
+
+export interface IProfileResponse {
+    profile: IProfile;
+    follow: IProfile[];
+    follower: IProfile[];
+    acceptedFollowCount: number;
+    acceptedFollowerCount: number;
 }

@@ -3,6 +3,7 @@ const POST_REISSUE_TOKEN = "/api/reissue/token" as const;
 const LOGOUT = "/api/logout" as const;
 
 const GET_SEARCH_USER = "/api/search/user" as const;
+const GET_SEARCH_USER_PROFILE = "/api/search/user/profile" as const;
 const GET_SEARCH_SCHEDULE = "/api/search/schedule" as const;
 
 const GET_USER_FOLLOW = "/api/user/follow" as const;
@@ -27,7 +28,9 @@ export const MS_BACKEND_API_PATH = {
   LOGOUT,
 
   GET_SEARCH_USER,
+  GET_SEARCH_USER_PROFILE,
   GET_SEARCH_SCHEDULE,
+
   GET_USER_FOLLOW,
   GET_USER_FOLLOWER,
 
@@ -35,10 +38,13 @@ export const MS_BACKEND_API_PATH = {
   PUT_FOLLOW_CANCEL,
   PUT_FOLLOW_ACCEPT,
   PUT_FOLLOWER_DELETE,
+
   GET_USER_PROFILE,
   PUT_USER_PROFILE,
   DELETE_ACCOUNT,
+  
   GET_SCHEDULE,
   PUT_SCHEDULE,
   POST_SCHEDULE,
 };
+ 

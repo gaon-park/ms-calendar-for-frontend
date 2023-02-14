@@ -18,6 +18,7 @@ import { CustomAvatarProps } from 'src/@core/components/mui/avatar/types'
 
 // ** Utils Import
 import { getInitials } from 'src/@core/utils/get-initials'
+import { FollowCancel, FollowRequest } from 'src/common/api/msBackend/user/follow'
 
 const ProfilePicture = styled(CustomAvatar)<CustomAvatarProps>(({ theme }) => ({
   width: 120,
@@ -35,6 +36,17 @@ const ProfilePicture = styled(CustomAvatar)<CustomAvatarProps>(({ theme }) => ({
 
 const UserProfileHeader = ({ data }: { data: ProfileHeaderType }) => {
   const router = useRouter()
+  const request = (
+    apiFunction: Function,
+  ) => {
+    const apiRequest = async () => {
+      await apiFunction({
+        personalKey: data.id
+      })
+    }
+    apiRequest()
+    router.reload()
+  }
 
   return (
     <Card>
@@ -100,14 +112,28 @@ const UserProfileHeader = ({ data }: { data: ProfileHeaderType }) => {
               <Box sx={{ display: 'flex', alignItems: 'center', '& svg': { mr: 1, color: 'text.secondary' } }}>
                 <Icon icon='mdi:calendar-blank' />
                 <Typography sx={{ ml: 1, color: 'text.secondary', fontWeight: 600 }}>
-                  Joined {new Date(data.createdAt).toDateString()}
+                  Joined {new Date(data.createdAt[0], data.createdAt[1] - 1, data.createdAt[2]).toLocaleDateString()}
                 </Typography>
               </Box>
             </Box>
           </Box>
-          <Button variant='contained' startIcon={<Icon icon='mdi:cog-outline' fontSize={20} />} onClick={() => router.push('/account-settings/account/')}>
-            ACCOUNT_EDIT
-          </Button>
+          {
+            data.holdFlg ? (
+              <Button variant='contained' startIcon={<Icon icon='mdi:cog-outline' fontSize={20} />} onClick={() => router.push('/account-settings/account/')}>
+                계정 정보 수정
+              </Button>
+            ) : (
+              data.ifollowHim ? (
+                <Button variant='contained' startIcon={<Icon icon='mdi:account-minus-outline' fontSize={20} />} onClick={() => request(FollowCancel)}>
+                  팔로우 취소
+                </Button>
+              ) : (
+                <Button variant='contained' startIcon={<Icon icon='mdi:account-plus-outline' fontSize={20} />} onClick={() => request(FollowRequest)}>
+                  팔로우 요청
+                </Button>
+              )
+            )
+          }
         </Box>
       </CardContent>
     </Card>

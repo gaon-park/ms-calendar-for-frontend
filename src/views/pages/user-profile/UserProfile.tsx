@@ -49,7 +49,7 @@ const TabList = styled(MuiTabList)<TabListProps>(({ theme }) => ({
   }
 }))
 
-const UserProfile = ({ tab, data }: { tab: string; data: UserProfileActiveTab }) => {
+const UserProfile = ({ tab, data }: { tab: string; data: UserProfileActiveTab | null }) => {
   // ** State
   const [activeTab, setActiveTab] = useState<string>(tab)
   const [isLoading, setIsLoading] = useState<boolean>(true)
@@ -87,7 +87,7 @@ const UserProfile = ({ tab, data }: { tab: string; data: UserProfileActiveTab })
     // connections: <Connections data={data as ConnectionsTabType[]} />
   }
 
-  return (
+  return data !== null ? (
     <Grid container spacing={6}>
       <Grid item xs={12}>
         <UserProfileHeader data={(data as ProfileTabType).header} />
@@ -140,7 +140,7 @@ const UserProfile = ({ tab, data }: { tab: string; data: UserProfileActiveTab })
         </Grid>
       )}
     </Grid>
-  )
+  ) : null
 }
 
 export default UserProfile

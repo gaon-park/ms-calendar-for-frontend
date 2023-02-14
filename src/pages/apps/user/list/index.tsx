@@ -46,6 +46,7 @@ import jobDetailData from 'src/model/jobDetailData'
 import { FollowCancel, FollowerDelete, FollowRequest } from 'src/common/api/msBackend/user/follow'
 import { IProfile } from 'src/model/user/profile'
 import { useProfile } from 'src/hooks/useProfile'
+import { useRouter } from 'next/router'
 
 const worldIcon = (world: string) => {
   for (let i = 0; i < worldData.length; i++) {
@@ -102,6 +103,8 @@ const UserList = () => {
   const [addUserOpen, setAddUserOpen] = useState<boolean>(false)
 
   const [reqId, setReqId] = useState<number>(0)
+
+  const router = useRouter()
 
   // 검색
   const { data } = useSWR(
@@ -179,7 +182,7 @@ const UserList = () => {
       let res: ActionRequest[] = []
       if (user.ifollowHim === null) {
         res.push({ text: '팔로우 하기', icon: 'mdi:account-plus-outline', apiRequest: FollowRequest })
-      } 
+      }
       else {
         res.push({ text: '팔로우 취소', icon: 'mdi:account-plus-outline', apiRequest: FollowCancel })
       }
@@ -225,10 +228,12 @@ const UserList = () => {
         >
           <MenuItem
             key={`${row.row.id}_0`}
-            component={Link}
             sx={{ '& svg': { mr: 2 } }}
-            onClick={handleRowOptionsClose}
-            href='/apps/user/view/overview/'
+            onClick={() => {
+              router.push(
+                `/user-profile/profile/?accountId=${row.row.accountId}`,
+              )
+            }}
           >
             <Icon icon='mdi:eye-outline' fontSize={20} />
             프로필 보기
@@ -314,15 +319,15 @@ const UserList = () => {
       headerName: 'Follow',
       renderCell: ({ row }: CellType) => {
         return (
-          row.ifollowHim === 'FOLLOW' || row.ifollowHim === 'WAITING' ? 
-          <CustomChip
-            skin='light'
-            size='small'
-            label={row.ifollowHim}
-            color={row.ifollowHim === 'FOLLOW' ? 'success' : 'primary'}
-            sx={{ textTransform: 'capitalize' }}
-          /> : null
-        ) 
+          row.ifollowHim === 'FOLLOW' || row.ifollowHim === 'WAITING' ?
+            <CustomChip
+              skin='light'
+              size='small'
+              label={row.ifollowHim}
+              color={row.ifollowHim === 'FOLLOW' ? 'success' : 'primary'}
+              sx={{ textTransform: 'capitalize' }}
+            /> : null
+        )
       }
     },
     {
