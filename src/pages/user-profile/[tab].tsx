@@ -61,8 +61,8 @@ const UserProfileTab = ({ tab }: InferGetStaticPropsType<typeof getStaticProps>)
           world: profileData.world,
           job: profileData.job,
           jobDetail: profileData.jobDetail,
-          followCount: otherData.data.follow.length,
-          followerCount: otherData.data.follower.length
+          followCount: otherData.data.acceptedFollowCount,
+          followerCount: otherData.data.acceptedFollowerCount
         }
       })
     } else if (typeof profile !== 'undefined') {
@@ -90,8 +90,8 @@ const UserProfileTab = ({ tab }: InferGetStaticPropsType<typeof getStaticProps>)
           world: profiledata.world,
           job: profiledata.job,
           jobDetail: profiledata.jobDetail,
-          followCount: profile.follow.length,
-          followerCount: profile.follower.length
+          followCount: profile.acceptedFollowCount,
+          followerCount: profile.acceptedFollowerCount
         }
       })
     }

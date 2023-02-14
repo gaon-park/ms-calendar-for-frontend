@@ -18,8 +18,8 @@ const renderOverview = (profile: ProfileOverviewType) => {
     { property: 'NickName', value: profile.nickName, icon: 'openmoji:european-name-badge' },
     { property: 'World', value: profile.world, icon: 'clarity:world-line' },
     { property: 'Job', value: profile.jobDetail ?? profile.job, icon: 'mdi:briefcase-outline' },
-    { property: 'Follow', value: '', icon: 'fluent-mdl2:follow-user' },
-    { property: 'Follower', value: '', icon: 'fluent-mdl2:follow-user' },
+    { property: 'Follow', value: profile.followCount, icon: 'fluent-mdl2:follow-user' },
+    { property: 'Follower', value: profile.followerCount, icon: 'fluent-mdl2:follow-user' },
   ]
 
   return overview.map((item, index) => {
