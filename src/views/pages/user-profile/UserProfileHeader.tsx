@@ -19,6 +19,8 @@ import { CustomAvatarProps } from 'src/@core/components/mui/avatar/types'
 // ** Utils Import
 import { getInitials } from 'src/@core/utils/get-initials'
 import { FollowCancel, FollowRequest } from 'src/common/api/msBackend/user/follow'
+import worldData from 'src/model/worldData'
+import { Avatar } from '@mui/material'
 
 const ProfilePicture = styled(CustomAvatar)<CustomAvatarProps>(({ theme }) => ({
   width: 120,
@@ -33,6 +35,15 @@ const ProfilePicture = styled(CustomAvatar)<CustomAvatarProps>(({ theme }) => ({
     fontSize: '1.75rem'
   },
 }))
+
+const worldIcon = (world: string) => {
+  for (let i = 0; i < worldData.length; i++) {
+    if (worldData[i].value === world) {
+      return worldData[i].iconSrc
+    }
+  }
+  return 'mdi:map-marker-outline'
+}
 
 const UserProfileHeader = ({ data }: { data: ProfileHeaderType }) => {
   const router = useRouter()
@@ -102,15 +113,10 @@ const UserProfileHeader = ({ data }: { data: ProfileHeaderType }) => {
               }}
             >
               <Box sx={{ mr: 5, display: 'flex', alignItems: 'center', '& svg': { mr: 1, color: 'text.secondary' } }}>
-                <Icon icon='mdi:briefcase-outline' />
-                <Typography sx={{ ml: 1, color: 'text.secondary', fontWeight: 600 }}>{data.job}</Typography>
-              </Box>
-              <Box sx={{ mr: 5, display: 'flex', alignItems: 'center', '& svg': { mr: 1, color: 'text.secondary' } }}>
-                <Icon icon='mdi:map-marker-outline' />
+              <Avatar alt='worldIcon' sx={{ width: 18, height: 18 }} src={worldIcon(data.world)} />
                 <Typography sx={{ ml: 1, color: 'text.secondary', fontWeight: 600 }}>{data.world}</Typography>
               </Box>
               <Box sx={{ display: 'flex', alignItems: 'center', '& svg': { mr: 1, color: 'text.secondary' } }}>
-                <Icon icon='mdi:calendar-blank' />
                 <Typography sx={{ ml: 1, color: 'text.secondary', fontWeight: 600 }}>
                   Joined {new Date(data.createdAt[0], data.createdAt[1] - 1, data.createdAt[2]).toLocaleDateString()}
                 </Typography>

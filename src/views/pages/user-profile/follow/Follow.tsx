@@ -272,7 +272,6 @@ const Follow = (props: Props) => {
         <Grid container spacing={6}>
             <Grid item xs={12}>
                 <Card>
-                    <CardHeader title='Followers' />
                     <DataGrid
                         autoHeight
                         rows={followers}

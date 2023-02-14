@@ -8,7 +8,6 @@ export type ProfileHeaderType = {
   nickName: string
   // coverImg: string
   avatarImg: string
-  job: string
   world: string
   createdAt: number[]
   holdFlg: boolean
