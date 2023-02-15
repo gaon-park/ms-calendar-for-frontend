@@ -10,8 +10,8 @@ export class MyCookie {
 
   readonly options: CookieSetOptions = {
     path: "/",
-    secure: true,
-    sameSite: "none",
+    secure: (process.env.NODE_ENV ?? "") === "production",
+    sameSite: (process.env.NODE_ENV ?? "") === "production",
     maxAge: 60 * 60 * 24,
   };
 

@@ -3,7 +3,7 @@ import useSWR from "swr";
 import { GetUserProfile } from "src/common/api/msBackend/user/profile";
 import { AuthCookie } from "src/common/cookie/cookies";
 import { MS_BACKEND_API_PATH } from "src/constants/msbackend";
-import { IProfile, IProfileResponse } from "src/model/user/profile";
+import { IProfile } from "src/model/user/profile";
 import { useSetRecoilState } from "recoil";
 import { myProfile } from "src/store/profile/user";
 
