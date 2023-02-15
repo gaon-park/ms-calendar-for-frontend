@@ -6,6 +6,7 @@ export interface PutJsonRequest {
     world: string;
     job: string;
     jobDetail: string;
+    notificationFlg: boolean;
 }
 
 export interface IProfile {
@@ -21,6 +22,7 @@ export interface IProfile {
     jobDetail: string;
     heFollowMe: 'FOLLOW' | 'WAITING' | null
     ifollowHim: 'FOLLOW' | 'WAITING' | null
+    notificationFlg: boolean;
 }
 
 export interface IProfileResponse {

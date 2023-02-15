@@ -1,5 +1,5 @@
 // ** React Imports
-import { useState, SyntheticEvent, Fragment, ReactNode } from 'react'
+import { useState, SyntheticEvent, Fragment, ReactNode, useEffect } from 'react'
 
 // ** MUI Imports
 import Box from '@mui/material/Box'
@@ -30,30 +30,34 @@ import CustomAvatar from 'src/@core/components/mui/avatar'
 // ** Util Import
 import { getInitials } from 'src/@core/utils/get-initials'
 
+import useSWR from "swr";
+import { useRecoilValue } from 'recoil'
+import { myProfile } from 'src/store/profile/user'
+import { GetNotifications, ReadAllNotifications } from 'src/common/api/msBackend/user/notification'
+
 export type NotificationsType = {
   meta: string
   title: string
   subtitle: string
 } & (
-  | { avatarAlt: string; avatarImg: string; avatarText?: never; avatarColor?: never; avatarIcon?: never }
-  | {
+    | { avatarAlt: string; avatarImg: string; avatarText?: never; avatarColor?: never; avatarIcon?: never }
+    | {
       avatarAlt?: never
       avatarImg?: never
       avatarText: string
       avatarIcon?: never
       avatarColor?: ThemeColor
     }
-  | {
+    | {
       avatarAlt?: never
       avatarImg?: never
       avatarText?: never
       avatarIcon: ReactNode
       avatarColor?: ThemeColor
     }
-)
+  )
 interface Props {
   settings: Settings
-  notifications: NotificationsType[]
 }
 
 // ** Styled Menu component
@@ -121,10 +125,44 @@ const ScrollWrapper = ({ children, hidden }: { children: ReactNode; hidden: bool
 
 const NotificationDropdown = (props: Props) => {
   // ** Props
-  const { settings, notifications } = props
+  const { settings } = props
 
   // ** States
   const [anchorEl, setAnchorEl] = useState<(EventTarget & Element) | null>(null)
+
+  const profile = useRecoilValue(myProfile)
+
+  const [notifications, setNotifications] = useState<NotificationsType[]>([])
+  const { data: notificationsData } = useSWR(
+    (profile !== undefined && profile.notificationFlg) ? '/notifications' : null,
+    GetNotifications,
+    {
+      refreshInterval: 1000 * 5,
+      refreshWhenHidden: false,
+      refreshWhenOffline: false,
+    }
+  )
+
+  useEffect(() => {
+    console.log(notificationsData)
+    if (notificationsData?.data !== undefined) {
+      setNotifications(notificationsData.data.map((n) => (
+        (n.avatarImg !== null) ?
+          {
+            meta: n.meta,
+            title: n.title,
+            subtitle: n.subTitle,
+            avatarImg: n.avatarImg,
+            avatarAlt: n.avatarText,
+          } : {
+            meta: n.meta,
+            title: n.title,
+            subtitle: n.subTitle,
+            avatarText: n.avatarText
+          }
+      )))
+    }
+  }, [notificationsData])
 
   // ** Hook
   const hidden = useMediaQuery((theme: Theme) => theme.breakpoints.down('lg'))
@@ -138,6 +176,11 @@ const NotificationDropdown = (props: Props) => {
 
   const handleDropdownClose = () => {
     setAnchorEl(null)
+  }
+
+  const readAllNotifications = () => {
+    setNotifications([])
+    ReadAllNotifications()
   }
 
   const RenderAvatar = ({ notification }: { notification: NotificationsType }) => {
@@ -160,7 +203,7 @@ const NotificationDropdown = (props: Props) => {
     }
   }
 
-  return (
+  return profile !== undefined ? (
     <Fragment>
       <IconButton color='inherit' aria-haspopup='true' onClick={handleDropdownOpen} aria-controls='customized-menu'>
         <Badge
@@ -225,13 +268,13 @@ const NotificationDropdown = (props: Props) => {
             borderTop: theme => `1px solid ${theme.palette.divider}`
           }}
         >
-          <Button fullWidth variant='contained' onClick={handleDropdownClose}>
+          <Button fullWidth variant='contained' onClick={readAllNotifications}>
             Read All Notifications
           </Button>
         </MenuItem>
       </Menu>
     </Fragment>
-  )
+  ) : null
 }
 
 export default NotificationDropdown
