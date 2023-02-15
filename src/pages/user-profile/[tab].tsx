@@ -31,7 +31,7 @@ const UserProfileTab = ({ tab }: InferGetStaticPropsType<typeof getStaticProps>)
     }
   )
 
-  const { profile } = useProfile()
+  const { profile, follow, followCount, follower, followerCount } = useProfile()
   const [data, setData] = useState<ProfileTabType | null>(null)
 
   useEffect(() => {
@@ -45,7 +45,7 @@ const UserProfileTab = ({ tab }: InferGetStaticPropsType<typeof getStaticProps>)
           avatarImg: profileData.avatarImg ?? '',
           world: profileData.world,
           job: profileData.jobDetail !== '' ? profileData.jobDetail : profileData.job,
-          holdFlg: profile?.profile?.id === profileData.id,
+          holdFlg: profile?.id === profileData.id,
           ifollowHim: profileData.ifollowHim,
           heFollowMe: profileData.heFollowMe,
         },
@@ -55,21 +55,20 @@ const UserProfileTab = ({ tab }: InferGetStaticPropsType<typeof getStaticProps>)
       }
       )
     } else if (typeof profile !== 'undefined') {
-      const profileData = profile.profile
       setData({
         header: {
-          id: profileData.id,
-          nickName: profileData.nickName,
-          avatarImg: profileData.avatarImg ?? '',
-          world: profileData.world,
-          job: profileData.jobDetail !== '' ? profileData.jobDetail : profileData.job,
+          id: profile.id,
+          nickName: profile.nickName,
+          avatarImg: profile.avatarImg ?? '',
+          world: profile.world,
+          job: profile.jobDetail !== '' ? profile.jobDetail : profile.job,
           holdFlg: true,
           ifollowHim: null,
           heFollowMe: null,
         },
-        overview: { profile: profile.profile, followCount: profile.acceptedFollowCount, followerCount: profile.acceptedFollowerCount },
-        follows: profile.follow,
-        followers: profile.follower
+        overview: { profile: profile, followCount: followCount, followerCount: followerCount },
+        follows: follow,
+        followers: follower
       })
     }
   }, [profile, otherData])

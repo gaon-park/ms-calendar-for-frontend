@@ -42,6 +42,7 @@ import { useRouter } from 'next/router'
 import { Switch } from '@mui/material'
 import { useRecoilValue } from 'recoil'
 import { myProfile } from 'src/store/profile/user'
+import { useProfile } from 'src/hooks/useProfile'
 
 const ProfilePicture = styled(CustomAvatar)<CustomAvatarProps>(({ theme }) => ({
   width: 120,
@@ -75,7 +76,7 @@ const ResetButtonStyled = styled(Button)<ButtonProps>(({ theme }) => ({
 }))
 
 const TabAccount = () => {
-  const profile = useRecoilValue(myProfile)
+  const { profile } = useProfile()
   const initialData: PutJsonRequest = {
     nickName: '',
     accountId: '',
@@ -83,7 +84,8 @@ const TabAccount = () => {
     avatarImg: '',
     world: '',
     job: '',
-    jobDetail: ''
+    jobDetail: '',
+    notificationFlg: true,
   }
 
   const [inputValue, setInputValue] = useState<string>('')
@@ -97,7 +99,8 @@ const TabAccount = () => {
   const router = useRouter();
 
   useEffect(() => {
-    if (typeof profile === 'undefined') return
+    if (profile === undefined) return
+    console.log(profile)
     setFormData({
       nickName: profile.nickName,
       accountId: profile.accountId,
@@ -106,6 +109,7 @@ const TabAccount = () => {
       world: profile.world,
       job: profile.job,
       jobDetail: profile.jobDetail,
+      notificationFlg: profile.notificationFlg
     })
     if (imgSrc === '' && profile.avatarImg !== null) {
       setImgSrc(profile.avatarImg!)
@@ -168,8 +172,10 @@ const TabAccount = () => {
   }
   const handleInputImageReset = () => {
     setInputValue('')
-    setImgSrc(profile?.avatarImg ?? '')
-    setFormData({ ...formData, ['avatarImg']: profile?.avatarImg ?? '' })
+    if (profile !== undefined) {
+      setImgSrc(profile.avatarImg ?? '')
+      setFormData({ ...formData, ['avatarImg']: profile?.avatarImg ?? '' })
+    }
   }
 
   const putUserProfile = async () => {
@@ -205,9 +211,9 @@ const TabAccount = () => {
               <Box sx={{ display: 'flex', alignItems: 'center' }}>
                 {
                   imgSrc !== '' ? (<ProfilePicture src={imgSrc} alt='Profile Pic' />)
-                  : (<ProfilePicture alt='Profile Pic' skin='light'>{getInitials(formData.nickName)}</ProfilePicture>)
+                    : (<ProfilePicture alt='Profile Pic' skin='light'>{getInitials(formData.nickName)}</ProfilePicture>)
                 }
-                
+
                 <div>
                   <ButtonStyled component='label' variant='contained' htmlFor='account-settings-upload-image'>
                     Upload New Photo
@@ -303,10 +309,16 @@ const TabAccount = () => {
                   </FormControl>
                 </Grid>
                 <Grid item xs={12} sm={6}>
-                  <FormControlLabel 
-                  label='Public Flg' 
-                  labelPlacement='end'
-                  control={<Switch checked={formData.isPublic} onChange={e => setFormData({...formData, ['isPublic']: e.target.checked})}/>}/>
+                  <FormControlLabel
+                    label='Public Flg'
+                    labelPlacement='end'
+                    control={<Switch checked={formData.isPublic} onChange={e => setFormData({ ...formData, ['isPublic']: e.target.checked })} />} />
+                </Grid>
+                <Grid item xs={12} sm={6}>
+                  <FormControlLabel
+                    label='Notification Flg'
+                    labelPlacement='end'
+                    control={<Switch checked={formData.notificationFlg} onChange={e => setFormData({ ...formData, ['notificationFlg']: e.target.checked })} />} />
                 </Grid>
                 <Grid item xs={12}>
                   <Button disabled={!saveBtn} variant='contained' sx={{ mr: 4 }} onClick={putUserProfile}>
