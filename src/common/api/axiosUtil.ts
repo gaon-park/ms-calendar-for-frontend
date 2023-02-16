@@ -18,8 +18,7 @@ export const MsBackendAxios = axios.create({
 MsBackendAxios.defaults.headers.common["X-OS-TYPE"] = "WEB";
 MsBackendAxios.interceptors.request.use(
   async function (config) {
-    if (!isTokenExpired()) {
-      console.log('expired token! run reissue logic')
+    if (config.url !== "/api/oauth2/google" && isTokenExpired()) {
       await axios.post(
         MS_BACKEND_API_PATH.POST_REISSUE_TOKEN,
         {},
@@ -30,11 +29,10 @@ MsBackendAxios.interceptors.request.use(
         new AuthCookie().signInCallbackCookies({
           accessToken: res.data.accessToken
         })
-
-        console.log('new cookie set done')
+      }).catch(() => {
+        new AuthCookie().clearCookies()
       })
     }
-    console.log('original api request!')
     return config;
   }
 )
@@ -42,8 +40,8 @@ MsBackendAxios.interceptors.request.use(
 const isTokenExpired = (): boolean => {
   const token = new AuthCookie().backendAccessCookie.getToken()
   if (token !== null) {
-    if (isJwtTokenExpired(token)) return true
-    return false
+    console.log(isJwtTokenExpired(token))
+    return isJwtTokenExpired(token)
   }
-  return true
+  return false
 }
