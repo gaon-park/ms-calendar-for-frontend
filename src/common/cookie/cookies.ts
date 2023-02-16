@@ -21,13 +21,10 @@ export class MyCookie {
   }
 
   public setToken(token: string) {
-    console.log("set token: " + token)
     this.cookies.set(this.keyToken, token, this.options);
   }
 
   public getToken(): string | null {
-    console.log("get token: " + this.cookies.get(this.keyToken))
-    
     return this.cookies.get(this.keyToken) || null;
   }
 
