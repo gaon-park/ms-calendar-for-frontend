@@ -25,8 +25,8 @@ MsBackendAxios.interceptors.request.use(
         {
           baseURL: process.env.NEXT_PUBLIC_BACKEND_API_URL ?? "",
         }
-      ).then((res) => {
-        new AuthCookie().signInCallbackCookies({
+      ).then(async (res) => {
+        await new AuthCookie().signInCallbackCookies({
           accessToken: res.data.accessToken
         })
       }).catch(() => {
