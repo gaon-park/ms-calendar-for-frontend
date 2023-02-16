@@ -27,6 +27,7 @@ export class MyCookie {
 
   public getToken(): string | null {
     console.log("get token: " + this.cookies.get(this.keyToken))
+    
     return this.cookies.get(this.keyToken) || null;
   }
 
