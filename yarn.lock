@@ -3460,6 +3460,11 @@ jws@^3.2.2:
     jwa "^1.4.1"
     safe-buffer "^5.0.1"
 
+jwt-check-expiry@^1.0.10:
+  version "1.0.10"
+  resolved "https://registry.npmjs.org/jwt-check-expiry/-/jwt-check-expiry-1.0.10.tgz"
+  integrity sha512-DaqnmxMu9WSmCnCiL6mblrSxNwG5K7F8xbP9FVXhDlttglbxfluLRIzUqQE8W0mr5SU246HFMJEln/RXjWZkNQ==
+
 keen-slider@6.8.3:
   version "6.8.3"
   resolved "https://registry.npmjs.org/keen-slider/-/keen-slider-6.8.3.tgz"
