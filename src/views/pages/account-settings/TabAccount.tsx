@@ -98,7 +98,6 @@ const TabAccount = () => {
 
   useEffect(() => {
     if (profile === undefined) return
-    console.log(profile)
     setFormData({
       nickName: profile.nickName,
       accountId: profile.accountId,

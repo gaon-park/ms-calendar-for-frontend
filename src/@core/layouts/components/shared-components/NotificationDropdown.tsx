@@ -144,7 +144,6 @@ const NotificationDropdown = (props: Props) => {
   )
 
   useEffect(() => {
-    console.log(notificationsData)
     if (notificationsData?.data !== undefined) {
       setNotifications(notificationsData.data.map((n) => (
         (n.avatarImg !== null) ?
