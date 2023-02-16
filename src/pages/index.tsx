@@ -5,7 +5,6 @@ import Typography from '@mui/material/Typography'
 import CardHeader from '@mui/material/CardHeader'
 import CardContent from '@mui/material/CardContent'
 import { useProfile } from 'src/hooks/useProfile'
-import { useRouter } from 'next/router'
 
 const Home = () => {
   useProfile()

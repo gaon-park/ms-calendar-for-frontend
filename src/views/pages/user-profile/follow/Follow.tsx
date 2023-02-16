@@ -1,4 +1,4 @@
-import { Grid, Card, Box, Typography, CardHeader, MenuItem, Avatar, IconButton, Menu } from "@mui/material"
+import { Grid, Card, Box, Typography, MenuItem, Avatar, IconButton, Menu } from "@mui/material"
 import { DataGrid } from "@mui/x-data-grid"
 import { useRouter } from "next/router"
 import { MouseEvent, useState } from "react"
@@ -22,8 +22,16 @@ const worldIcon = (world: string) => {
             return worldData[i].iconSrc
         }
     }
+
     return ''
 }
+
+interface APIFunctionReq {
+    personalKey: string
+}
+
+type CallbackFunction = (apiFunction: APIFunctionReq) => void
+
 
 interface CellType {
     row: IProfile
@@ -82,7 +90,7 @@ const Follow = (props: Props) => {
 
         const request = (
             user: IProfile,
-            apiFunction: Function,
+            apiFunction: CallbackFunction,
         ) => {
             handleRowOptionsClose()
             const apiRequest = async () => {
@@ -97,11 +105,11 @@ const Follow = (props: Props) => {
         interface ActionRequest {
             text: string
             icon: string
-            apiRequest: Function
+            apiRequest: CallbackFunction
         }
 
         const renderActionItemValue = (user: IProfile): ActionRequest[] => {
-            let res: ActionRequest[] = []
+            const res: ActionRequest[] = []
             if (user.ifollowHim === null) {
                 res.push({ text: '팔로우 하기', icon: 'mdi:account-plus-outline', apiRequest: FollowRequest })
             }
@@ -111,11 +119,13 @@ const Follow = (props: Props) => {
             if (user.heFollowMe !== null) {
                 res.push({ text: '내 팔로워에서 삭제', icon: 'mdi:account-plus-outline', apiRequest: FollowerDelete })
             }
+
             return res
         }
 
         const renderRequestItem = (user: IProfile) => {
             const values = renderActionItemValue(user)
+
             return (
                 values.map((value, index) => (
                     <MenuItem key={`action_${user.id}_${index}`} onClick={() => request(
@@ -268,6 +278,7 @@ const Follow = (props: Props) => {
             renderCell: ({ row }: CellType) => <RowOptions row={row} />
         }
     ]
+    
     return followers !== undefined ? (
         <Grid container spacing={6}>
             <Grid item xs={12}>

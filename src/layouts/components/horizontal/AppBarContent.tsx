@@ -1,6 +1,5 @@
 // ** MUI Imports
 import Box from '@mui/material/Box'
-import { useRecoilValue } from 'recoil'
 
 // ** Type Import
 import { Settings } from 'src/@core/context/settingsContext'

@@ -27,7 +27,6 @@ export interface FullCalendarFormat {
   start: string;
   end: string;
   allDay: boolean;
-  // ExtendsProp
   note: string;
   isPublic: boolean;
   members: IMember[];

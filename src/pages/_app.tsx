@@ -82,6 +82,7 @@ const App = (props: ExtendedAppProps) => {
     Component.getLayout ?? (page => <UserLayout contentHeightFixed={contentHeightFixed}>{page}</UserLayout>)
 
   const setConfig = Component.setConfig ?? undefined
+  
   return (
     <RecoilRoot>
     <Provider store={store}>

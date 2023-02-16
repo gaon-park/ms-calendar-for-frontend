@@ -54,11 +54,21 @@ const worldIcon = (world: string) => {
       return worldData[i].iconSrc
     }
   }
+
   return ''
 }
 
 interface CellType {
   row: IProfile
+}
+
+interface APIRequestParam {
+  personalKey: string
+}
+
+interface APIReq {
+  user: IProfile
+  apiRequest: (pama: APIRequestParam) => void
 }
 
 const StyledLink = styled(Link)(({ theme }) => ({
@@ -159,13 +169,12 @@ const UserList = () => {
     }
 
     const request = (
-      user: IProfile,
-      apiFunction: Function,
+      req: APIReq
     ) => {
       handleRowOptionsClose()
       const apiRequest = async () => {
-        await apiFunction({
-          personalKey: user.id
+        await req.apiRequest({
+          personalKey: req.user.id
         })
       }
       apiRequest()
@@ -175,29 +184,33 @@ const UserList = () => {
     interface ActionRequest {
       text: string
       icon: string
-      apiRequest: Function
+      apiRequest: () => void
     }
 
     const renderActionItemValue = (user: IProfile): ActionRequest[] => {
-      let res: ActionRequest[] = []
+      const res: ActionRequest[] = []
       if (user.ifollowHim === null) {
-        res.push({ text: '팔로우 하기', icon: 'mdi:account-plus-outline', apiRequest: FollowRequest })
+        res.push({ text: '팔로우 하기', icon: 'mdi:account-plus-outline', apiRequest: () => FollowRequest })
       }
       else {
-        res.push({ text: '팔로우 취소', icon: 'mdi:account-plus-outline', apiRequest: FollowCancel })
+        res.push({ text: '팔로우 취소', icon: 'mdi:account-plus-outline', apiRequest: () => FollowCancel })
       }
       if (user.heFollowMe !== null) {
-        res.push({ text: '내 팔로워에서 삭제', icon: 'mdi:account-minus-outline', apiRequest: FollowerDelete })
+        res.push({ text: '내 팔로워에서 삭제', icon: 'mdi:account-minus-outline', apiRequest: () => FollowerDelete })
       }
+
       return res
     }
 
     const renderRequestItem = (user: IProfile) => {
       const values = renderActionItemValue(user)
+      
       return (
         values.map((value, index) => (
           <MenuItem key={`action_${user.id}_${index}`} onClick={() => request(
-            user, value.apiRequest
+            {
+              user: user, apiRequest: value.apiRequest
+            }
           )} sx={{ '& svg': { mr: 2 } }}>
             <Icon icon={value.icon} fontSize={20} />
             {value.text}

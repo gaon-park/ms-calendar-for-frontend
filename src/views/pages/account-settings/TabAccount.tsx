@@ -40,8 +40,6 @@ import jobDetailData from 'src/model/jobDetailData'
 import { DeleteAccount, PutJsonUserProfile } from 'src/common/api/msBackend/user/profile'
 import { useRouter } from 'next/router'
 import { Switch } from '@mui/material'
-import { useRecoilValue } from 'recoil'
-import { myProfile } from 'src/store/profile/user'
 import { useProfile } from 'src/hooks/useProfile'
 
 const ProfilePicture = styled(CustomAvatar)<CustomAvatarProps>(({ theme }) => ({

@@ -42,13 +42,19 @@ const worldIcon = (world: string) => {
       return worldData[i].iconSrc
     }
   }
+
   return 'mdi:map-marker-outline'
 }
+
+interface APICallbackReq {
+  personalKey: string
+}
+type CallbackFunction = (req: APICallbackReq) => void;
 
 const UserProfileHeader = ({ data }: { data: ProfileHeaderType }) => {
   const router = useRouter()
   const request = (
-    apiFunction: Function,
+    apiFunction: CallbackFunction,
   ) => {
     const apiRequest = async () => {
       await apiFunction({
@@ -64,6 +70,7 @@ const UserProfileHeader = ({ data }: { data: ProfileHeaderType }) => {
       <CardMedia
         component='img'
         alt='profile-header'
+        
         // todo coverImg
         image={'/images/pages/profile-banner.png'}
         sx={{

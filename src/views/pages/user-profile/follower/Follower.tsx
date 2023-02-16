@@ -1,4 +1,4 @@
-import { Grid, Card, Box, Typography, CardHeader, MenuItem, Avatar, IconButton, Menu } from "@mui/material"
+import { Grid, Card, Box, Typography, MenuItem, Avatar, IconButton, Menu } from "@mui/material"
 import { DataGrid } from "@mui/x-data-grid"
 import { useRouter } from "next/router"
 import { MouseEvent, useState } from "react"
@@ -22,7 +22,17 @@ const worldIcon = (world: string) => {
             return worldData[i].iconSrc
         }
     }
+    
     return ''
+}
+
+interface APIRequestParam {
+    personalKey: string
+}
+
+interface APIReq {
+    user: IProfile
+    apiRequest: (pama: APIRequestParam) => void
 }
 
 interface CellType {
@@ -41,7 +51,7 @@ const StyledLink = styled(Link)(({ theme }) => ({
 
 const Follower = (props: Props) => {
     // ** Hooks
-    const {followers} = props
+    const { followers } = props
 
     // ** renders client column
     const renderClient = (row: IProfile) => {
@@ -62,7 +72,7 @@ const Follower = (props: Props) => {
 
     // ** State
     const [pageSize, setPageSize] = useState<number>(10)
- 
+
     const [reqId, setReqId] = useState<number>(0)
 
     const router = useRouter()
@@ -81,13 +91,12 @@ const Follower = (props: Props) => {
         }
 
         const request = (
-            user: IProfile,
-            apiFunction: Function,
+            req: APIReq
         ) => {
             handleRowOptionsClose()
             const apiRequest = async () => {
-                await apiFunction({
-                    personalKey: user.id
+                await req.apiRequest({
+                    personalKey: req.user.id
                 })
             }
             apiRequest()
@@ -97,33 +106,37 @@ const Follower = (props: Props) => {
         interface ActionRequest {
             text: string
             icon: string
-            apiRequest: Function
+            apiRequest: () => void
         }
 
         const renderActionItemValue = (user: IProfile): ActionRequest[] => {
-            let res: ActionRequest[] = []
+            const res: ActionRequest[] = []
             if (user.ifollowHim === null) {
-                res.push({ text: '팔로우 하기', icon: 'mdi:account-plus-outline', apiRequest: FollowRequest })
+                res.push({ text: '팔로우 하기', icon: 'mdi:account-plus-outline', apiRequest: () => FollowRequest })
             }
             else {
-                res.push({ text: '팔로우 취소', icon: 'mdi:account-plus-outline', apiRequest: FollowCancel })
+                res.push({ text: '팔로우 취소', icon: 'mdi:account-plus-outline', apiRequest: () => FollowCancel })
             }
             if (user.heFollowMe === 'WAITING') {
-                res.push({ text: '팔로우 요청 수락', icon: 'mdi:account-plus-outline', apiRequest: FollowAccept })
+                res.push({ text: '팔로우 요청 수락', icon: 'mdi:account-plus-outline', apiRequest: () => FollowAccept })
             }
             if (user.heFollowMe !== null) {
-                res.push({ text: '내 팔로워에서 삭제', icon: 'mdi:account-minus-outline', apiRequest: FollowerDelete })
+                res.push({ text: '내 팔로워에서 삭제', icon: 'mdi:account-minus-outline', apiRequest: () => FollowerDelete })
             }
+
             return res
         }
 
         const renderRequestItem = (user: IProfile) => {
             const values = renderActionItemValue(user)
+
             return (
                 values.map((value, index) => (
                     <MenuItem key={`action_${user.id}_${index}`} onClick={() => request(
-                        user, value.apiRequest
-                    )} sx={{ '& svg': { mr: 2 } }}>
+                        {
+                          user: user, apiRequest: value.apiRequest
+                        }
+                      )} sx={{ '& svg': { mr: 2 } }}>
                         <Icon icon={value.icon} fontSize={20} />
                         {value.text}
                     </MenuItem>
@@ -251,7 +264,7 @@ const Follower = (props: Props) => {
                             label={'수락 완료'}
                             color={'success'}
                             sx={{ textTransform: 'capitalize' }}
-                        /> : 
+                        /> :
                         <CustomChip
                             skin='light'
                             size='small'
@@ -271,6 +284,7 @@ const Follower = (props: Props) => {
             renderCell: ({ row }: CellType) => <RowOptions row={row} />
         }
     ]
+
     return followers !== undefined ? (
         <Grid container spacing={6}>
             <Grid item xs={12}>

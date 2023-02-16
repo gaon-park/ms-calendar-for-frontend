@@ -23,7 +23,6 @@ import HorizontalAppBarContent from './components/horizontal/AppBarContent'
 
 // ** Hook Import
 import { useSettings } from 'src/@core/hooks/useSettings'
-import { Box, Typography } from '@mui/material'
 
 interface Props {
   children: ReactNode

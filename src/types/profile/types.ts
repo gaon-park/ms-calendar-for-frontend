@@ -1,12 +1,11 @@
 // User Profile pages
 
-import { IProfile, IProfileResponse } from "src/model/user/profile"
+import { IProfile } from "src/model/user/profile"
 
 //-------------------
 export type ProfileHeaderType = {
   id: string
   nickName: string
-  // coverImg: string
   avatarImg: string
   world: string
   job: string

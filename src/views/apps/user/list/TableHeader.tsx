@@ -1,7 +1,6 @@
 // ** MUI Imports
 import Box from '@mui/material/Box'
 import TextField from '@mui/material/TextField'
-import { useEffect } from 'react'
 
 interface TableHeaderProps {
   value: string
@@ -11,7 +10,7 @@ interface TableHeaderProps {
 
 const TableHeader = (props: TableHeaderProps) => {
   // ** Props
-  const { setKeyword, toggle, value } = props
+  const { setKeyword, value } = props
 
   return (
     <Box sx={{ p: 5, pb: 3, display: 'flex', flexWrap: 'wrap', alignItems: 'center' }}>

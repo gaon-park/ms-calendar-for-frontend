@@ -10,7 +10,7 @@ import { Logout } from "src/common/api/msBackend/auth/logout";
 const googleAuthClient = new AuthClient(GOOGLE_PROVIDER);
 
 export const useAuth = () => {
-    const router = useRouter();
+    const router = useRouter(); 
     const setIsAuth = useSetRecoilState<boolean>(isAuthenticated);
 
     const isSignIn = useMemo(() => {
@@ -35,7 +35,7 @@ export const useAuth = () => {
 
     const signOutRedirect = async () => {
         new AuthCookie().clearCookies();
-        await Logout({})
+        await Logout()
             .then(() => {
                 router.push("/signin");
             })
@@ -51,7 +51,6 @@ export const useAuth = () => {
 
 export const useLogoutAuth = () => {
     const setIsAuth = useSetRecoilState<boolean>(isAuthenticated)
-    const router = useRouter();
     new AuthCookie().clearCookies()
     setIsAuth(false)
 }

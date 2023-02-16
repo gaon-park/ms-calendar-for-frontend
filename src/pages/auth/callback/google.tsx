@@ -20,6 +20,7 @@ function OAuthGoogleCallback() {
         const code = decodeURIComponent(params["code"]);
         if (code != null) {
             signInCallback(code, OAuthProvider.GOOGLE_ID);
+            
             return;
         }
         router.push("/404");

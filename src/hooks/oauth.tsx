@@ -36,7 +36,7 @@ export class AuthClient {
                     });
                     window.location.href = `${window.location.origin}`;
                 })
-                .catch((e) => {
+                .catch(() => {
                     window.location.href = `${window.location.origin}/404`;
                 });
         } else {

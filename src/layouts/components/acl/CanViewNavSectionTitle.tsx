@@ -1,5 +1,5 @@
 // ** React Imports
-import { ReactNode, useContext } from 'react'
+import { ReactNode } from 'react'
 
 // ** Types
 import { NavSectionTitle } from 'src/@core/layouts/types'

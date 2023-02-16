@@ -1,8 +1,8 @@
 // ** React Imports
-import { ReactNode, useContext } from 'react'
+import { ReactNode } from 'react'
 
 // ** Types
-import { NavGroup, NavLink } from 'src/@core/layouts/types'
+import { NavGroup } from 'src/@core/layouts/types'
 
 interface Props {
   navGroup?: NavGroup
