@@ -21,8 +21,6 @@ export class MyCookie {
   }
 
   public setToken(token: string) {
-    // ローカルホストで機能
-    // ドメイン環境上は機能しない
     this.cookies.set(this.keyToken, token, this.options);
   }
 
@@ -32,6 +30,7 @@ export class MyCookie {
 
   public removeToken() {
     this.cookies.remove(this.keyToken, this.options);
+    this.cookies.remove('X-AUTH-REFRESH-TOKEN', {path: '/', domain: 'ms-hero.kr'});
   }
 }
 
