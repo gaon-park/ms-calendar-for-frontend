@@ -19,6 +19,7 @@ MsBackendAxios.defaults.headers.common["X-OS-TYPE"] = "WEB";
 MsBackendAxios.interceptors.request.use(
   async function (config) {
     if (config.url !== "/api/oauth2/google" && isTokenExpired()) {
+      const myCookie = new AuthCookie()
       await axios.post(
         MS_BACKEND_API_PATH.POST_REISSUE_TOKEN,
         {},
@@ -26,11 +27,15 @@ MsBackendAxios.interceptors.request.use(
           baseURL: process.env.NEXT_PUBLIC_BACKEND_API_URL ?? "",
         }
       ).then(async (res) => {
-        await new AuthCookie().signInCallbackCookies({
+        await myCookie.signInCallbackCookies({
           accessToken: res.data.accessToken
         })
+
+        config.headers = {
+          Authorization: "Bearer " + myCookie.backendAccessCookie.getToken(),
+        }
       }).catch(() => {
-        new AuthCookie().clearCookies()
+        myCookie.clearCookies()
       })
     }
 
