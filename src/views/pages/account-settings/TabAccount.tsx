@@ -34,13 +34,15 @@ import { CustomAvatarProps } from 'src/@core/components/mui/avatar/types'
 // ** Utils Import
 import { getInitials } from 'src/@core/utils/get-initials'
 
-import { PutJsonRequest } from 'src/model/user/profile'
+import { IProfile, PutJsonRequest } from 'src/model/user/profile'
 import worldData from 'src/model/worldData'
 import jobDetailData from 'src/model/jobDetailData'
 import { DeleteAccount, PutJsonUserProfile } from 'src/common/api/msBackend/user/profile'
 import { useRouter } from 'next/router'
 import { Switch } from '@mui/material'
 import { useProfile } from 'src/hooks/useProfile'
+import { useSetRecoilState } from 'recoil'
+import { myProfile } from 'src/store/profile/user'
 
 const ProfilePicture = styled(CustomAvatar)<CustomAvatarProps>(({ theme }) => ({
   width: 120,
@@ -95,6 +97,8 @@ const TabAccount = () => {
   const [savedDialogOpen, setSavedDialogOpen] = useState<boolean>(false)
   const [saveBtn, setSaveBtn] = useState<boolean>(true)
   const router = useRouter();
+
+  const setMyProfile = useSetRecoilState<IProfile | undefined>(myProfile)
 
   useEffect(() => {
     if (profile === undefined) return
@@ -177,9 +181,10 @@ const TabAccount = () => {
 
   const putUserProfile = async () => {
     await PutJsonUserProfile({ ...formData, avatarImg: (imgSrc) })
-      .then(() => {
+      .then((res) => {
         setResult(true)
         setResultMessage('저장 완료!')
+        setMyProfile(res.data.profile)
         setSavedDialogOpen(true)
       }).catch(() => {
         setResult(false)
