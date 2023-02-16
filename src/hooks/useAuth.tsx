@@ -5,7 +5,6 @@ import { AuthClient } from "src/hooks/oauth";
 import { useRouter } from "next/router";
 import { useSetRecoilState } from "recoil";
 import { isAuthenticated } from "src/store/auth";
-import { Logout } from "src/common/api/msBackend/auth/logout";
 
 const googleAuthClient = new AuthClient(GOOGLE_PROVIDER);
 
@@ -33,18 +32,9 @@ export const useAuth = () => {
         []
     );
 
-    const signOutRedirect = async () => {
-        new AuthCookie().clearCookies();
-        await Logout()
-            .then(() => {
-                router.push("/signin");
-            })
-    };
-
     return {
         isSignIn,
         signInCallback,
         initAuthStatus,
-        signOutRedirect,
     };
 };
