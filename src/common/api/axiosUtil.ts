@@ -33,6 +33,7 @@ MsBackendAxios.interceptors.request.use(
         new AuthCookie().clearCookies()
       })
     }
+
     return config;
   }
 )
@@ -40,8 +41,8 @@ MsBackendAxios.interceptors.request.use(
 const isTokenExpired = (): boolean => {
   const token = new AuthCookie().backendAccessCookie.getToken()
   if (token !== null) {
-    console.log(isJwtTokenExpired(token))
     return isJwtTokenExpired(token)
   }
+
   return false
 }
