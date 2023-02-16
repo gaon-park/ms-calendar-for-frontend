@@ -30,7 +30,6 @@ export class MyCookie {
 
   public removeToken() {
     this.cookies.remove(this.keyToken, this.options);
-    this.cookies.remove('X-AUTH-REFRESH-TOKEN', {path: '/', domain: 'ms-hero.kr'});
   }
 }
 

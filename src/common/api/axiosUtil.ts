@@ -4,11 +4,13 @@ import { AuthCookie } from "../cookie/cookies";
 import isJwtTokenExpired from "jwt-check-expiry";
 import { MS_BACKEND_API_PATH } from "src/constants/msbackend";
 
+const myCookie = new AuthCookie()
+
 export const MsBackendAxios = axios.create({
   baseURL: process.env.NEXT_PUBLIC_BACKEND_API_URL ?? "",
   timeout: 50_000,
   headers: {
-    Authorization: "Bearer " + new AuthCookie().backendAccessCookie.getToken(),
+    Authorization: "Bearer " + myCookie.backendAccessCookie.getToken(),
   },
   paramsSerializer: {
     serialize: (params) => qs.stringify(params, { arrayFormat: "repeat" }),
@@ -19,7 +21,6 @@ MsBackendAxios.defaults.headers.common["X-OS-TYPE"] = "WEB";
 MsBackendAxios.interceptors.request.use(
   async function (config) {
     if (config.url !== "/api/oauth2/google" && isTokenExpired()) {
-      const myCookie = new AuthCookie()
       await axios.post(
         MS_BACKEND_API_PATH.POST_REISSUE_TOKEN,
         {},
