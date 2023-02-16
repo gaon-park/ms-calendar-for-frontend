@@ -33,18 +33,9 @@ export const useAuth = () => {
         []
     );
 
-    const signOutRedirect = async () => {
-        new AuthCookie().clearCookies();
-        await Logout()
-            .then(() => {
-                router.push("/signin");
-            })
-    };
-
     return {
         isSignIn,
         signInCallback,
         initAuthStatus,
-        signOutRedirect,
     };
 };
