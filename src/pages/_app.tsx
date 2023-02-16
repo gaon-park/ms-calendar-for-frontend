@@ -26,7 +26,6 @@ import ThemeComponent from 'src/@core/theme/ThemeComponent'
 import WindowWrapper from 'src/@core/components/window-wrapper'
 
 // ** Contexts
-import { AuthProvider } from 'src/context/AuthContext'
 import { SettingsConsumer, SettingsProvider } from 'src/@core/context/settingsContext'
 
 // ** Styled Components
@@ -82,22 +81,21 @@ const App = (props: ExtendedAppProps) => {
     Component.getLayout ?? (page => <UserLayout contentHeightFixed={contentHeightFixed}>{page}</UserLayout>)
 
   const setConfig = Component.setConfig ?? undefined
-  
+
   return (
     <RecoilRoot>
-    <Provider store={store}>
-      <CacheProvider value={emotionCache}>
-        <Head>
-          <title>{themeConfig.templateName}</title>
-          <meta
-            name='description'
-            content={themeConfig.templateName}
-          />
-          <meta name='keywords' content='ms-hero, maplestory, custom-calendar' />
-          <meta name='viewport' content='initial-scale=1, width=device-width' />
-        </Head>
+      <Provider store={store}>
+        <CacheProvider value={emotionCache}>
+          <Head>
+            <title>{themeConfig.templateName}</title>
+            <meta
+              name='description'
+              content={themeConfig.templateName}
+            />
+            <meta name='keywords' content='ms-hero, maplestory, custom-calendar' />
+            <meta name='viewport' content='initial-scale=1, width=device-width' />
+          </Head>
 
-        <AuthProvider>
           <SettingsProvider {...(setConfig ? { pageSettings: setConfig() } : {})}>
             <SettingsConsumer>
               {({ settings }) => {
@@ -114,9 +112,8 @@ const App = (props: ExtendedAppProps) => {
               }}
             </SettingsConsumer>
           </SettingsProvider>
-        </AuthProvider>
-      </CacheProvider>
-    </Provider>
+        </CacheProvider>
+      </Provider>
     </RecoilRoot>
   )
 }
