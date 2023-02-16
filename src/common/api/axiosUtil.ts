@@ -9,9 +9,6 @@ const myCookie = new AuthCookie()
 export const MsBackendAxios = axios.create({
   baseURL: process.env.NEXT_PUBLIC_BACKEND_API_URL ?? "",
   timeout: 50_000,
-  headers: {
-    Authorization: "Bearer " + myCookie.backendAccessCookie.getToken(),
-  },
   paramsSerializer: {
     serialize: (params) => qs.stringify(params, { arrayFormat: "repeat" }),
   },
@@ -31,13 +28,13 @@ MsBackendAxios.interceptors.request.use(
         await myCookie.signInCallbackCookies({
           accessToken: res.data.accessToken
         })
-
-        config.headers = {
-          Authorization: "Bearer " + myCookie.backendAccessCookie.getToken(),
-        }
       }).catch(() => {
         myCookie.clearCookies()
       })
+    }
+
+    config.headers = {
+      Authorization: "Bearer " + myCookie.backendAccessCookie.getToken(),
     }
 
     return config;
