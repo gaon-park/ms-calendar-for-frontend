@@ -20,12 +20,15 @@ import Icon from 'src/@core/components/icon'
 
 // ** Type Imports
 import { Settings } from 'src/@core/context/settingsContext'
-import { useRecoilValue } from 'recoil'
+import { useRecoilValue, useSetRecoilState } from 'recoil'
 import { myProfile } from 'src/store/profile/user'
 import { Button } from '@mui/material'
 
 // ** Utils Import
 import { getInitials } from 'src/@core/utils/get-initials'
+import { AuthCookie } from 'src/common/cookie/cookies'
+import { isAuthenticated } from 'src/store/auth'
+import { IProfile } from 'src/model/user/profile'
 
 interface Props {
   settings: Settings
@@ -49,6 +52,8 @@ const UserDropdown = (props: Props) => {
 
   // ** Hooks
   const router = useRouter()
+  const setIsAuth = useSetRecoilState<boolean>(isAuthenticated)
+  const setMyProfile = useSetRecoilState<IProfile | undefined>(myProfile)
 
   // ** Vars
   const { direction } = settings
@@ -82,7 +87,10 @@ const UserDropdown = (props: Props) => {
 
   const handleLogout = () => {
     handleDropdownClose()
-    router.push('/logout')
+    new AuthCookie().clearCookies()
+    setIsAuth(false)
+    setMyProfile(undefined)
+    router.push('/')
   }
 
   const handleLogin = () => {

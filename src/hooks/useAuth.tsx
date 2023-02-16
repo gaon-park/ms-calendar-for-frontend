@@ -48,9 +48,3 @@ export const useAuth = () => {
         signOutRedirect,
     };
 };
-
-export const useLogoutAuth = () => {
-    const setIsAuth = useSetRecoilState<boolean>(isAuthenticated)
-    new AuthCookie().clearCookies()
-    setIsAuth(false)
-}

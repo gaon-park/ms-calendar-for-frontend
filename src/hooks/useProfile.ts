@@ -49,8 +49,3 @@ export const useProfile = () => {
     followerCount,
   };
 };
-
-export const useLogoutProfile = () => {
-  const setMyProfile = useSetRecoilState<IProfile | undefined>(myProfile)
-  setMyProfile(undefined)
-}
