@@ -4,11 +4,17 @@ This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next
 
 First, run the development server:
 
-```bash
-npm run dev
-# or
+local 
+```
 yarn dev
 ```
+
+production
+```
+yarn build
+yarn start
+```
+
 
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
@@ -40,25 +46,3 @@ Check out our [Next.js deployment documentation](https://nextjs.org/docs/deploym
 https://fullcalendar.io/docs/month-view-demo
 
 https://m3.material.io/develop/web
-
-## 環境変数
-
-.env.local を作成し以下の内容を保存する
-
-```
-NEXT_PUBLIC_BACKEND_API_URL=http://127.0.0.1:8080
-
-NEXT_PUBLIC_GOOGLE_CLIENT_ID=xxxx
-NEXT_PUBLIC_GOOGLE_CLIENT_SECRET=xxxx
-NEXT_PUBLIC_GOOGLE_REDIRECT_URL=http://127.0.0.1:3000/auth/callback/google
-```
-
-local 起動コマンド
-```
-next dev
-```
-
-本番 起動コマンド
-```
-next start
-```
