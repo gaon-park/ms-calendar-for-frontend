@@ -52,3 +52,13 @@ NEXT_PUBLIC_GOOGLE_CLIENT_ID=xxxx
 NEXT_PUBLIC_GOOGLE_CLIENT_SECRET=xxxx
 NEXT_PUBLIC_GOOGLE_REDIRECT_URL=http://127.0.0.1:3000/auth/callback/google
 ```
+
+local 起動コマンド
+```
+next dev
+```
+
+本番 起動コマンド
+```
+next start
+```
