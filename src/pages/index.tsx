@@ -8,29 +8,35 @@ import { useProfile } from 'src/hooks/useProfile'
 
 const Home = () => {
   useProfile()
-  
+
   return (
     <Grid container spacing={6}>
       <Grid item xs={12}>
         <Card>
-          <CardHeader title='Kick start your project 🚀'></CardHeader>
+          <CardHeader title='스케줄 관련 참고 사항 🚀'></CardHeader>
           <CardContent>
-            <Typography sx={{ mb: 2 }}>All the best for your new project.</Typography>
-            <Typography>
-              Please make sure to read our Template Documentation to understand where to go from here and how to use our
-              template.
+            <Typography sx={{ mb: 2 }}>
+              0. 계정의 공개, 비공개 상태에 관계없이 public 이 아닌 스케줄이라면, 스케줄의 멤버만 보거나 수정할 수 있습니다.
+            </Typography>
+            <Typography sx={{ mb: 2 }}>
+              1. 계정이 비공개 상태라면, public 스케줄 또한 스케줄의 멤버만 볼 수 있습니다.
+            </Typography>
+            <Typography sx={{ mb: 2 }}>
+              2. 스케줄 추가, 수정 시 멤버 초대는 팔로우중이거나 계정이 공개 상태인 유저에게만 보낼 수 있습니다.
             </Typography>
           </CardContent>
         </Card>
       </Grid>
       <Grid item xs={12}>
         <Card>
-          <CardHeader title='ACL and JWT 🔒'></CardHeader>
+          <CardHeader title='계정 관련 참고 사항 ⚙️'></CardHeader>
           <CardContent>
             <Typography sx={{ mb: 2 }}>
-              Access Control (ACL) and Authentication (JWT) are the two main security features of our template and are implemented in the starter-kit as well.
+              0. PublicFlg: 계정을 공개, 비공개 상태로 바꿀 수 있습니다. 
             </Typography>
-            <Typography>Please read our Authentication and ACL Documentations to get more out of them.</Typography>
+            <Typography sx={{ mb: 2 }}>
+              1. NotificationFlg: 오른쪽 상단에 표시되는 알림을 받거나, 받지 않도록 할 수 있습니다. 
+            </Typography>
           </CardContent>
         </Card>
       </Grid>
