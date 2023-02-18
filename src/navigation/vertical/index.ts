@@ -12,7 +12,7 @@ const navigation = (): VerticalNavItemsType => {
       path: '/apps/calendar'
     },
     {
-      title: 'User List',
+      title: 'Search User',
       icon: 'mdi:account-outline',
       path: '/apps/user/list'
     },
