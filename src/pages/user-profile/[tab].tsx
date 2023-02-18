@@ -52,6 +52,7 @@ const UserProfileTab = ({ tab }: InferGetStaticPropsType<typeof getStaticProps>)
         overview: { profile: otherData.data.profile, followCount: otherData.data.acceptedFollowCount, followerCount: otherData.data.acceptedFollowerCount },
         follows: otherData.data.follow,
         followers: otherData.data.follower,
+        isMyData: false
       }
       )
     } else if (typeof profile !== 'undefined') {
@@ -68,12 +69,13 @@ const UserProfileTab = ({ tab }: InferGetStaticPropsType<typeof getStaticProps>)
         },
         overview: { profile: profile, followCount: followCount, followerCount: followerCount },
         follows: follow,
-        followers: follower
+        followers: follower,
+        isMyData: true,
       })
     }
   }, [profile, otherData])
 
-  return <UserProfile tab={tab} data={data} />
+  return <UserProfile tab={tab} data={data} accountId={accountId as string} />
 }
 
 export const getStaticPaths: GetStaticPaths = () => {

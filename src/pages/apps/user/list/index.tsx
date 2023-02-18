@@ -51,13 +51,12 @@ const UserList = () => {
     }
   )
 
-  const [users, setUsers] = useState<IProfile[]>([])
-  const [fullHit, setFullHit] = useState<number>(0)
+  const [users, setUsers] = useState<IProfile[]>()
 
   useEffect(() => {
-    if (typeof data === 'undefined') return
-    setUsers(data.data.users)
-    setFullHit(data.data.fullHit)
+    if (typeof data !== 'undefined') {
+      setUsers(data.data)
+    }
   }, [data])
 
   const handleWorldChange = useCallback((e: SelectChangeEvent) => {
@@ -152,13 +151,12 @@ const UserList = () => {
           </CardContent>
           <UserListTableHeader value={keyword ?? ''} setKeyword={setKeyword} />
           <UserListComponent
-            users={users}
-            fullHit={fullHit}
+            users={users ?? []}
             forFollower={false}
             updatedUser={(user: IProfile) => {
-              setUsers(users.map((obj) => {
+              setUsers(users?.map((obj) => {
                 if (obj.id === user.id) return user
-                
+
                 return obj
               }))
             }}

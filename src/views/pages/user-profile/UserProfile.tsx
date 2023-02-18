@@ -50,7 +50,15 @@ const TabList = styled(MuiTabList)<TabListProps>(({ theme }) => ({
   }
 }))
 
-const UserProfile = ({ tab, data }: { tab: string; data: ProfileTabType | null }) => {
+interface TabProps {
+  tab: string
+  data: ProfileTabType | null
+  accountId?: string
+}
+
+const UserProfile = (props: TabProps) => {
+  const { tab, data, accountId } = props
+
   // ** State
   const [activeTab, setActiveTab] = useState<string>(tab)
   const [isLoading, setIsLoading] = useState<boolean>(true)
@@ -62,11 +70,22 @@ const UserProfile = ({ tab, data }: { tab: string; data: ProfileTabType | null }
   const handleChange = (event: SyntheticEvent, value: string) => {
     setIsLoading(true)
     setActiveTab(value)
-    router
-      .push({
-        pathname: `/user-profile/${value.toLowerCase()}`
-      })
-      .then(() => setIsLoading(false))
+    if (accountId !== undefined) {
+      router
+        .push({
+          pathname: `/user-profile/${value.toLowerCase()}`,
+          query: {
+            accountId
+          }
+        }, undefined, {shallow: true})
+        .then(() => setIsLoading(false))
+    } else {
+      router
+        .push({
+          pathname: `/user-profile/${value.toLowerCase()}`
+        }, undefined, {shallow: true})
+        .then(() => setIsLoading(false))
+    }
   }
 
   useEffect(() => {

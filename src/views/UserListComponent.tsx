@@ -59,9 +59,9 @@ const StyledLink = styled(Link)(({ theme }) => ({
 
 interface Props {
     users: IProfile[]
-    fullHit: number
     forFollower: boolean
     updatedUser: (user: IProfile) => void
+    isMyData?: boolean
 }
 
 const UserListComponent = (props: Props) => {
@@ -277,7 +277,7 @@ const UserListComponent = (props: Props) => {
         {
             flex: 0.08,
             minWidth: 80,
-            field: 'follow status',
+            field: 'followStatus',
             headerName: 'Follow Status',
             sortable: false,
             filterable: false,
@@ -320,9 +320,15 @@ const UserListComponent = (props: Props) => {
 
     return (
         <DataGrid
+            columnVisibilityModel={
+                {
+                    actions: props.isMyData === true,
+                    followStatus: props.isMyData === true
+                }
+            }
             autoHeight
             rows={props.users}
-            rowCount={props.fullHit}
+            rowCount={props.users.length}
             rowsPerPageOptions={[10, 20, 30]}
             columns={columns}
             pagination
