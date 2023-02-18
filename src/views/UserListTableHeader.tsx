@@ -4,11 +4,10 @@ import TextField from '@mui/material/TextField'
 
 interface TableHeaderProps {
   value: string
-  toggle: () => void
   setKeyword: (val: string) => void
 }
 
-const TableHeader = (props: TableHeaderProps) => {
+const UserListTableHeader = (props: TableHeaderProps) => {
   // ** Props
   const { setKeyword, value } = props
 
@@ -25,4 +24,4 @@ const TableHeader = (props: TableHeaderProps) => {
   )
 }
 
-export default TableHeader
+export default UserListTableHeader

@@ -1,20 +1,36 @@
-import { Grid, Card, Box, Typography, MenuItem, Avatar, IconButton, Menu } from "@mui/material"
-import { DataGrid } from "@mui/x-data-grid"
-import { useRouter } from "next/router"
-import { MouseEvent, useState } from "react"
-import { getInitials } from "src/@core/utils/get-initials"
-import { FollowRequest, FollowCancel, FollowerDelete, FollowAccept } from "src/common/api/msBackend/user/follow"
-import worldData from "src/model/worldData"
-import CustomAvatar from 'src/@core/components/mui/avatar'
-import CustomChip from 'src/@core/components/mui/chip'
-import Icon from 'src/@core/components/icon'
-import Link from 'next/link'
-import { styled } from '@mui/material/styles'
-import { IProfile } from "src/model/user/profile"
+// ** React Imports
+import { useState, MouseEvent } from 'react'
 
-interface Props {
-    followers: IProfile[]
-}
+// ** Next Imports
+import Link from 'next/link'
+
+// ** MUI Imports
+import Box from '@mui/material/Box'
+import Menu from '@mui/material/Menu'
+import { DataGrid } from '@mui/x-data-grid'
+import { styled } from '@mui/material/styles'
+import MenuItem from '@mui/material/MenuItem'
+import IconButton from '@mui/material/IconButton'
+import Typography from '@mui/material/Typography'
+
+// ** Icon Imports
+import Icon from 'src/@core/components/icon'
+
+// ** Custom Components Imports
+import CustomChip from 'src/@core/components/mui/chip'
+import CustomAvatar from 'src/@core/components/mui/avatar'
+
+// ** Utils Import
+import { getInitials } from 'src/@core/utils/get-initials'
+
+// ** Types Imports
+import { Avatar } from '@mui/material'
+
+// ** data
+import worldData from 'src/model/worldData'
+import { FollowAccept, FollowCancel, FollowerDelete, FollowRequest } from 'src/common/api/msBackend/user/follow'
+import { IProfile } from 'src/model/user/profile'
+import { useRouter } from 'next/router'
 
 const worldIcon = (world: string) => {
     for (let i = 0; i < worldData.length; i++) {
@@ -22,22 +38,14 @@ const worldIcon = (world: string) => {
             return worldData[i].iconSrc
         }
     }
-    
+
     return ''
-}
-
-interface APIRequestParam {
-    personalKey: string
-}
-
-interface APIReq {
-    user: IProfile
-    apiRequest: (pama: APIRequestParam) => void
 }
 
 interface CellType {
     row: IProfile
 }
+
 const StyledLink = styled(Link)(({ theme }) => ({
     fontWeight: 600,
     fontSize: '1rem',
@@ -49,9 +57,15 @@ const StyledLink = styled(Link)(({ theme }) => ({
     }
 }))
 
-const Follower = (props: Props) => {
-    // ** Hooks
-    const { followers } = props
+interface Props {
+    users: IProfile[]
+    fullHit: number
+    forFollower: boolean
+    updatedUser: (user: IProfile) => void
+}
+
+const UserListComponent = (props: Props) => {
+    const [pageSize, setPageSize] = useState<number>(10)
 
     // ** renders client column
     const renderClient = (row: IProfile) => {
@@ -70,11 +84,6 @@ const Follower = (props: Props) => {
         }
     }
 
-    // ** State
-    const [pageSize, setPageSize] = useState<number>(10)
-
-    const [reqId, setReqId] = useState<number>(0)
-
     const router = useRouter()
 
     const RowOptions = (row: CellType) => {
@@ -90,57 +99,63 @@ const Follower = (props: Props) => {
             setAnchorEl(null)
         }
 
-        const request = (
-            req: APIReq
-        ) => {
-            handleRowOptionsClose()
-            const apiRequest = async () => {
-                await req.apiRequest({
-                    personalKey: req.user.id
-                })
-            }
-            apiRequest()
-            setReqId(reqId + 1)
-        }
-
-        interface ActionRequest {
-            text: string
-            icon: string
-            apiRequest: () => void
-        }
-
-        const renderActionItemValue = (user: IProfile): ActionRequest[] => {
-            const res: ActionRequest[] = []
-            if (user.ifollowHim === null) {
-                res.push({ text: '팔로우 하기', icon: 'mdi:account-plus-outline', apiRequest: () => FollowRequest })
-            }
-            else {
-                res.push({ text: '팔로우 취소', icon: 'mdi:account-plus-outline', apiRequest: () => FollowCancel })
-            }
-            if (user.heFollowMe === 'WAITING') {
-                res.push({ text: '팔로우 요청 수락', icon: 'mdi:account-plus-outline', apiRequest: () => FollowAccept })
-            }
-            if (user.heFollowMe !== null) {
-                res.push({ text: '내 팔로워에서 삭제', icon: 'mdi:account-minus-outline', apiRequest: () => FollowerDelete })
-            }
-
-            return res
-        }
-
-        const renderRequestItem = (user: IProfile) => {
-            const values = renderActionItemValue(user)
-
+        const renderFollowActionItem = (user: IProfile) => {
             return (
-                values.map((value, index) => (
-                    <MenuItem key={`action_${user.id}_${index}`} onClick={() => request(
-                        {
-                          user: user, apiRequest: value.apiRequest
+                user.ifollowHim === null ? (
+                    <MenuItem key={`action_follow_${user.id}`} onClick={() => {
+                        handleRowOptionsClose()
+                        FollowRequest({ personalKey: user.id })
+                        if (user.isPublic) {
+                            user.ifollowHim = 'FOLLOW'
+                        } else {
+                            user.ifollowHim = 'WAITING'
                         }
-                      )} sx={{ '& svg': { mr: 2 } }}>
-                        <Icon icon={value.icon} fontSize={20} />
-                        {value.text}
+                        props.updatedUser(user)
+                    }} sx={{ '& svg': { mr: 2 } }}>
+                        <Icon icon='mdi:account-plus-outline' fontSize={20} />
+                        팔로우 하기
                     </MenuItem>
-                ))
+                ) : (
+                    <MenuItem key={`action_cancel_${user.id}`} onClick={() => {
+                        handleRowOptionsClose()
+                        FollowCancel({ personalKey: user.id })
+                        user.ifollowHim = null
+                        props.updatedUser(user)
+                    }} sx={{ '& svg': { mr: 2 } }}>
+                        <Icon icon='mdi:account-plus-outline' fontSize={20} />
+                        팔로우 취소
+                    </MenuItem>
+                )
+            )
+        }
+
+        const renderFollowerActionItem = (user: IProfile) => {
+            return (
+                user.heFollowMe !== null ? (
+                    <Box>
+                        {
+                            user.heFollowMe === 'WAITING' ?
+                                <MenuItem key={`action_follower_accept_${user.id}`} onClick={() => {
+                                    handleRowOptionsClose()
+                                    FollowAccept({ personalKey: user.id })
+                                    user.heFollowMe = 'FOLLOW'
+                                    props.updatedUser(user)
+                                }} sx={{ '& svg': { mr: 2 } }}>
+                                    <Icon icon='mdi:account-plus-outline' fontSize={20} />
+                                    팔로우 요청 승인
+                                </MenuItem> : null
+                        }
+                        <MenuItem key={`action_follower_delete_${user.id}`} onClick={() => {
+                            handleRowOptionsClose()
+                            FollowerDelete({ personalKey: user.id })
+                            user.heFollowMe = null
+                            props.updatedUser(user)
+                        }} sx={{ '& svg': { mr: 2 } }}>
+                            <Icon icon='mdi:account-minus-outline' fontSize={20} />
+                            내 팔로워에서 삭제
+                        </MenuItem>
+                    </Box>
+                ) : null
             )
         }
 
@@ -176,7 +191,8 @@ const Follower = (props: Props) => {
                         <Icon icon='mdi:eye-outline' fontSize={20} />
                         프로필 보기
                     </MenuItem>
-                    {renderRequestItem(row.row)}
+                    {renderFollowActionItem(row.row)}
+                    {renderFollowerActionItem(row.row)}
                 </Menu>
             </>
         )
@@ -188,6 +204,8 @@ const Follower = (props: Props) => {
             minWidth: 200,
             field: 'user',
             headerName: 'User',
+            sortable: false,
+            filterable: false,
             renderCell: ({ row }: CellType) => {
                 return (
                     <Box sx={{ display: 'flex', alignItems: 'center' }}>
@@ -207,6 +225,8 @@ const Follower = (props: Props) => {
             field: 'world',
             minWidth: 60,
             headerName: 'World',
+            sortable: false,
+            filterable: false,
             renderCell: ({ row }: CellType) => {
                 if (row.world !== '') {
                     return (
@@ -225,6 +245,8 @@ const Follower = (props: Props) => {
             minWidth: 60,
             headerName: 'Job',
             field: 'job',
+            sortable: false,
+            filterable: false,
             renderCell: ({ row }: CellType) => {
                 if (row.job !== '') {
                     return (
@@ -240,6 +262,8 @@ const Follower = (props: Props) => {
             minWidth: 110,
             headerName: 'Job Detail',
             field: 'jobDetail',
+            sortable: false,
+            filterable: false,
             renderCell: ({ row }: CellType) => {
                 if (row.jobDetail !== '') {
                     return (
@@ -253,25 +277,33 @@ const Follower = (props: Props) => {
         {
             flex: 0.08,
             minWidth: 80,
-            field: 'follower request',
-            headerName: 'Follow Request',
+            field: 'follow status',
+            headerName: 'Follow Status',
+            sortable: false,
+            filterable: false,
             renderCell: ({ row }: CellType) => {
                 return (
-                    row.heFollowMe === 'FOLLOW' ?
-                        <CustomChip
-                            skin='light'
-                            size='small'
-                            label={'수락 완료'}
-                            color={'success'}
-                            sx={{ textTransform: 'capitalize' }}
-                        /> :
-                        <CustomChip
-                            skin='light'
-                            size='small'
-                            label={'응답 보류'}
-                            color={'primary'}
-                            sx={{ textTransform: 'capitalize' }}
-                        />
+                    props.forFollower ? (
+                        row.heFollowMe !== 'FOLLOW' ?
+                            <CustomChip
+                                skin='light'
+                                size='small'
+                                label={'응답 보류'}
+                                color={'primary'}
+                                sx={{ textTransform: 'capitalize' }}
+                            />
+                            : null
+                    ) : (
+                        row.ifollowHim !== null ?
+                            <CustomChip
+                                skin='light'
+                                size='small'
+                                label={row.ifollowHim === 'FOLLOW' ? '팔로우 하는중' : '상대 응답 대기'}
+                                color={row.ifollowHim === 'FOLLOW' ? 'success' : 'primary'}
+                                sx={{ textTransform: 'capitalize' }}
+                            />
+                            : null
+                    )
                 )
             }
         },
@@ -279,31 +311,26 @@ const Follower = (props: Props) => {
             flex: 0.05,
             minWidth: 50,
             sortable: false,
+            filterable: false,
             field: 'actions',
             headerName: 'Actions',
             renderCell: ({ row }: CellType) => <RowOptions row={row} />
         }
     ]
 
-    return followers !== undefined ? (
-        <Grid container spacing={6}>
-            <Grid item xs={12}>
-                <Card>
-                    <DataGrid
-                        autoHeight
-                        rows={followers}
-                        rowCount={followers.length}
-                        rowsPerPageOptions={[10, 20, 30]}
-                        columns={columns}
-                        pagination
-                        pageSize={pageSize}
-                        disableSelectionOnClick
-                        onPageSizeChange={(newPageSize: number) => setPageSize(newPageSize)}
-                    />
-                </Card>
-            </Grid>
-        </Grid>
-    ) : null
+    return (
+        <DataGrid
+            autoHeight
+            rows={props.users}
+            rowCount={props.fullHit}
+            rowsPerPageOptions={[10, 20, 30]}
+            columns={columns}
+            pagination
+            pageSize={pageSize}
+            disableSelectionOnClick
+            onPageSizeChange={(newPageSize: number) => setPageSize(newPageSize)}
+        />
+    )
 }
 
-export default Follower
+export default UserListComponent
