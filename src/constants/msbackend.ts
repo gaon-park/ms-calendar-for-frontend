@@ -24,6 +24,9 @@ const READ_ALL_NOTIFICATIONS = "/api/user/notifications/read-all" as const;
 const GET_SCHEDULE = "/api/schedule" as const;
 const PUT_SCHEDULE = "/api/schedule" as const;
 const POST_SCHEDULE = "/api/schedule" as const;
+const PUT_API_SCHEDULE_REFUSE = "/api/schedule/refuse" as const;
+const PUT_API_SCHEDULE_DELETE = "/api/schedule/delete" as const;
+const PUT_API_SCHEDULE_ACCEPT = "/api/schedule/accept" as const;
 
 export const MS_BACKEND_API_PATH = {
   GET_OAUTH2_GOOGLE,
@@ -45,12 +48,14 @@ export const MS_BACKEND_API_PATH = {
   GET_USER_PROFILE,
   PUT_USER_PROFILE,
   DELETE_ACCOUNT,
-  
+
   GET_NOTIFICATIONS,
   READ_ALL_NOTIFICATIONS,
-  
+
   GET_SCHEDULE,
   PUT_SCHEDULE,
   POST_SCHEDULE,
+  PUT_API_SCHEDULE_REFUSE,
+  PUT_API_SCHEDULE_DELETE,
+  PUT_API_SCHEDULE_ACCEPT,
 };
- 

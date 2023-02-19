@@ -8,8 +8,10 @@ import FormControlLabel from '@mui/material/FormControlLabel'
 // ** Types
 import { ThemeColor } from 'src/@core/layouts/types'
 import { SidebarLeftType, CalendarFiltersType } from 'src/types/apps/calendarTypes'
+import { useAuth } from 'src/hooks/useAuth'
 
 const SidebarLeft = (props: SidebarLeftType) => {
+  const { isSignIn } = useAuth();
   const {
     store,
     mdAbove,
@@ -18,7 +20,6 @@ const SidebarLeft = (props: SidebarLeftType) => {
     leftSidebarOpen,
     leftSidebarWidth,
     handleSelectEvent,
-    handleAllCalendars,
     handleCalendarsUpdate,
     handleLeftSidebarToggle,
     handleAddEventSidebarToggle
@@ -82,23 +83,15 @@ const SidebarLeft = (props: SidebarLeftType) => {
           }
         }}
       >
-        <Button fullWidth variant='contained' onClick={handleSidebarToggleSidebar}>
-          Add Event
-        </Button>
+        {isSignIn ?
+          <Button fullWidth variant='contained' onClick={handleSidebarToggleSidebar}>
+            Add Event
+          </Button>
+        : null}
 
         <Typography variant='caption' sx={{ mt: 7, mb: 2, textTransform: 'uppercase' }}>
           Calendars
         </Typography>
-        <FormControlLabel
-          label='View All'
-          control={
-            <Checkbox
-              color='secondary'
-              checked={store.selectedCalendars.length === colorsArr.length}
-              onChange={e => dispatch(handleAllCalendars(e.target.checked))}
-            />
-          }
-        />
         {renderFilters}
       </Drawer>
     )

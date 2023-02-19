@@ -12,19 +12,23 @@ import interactionPlugin from '@fullcalendar/interaction'
 import Icon from 'src/@core/components/icon'
 
 // ** Types
-import { CalendarType } from 'src/types/apps/calendarTypes'
+import { CalendarType, EventType } from 'src/types/apps/calendarTypes'
 
-const blankEvent = {
+const blankEvent: EventType = {
+  id: 0,
   title: '',
-  start: '',
-  end: '',
+  start: new Date(),
+  end: undefined,
   allDay: false,
-  url: '',
   extendedProps: {
-    calendar: '',
+    calendar: undefined,
+    byAdmin: undefined,
+    repeatInfo: undefined,
+    description: undefined,
+    isPublic: undefined,
     guests: [],
-    location: '',
-    description: ''
+    forOfficial: false,
+    scheduleUpdateCode: 'ONLY_THIS'
   }
 }
 
@@ -110,6 +114,7 @@ const Calendar = (props: CalendarType) => {
       },
 
       eventClick({ event: clickedEvent }: any) {
+        if (!store.isSignIn) return;
         dispatch(handleSelectEvent(clickedEvent))
         handleAddEventSidebarToggle()
 
@@ -124,12 +129,14 @@ const Calendar = (props: CalendarType) => {
         sidebarToggle: {
           text: <Icon icon='mdi:menu' />,
           click() {
+            if (!store.isSignIn) return;
             handleLeftSidebarToggle()
           }
         }
       },
 
       dateClick(info: any) {
+        if (!store.isSignIn) return;
         const ev = { ...blankEvent }
         ev.start = info.date
         ev.end = info.date
@@ -146,6 +153,7 @@ const Calendar = (props: CalendarType) => {
       ? We can use `eventDragStop` but it doesn't return updated event so we have to use `eventDrop` which returns updated event
     */
       eventDrop({ event: droppedEvent }: any) {
+        if (!store.isSignIn) return;
         dispatch(updateEvent(droppedEvent))
       },
 
@@ -154,6 +162,7 @@ const Calendar = (props: CalendarType) => {
       ? Docs: https://fullcalendar.io/docs/eventResize
     */
       eventResize({ event: resizedEvent }: any) {
+        if (!store.isSignIn) return;
         dispatch(updateEvent(resizedEvent))
       },
 

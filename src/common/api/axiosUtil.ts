@@ -11,10 +11,13 @@ export const MsBackendAxios = axios.create({
   timeout: 50_000,
   paramsSerializer: {
     serialize: (params) => qs.stringify(params, { arrayFormat: "repeat" }),
-  },
+  }
 });
 
 MsBackendAxios.defaults.headers.common["X-OS-TYPE"] = "WEB";
+MsBackendAxios.defaults.headers.common["Accept"] = "application/json";
+MsBackendAxios.defaults.headers.common["Content-Type"] = "application/json";
+
 MsBackendAxios.interceptors.request.use(
   async function (config) {
     if (config.url !== "/api/oauth2/google" && isTokenExpired()) {

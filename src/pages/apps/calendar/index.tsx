@@ -14,7 +14,7 @@ import { useSettings } from 'src/@core/hooks/useSettings'
 
 // ** Types
 import { RootState, AppDispatch } from 'src/store'
-import { CalendarColors, CalendarFiltersType } from 'src/types/apps/calendarTypes'
+import { CalendarColors } from 'src/types/apps/calendarTypes'
 
 // ** FullCalendar & App Components Imports
 import Calendar from 'src/views/apps/calendar/Calendar'
@@ -29,18 +29,17 @@ import {
   deleteEvent,
   updateEvent,
   handleSelectEvent,
-  handleAllCalendars,
-  handleCalendarsUpdate
+  handleCalendarsUpdate,
+  handleIsSignIn
 } from 'src/store/apps/calendar'
 import { useProfile } from 'src/hooks/useProfile'
+import { useAuth } from 'src/hooks/useAuth'
 
 // ** CalendarColors
 const calendarsColor: CalendarColors = {
-  Personal: 'error',
-  Business: 'primary',
-  Family: 'warning',
-  Holiday: 'success',
-  ETC: 'info'
+  Official: 'warning',
+  My: 'success',
+  Member: 'info'
 }
 
 const AppCalendar = () => {
@@ -61,9 +60,16 @@ const AppCalendar = () => {
   const { skin, direction } = settings
   const mdAbove = useMediaQuery((theme: Theme) => theme.breakpoints.up('md'))
 
+  const { isSignIn } = useAuth();
+
   useEffect(() => {
-    dispatch(fetchEvents(store.selectedCalendars as CalendarFiltersType[]))
-  }, [dispatch, store.selectedCalendars])
+    dispatch(handleIsSignIn(isSignIn))
+  }, [dispatch, store, isSignIn])
+
+  useEffect(() => {
+    // ちょっとわかんないとりあえず動きはする
+    dispatch(fetchEvents())
+  }, [])
 
   const handleLeftSidebarToggle = () => setLeftSidebarOpen(!leftSidebarOpen)
 
@@ -85,7 +91,6 @@ const AppCalendar = () => {
         leftSidebarOpen={leftSidebarOpen}
         leftSidebarWidth={leftSidebarWidth}
         handleSelectEvent={handleSelectEvent}
-        handleAllCalendars={handleAllCalendars}
         handleCalendarsUpdate={handleCalendarsUpdate}
         handleLeftSidebarToggle={handleLeftSidebarToggle}
         handleAddEventSidebarToggle={handleAddEventSidebarToggle}

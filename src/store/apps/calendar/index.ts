@@ -1,53 +1,145 @@
 // ** Redux Imports
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit'
 
-// ** Axios Imports
-import axios from 'axios'
+import { DeleteScheduleRequest, GetUserSchedule, PostUserSchedule, PostUserScheduleRequest, PutScheduleDelete, PutUserSchedule, PutUserScheduleRequest } from 'src/common/api/msBackend/user/schedule'
+
+import { IScheduleResponse, ScheduleOfficial, SchedulePersonalParent } from 'src/model/user/schedule'
+import { EventType } from "src/types/apps/calendarTypes";
 
 // ** Types
-import { CalendarFiltersType, AddEventType, EventType } from 'src/types/apps/calendarTypes'
+import { CalendarStoreType } from 'src/types/apps/calendarTypes'
 
 // ** Fetch Events
-export const fetchEvents = createAsyncThunk('appCalendar/fetchEvents', async (calendars: CalendarFiltersType[]) => {
-  const response = await axios.get('/apps/calendar/events', {
-    params: {
-      calendars
+export const fetchEvents = createAsyncThunk<
+  EventType[], undefined, { state: CalendarStoreType }
+>('appCalendar/fetchEvents', async (undefined, {getState}) => {
+  const { memberIds } = getState();
+  const response = await GetUserSchedule({
+      userIds: memberIds ?? [],
+      from: generateDateBegin(),
+      to: generateDateEnd(),
+  })
+
+  return fromEventType(response.data)
+})
+
+export function fromEventType(res: IScheduleResponse): EventType[] {
+  const off = fromScheduleOfficial(res.officials);
+  const personal = fromSchedulePersonal(res.personals);
+
+  return off.concat(personal);
+}
+
+function fromScheduleOfficial(scOff: ScheduleOfficial[]): EventType[] {
+  return scOff.map((e) => {
+    return {
+      id: e.scheduleId,
+      title: e.title,
+      allDay: e.allDay,
+      start: new Date(e.start),
+      end: e.end ? new Date(e.end) : undefined,
+      extendedProps: {
+        calendar: 'Official',
+        byAdmin: e.byAdmin,
+        description: e.note,
+        guests: [],
+        forOfficial: true,
+        scheduleUpdateCode: undefined
+      }
     }
   })
+}
+
+function fromSchedulePersonal(scPer: SchedulePersonalParent): EventType[] {
+  const res: EventType[] = [];
+  Object.keys(scPer).forEach((memberId: string) => {
+    const colScp = scPer[memberId];
+    colScp.forEach((e) => {
+      const col: EventType =  {
+        id: e.scheduleId,
+        title: e.title,
+        allDay: e.allDay,
+        start: new Date(e.start),
+        end: e.end ? new Date(e.end) : undefined,
+        extendedProps: {
+          ownerId: e.ownerId,
+          calendar: 'Member',
+          calendarMemberId: memberId,
+          description: e.note,
+          isPublic: e.isPublic,
+          guests: e.members.map((m) => {
+            return m.accountId
+          }),
+          forOfficial: false,
+        }
+      }
+      res.push(col);
+    });
+  });
+
+  return res;
+}
+
+let fromDate: string | null = null;
+function generateDateBegin(): string {
+  if (fromDate) return fromDate;
+  const today = new Date();
+  const beginDate = new Date(today.getFullYear(), today.getMonth(), 1);
+  const month = (beginDate.getMonth() + 1).toString().padStart(2, "0");
+  fromDate = beginDate.getFullYear().toString() + "-" + month + "-01"
+
+  return fromDate;
+}
+
+let toDate: string | null = null;
+function generateDateEnd() {
+  if (toDate) return toDate;
+  const today = new Date();
+  const endDate = new Date(today.getFullYear(), today.getMonth() + 1, 0);
+  const month = (endDate.getMonth() + 1).toString().padStart(2, "0");
+  toDate = endDate.getFullYear() + "-" + month + "-" + endDate.getDate()
+
+  return toDate;
+}
+
+// ** Add Event
+export const addEvent = createAsyncThunk<
+  string, PostUserScheduleRequest, { state: CalendarStoreType }
+>('appCalendar/addEvent', async (req, { dispatch, getState }) => {
+  const { isSignIn } = getState();
+
+  if (isSignIn) return "register failed";
+  const response = await PostUserSchedule(req);
+  await dispatch(fetchEvents())
 
   return response.data
 })
 
-// ** Add Event
-export const addEvent = createAsyncThunk('appCalendar/addEvent', async (event: AddEventType, { dispatch }) => {
-  const response = await axios.post('/apps/calendar/add-event', {
-    data: {
-      event
-    }
-  })
-  await dispatch(fetchEvents(['Personal', 'Business', 'Family', 'Holiday', 'ETC']))
-
-  return response.data.event
-})
-
 // ** Update Event
-export const updateEvent = createAsyncThunk('appCalendar/updateEvent', async (event: EventType, { dispatch }) => {
-  const response = await axios.post('/apps/calendar/update-event', {
-    data: {
-      event
-    }
-  })
-  await dispatch(fetchEvents(['Personal', 'Business', 'Family', 'Holiday', 'ETC']))
+export const updateEvent = createAsyncThunk<
+  string, PutUserScheduleRequest, { state: CalendarStoreType }
+> ('appCalendar/updateEvent', async (req, { dispatch, getState }) => {
+  const { isSignIn } = getState();
 
-  return response.data.event
+  if (isSignIn) return "update failed";
+  const response = await PutUserSchedule(req);
+
+  await dispatch(fetchEvents())
+
+  return response.data;
 })
 
 // ** Delete Event
-export const deleteEvent = createAsyncThunk('appCalendar/deleteEvent', async (id: number | string, { dispatch }) => {
-  const response = await axios.delete('/apps/calendar/remove-event', {
-    params: { id }
-  })
-  await dispatch(fetchEvents(['Personal', 'Business', 'Family', 'Holiday', 'ETC']))
+export const deleteEvent = createAsyncThunk<
+  string, DeleteScheduleRequest, { state: CalendarStoreType }
+>('appCalendar/deleteEvent', async (req, { dispatch, getState }) => {
+  const { isSignIn } = getState();
+
+  console.log(isSignIn);
+  if (isSignIn) return "delete failed";
+
+  const response = await PutScheduleDelete(req)
+  await dispatch(fetchEvents())
 
   return response.data
 })
@@ -57,9 +149,18 @@ export const appCalendarSlice = createSlice({
   initialState: {
     events: [],
     selectedEvent: null,
-    selectedCalendars: ['Personal', 'Business', 'Family', 'Holiday', 'ETC']
-  },
+    selectedCalendars: ['Official', 'My', 'Member'],
+    memberIds: [],
+    isSignIn: false,
+    myId: ""
+  } as CalendarStoreType,
   reducers: {
+    handleProfile: (state, action) => {
+      state.myId = action.payload;
+    },
+    handleIsSignIn: (state, action) => {
+      state.isSignIn = action.payload;
+    },
     handleSelectEvent: (state, action) => {
       state.selectedEvent = action.payload
     },
@@ -74,21 +175,14 @@ export const appCalendarSlice = createSlice({
         state.events.length = 0
       }
     },
-    handleAllCalendars: (state, action) => {
-      const value = action.payload
-      if (value === true) {
-        state.selectedCalendars = ['Personal', 'Business', 'Family', 'Holiday', 'ETC']
-      } else {
-        state.selectedCalendars = []
-      }
-    }
   },
   extraReducers: builder => {
     builder.addCase(fetchEvents.fulfilled, (state, action) => {
-      state.events = action.payload
+      state.events = action.payload;
     })
   }
 })
-export const { handleSelectEvent, handleCalendarsUpdate, handleAllCalendars } = appCalendarSlice.actions
+
+export const { handleSelectEvent, handleCalendarsUpdate, handleIsSignIn } = appCalendarSlice.actions
 
 export default appCalendarSlice.reducer

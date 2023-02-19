@@ -28,6 +28,7 @@ import DatePickerWrapper from 'src/@core/styles/libs/react-datepicker'
 
 // ** Types
 import { EventDateType, AddEventSidebarType } from 'src/types/apps/calendarTypes'
+import { RepeatCode, ScheduleUpdateCode } from 'src/common/api/msBackend/user/schedule'
 
 interface PickerProps {
   label?: string
@@ -36,27 +37,45 @@ interface PickerProps {
 }
 
 interface DefaultStateType {
-  url: string
   title: string
   allDay: boolean
-  calendar: string
+  view: string
   description: string
-  endDate: Date | string
-  startDate: Date | string
+  endDate: Date | undefined
+  startDate: Date
+  repeatCode: string | RepeatCode;
+  repeatEnd: Date | undefined;
   guests: string[] | string | undefined
+  scheduleUpdateCode: string | ScheduleUpdateCode | undefined
 }
 
-const capitalize = (string: string) => string && string[0].toUpperCase() + string.slice(1)
-
 const defaultState: DefaultStateType = {
-  url: '',
   title: '',
   guests: [],
   allDay: true,
   description: '',
   endDate: new Date(),
-  calendar: 'Business',
-  startDate: new Date()
+  repeatCode: 'None',
+  repeatEnd: new Date(),
+  view: 'Business',
+  startDate: new Date(),
+  scheduleUpdateCode: 'ONLY_THIS',
+}
+
+function convertDatetimeFormat(date: Date) {
+  const month = (date.getMonth() + 1).toString().padStart(2, "0");
+  const day = (date.getDate()).toString().padStart(2, "0");
+  const hour = (date.getHours()).toString().padStart(2, "0");
+  const min = (date.getMinutes()).toString().padStart(2, "0");
+
+  return date.getFullYear().toString() + "-" + month + "-" + day + "T" + hour + ":" + min;
+}
+
+function convertDateFormat(date: Date) {
+  const month = (date.getMonth() + 1).toString().padStart(2, "0");
+  const day = (date.getDate()).toString().padStart(2, "0");
+
+  return date.getFullYear().toString() + "-" + month + "-" + day;
 }
 
 const AddEventSidebar = (props: AddEventSidebarType) => {
@@ -92,24 +111,44 @@ const AddEventSidebar = (props: AddEventSidebarType) => {
     handleAddEventSidebarToggle()
   }
 
+  function forOfficial() {
+    return values.view === "Official"
+  }
+
+  function isPublic() {
+    return values.view === "Public"
+  }
+
   const onSubmit = (data: { title: string }) => {
     const modifiedEvent = {
-      url: values.url,
-      display: 'block',
       title: data.title,
-      end: values.endDate,
+      end: (!values.allDay && values.endDate) ? convertDatetimeFormat(values.endDate) : undefined,
       allDay: values.allDay,
-      start: values.startDate,
-      extendedProps: {
-        calendar: capitalize(values.calendar),
-        guests: values.guests && values.guests.length ? values.guests : undefined,
-        description: values.description.length ? values.description : undefined
-      }
+      start: convertDatetimeFormat(values.startDate),
+      memberIds: typeof(values.guests) === "string" ? [values.guests] : (values.guests ?? []),
+      note: values.description,
+      isPublic: isPublic(),
+      forOfficial: forOfficial()
     }
+
     if (store.selectedEvent === null || (store.selectedEvent !== null && !store.selectedEvent.title.length)) {
-      dispatch(addEvent(modifiedEvent))
+      dispatch(addEvent(
+        {
+          repeatInfo: (values.repeatCode !== 'NONE' && values.repeatEnd) ? {
+            repeatCode: values.repeatCode,
+            end: convertDateFormat(values.repeatEnd)
+          } : undefined,
+          ...modifiedEvent
+        }
+      ))
     } else {
-      dispatch(updateEvent({ id: store.selectedEvent.id, ...modifiedEvent }))
+      dispatch(updateEvent(
+        {
+          scheduleId: store.selectedEvent.id,
+          scheduleUpdateCode: values.scheduleUpdateCode ?? 'ONLY_THIS',
+          ...modifiedEvent
+        }
+      ))
     }
     calendarApi.refetchEvents()
     handleSidebarClose()
@@ -117,7 +156,11 @@ const AddEventSidebar = (props: AddEventSidebarType) => {
 
   const handleDeleteEvent = () => {
     if (store.selectedEvent) {
-      dispatch(deleteEvent(store.selectedEvent.id))
+      dispatch(deleteEvent({
+        scheduleId: store.selectedEvent.id,
+        scheduleUpdateCode: values.scheduleUpdateCode ?? 'ONLY_THIS',
+        forOfficial: forOfficial()
+      }))
     }
 
     // calendarApi.getEventById(store.selectedEvent.id).remove()
@@ -125,7 +168,7 @@ const AddEventSidebar = (props: AddEventSidebarType) => {
   }
 
   const handleStartDate = (date: Date) => {
-    if (date > values.endDate) {
+    if (values.endDate && date > values.endDate) {
       setValues({ ...values, startDate: new Date(date), endDate: new Date(date) })
     }
   }
@@ -135,14 +178,18 @@ const AddEventSidebar = (props: AddEventSidebarType) => {
       const event = store.selectedEvent
       setValue('title', event.title || '')
       setValues({
-        url: event.url || '',
         title: event.title || '',
         allDay: event.allDay,
         guests: event.extendedProps.guests || [],
         description: event.extendedProps.description || '',
-        calendar: event.extendedProps.calendar || 'Business',
-        endDate: event.end !== null ? event.end : event.start,
-        startDate: event.start !== null ? event.start : new Date()
+        view: event.extendedProps.forOfficial ? "Official" :
+          (event.extendedProps.isPublic == true ? 'Public' :
+          (event.extendedProps.isPublic == false ? 'Private' : 'Public')),
+        endDate: event.end ? event.end : event.start,
+        repeatCode: event.extendedProps.repeatInfo?.repeatCode ?? 'NONE',
+        repeatEnd: event.extendedProps.repeatInfo?.end ?? new Date(),
+        startDate: event.start !== null ? event.start : new Date(),
+        scheduleUpdateCode: event.extendedProps.scheduleUpdateCode || 'ONLY_THIS',
       })
     }
   }, [setValue, store.selectedEvent])
@@ -253,18 +300,16 @@ const AddEventSidebar = (props: AddEventSidebarType) => {
               )}
             </FormControl>
             <FormControl fullWidth sx={{ mb: 6 }}>
-              <InputLabel id='event-calendar'>Calendar</InputLabel>
+              <InputLabel id='event-view'>公開設定</InputLabel>
               <Select
-                label='Calendar'
-                value={values.calendar}
-                labelId='event-calendar'
-                onChange={e => setValues({ ...values, calendar: e.target.value })}
+                label='View'
+                value={values.view}
+                labelId='event-view'
+                onChange={e => setValues({ ...values, view: e.target.value })}
               >
-                <MenuItem value='Personal'>Personal</MenuItem>
-                <MenuItem value='Business'>Business</MenuItem>
-                <MenuItem value='Family'>Family</MenuItem>
-                <MenuItem value='Holiday'>Holiday</MenuItem>
-                <MenuItem value='ETC'>ETC</MenuItem>
+                <MenuItem value='Official'>公式</MenuItem>
+                <MenuItem value='Public'>公開</MenuItem>
+                <MenuItem value='Private'>非公開</MenuItem>
               </Select>
             </FormControl>
             <Box sx={{ mb: 6 }}>
@@ -282,7 +327,7 @@ const AddEventSidebar = (props: AddEventSidebarType) => {
               />
             </Box>
             <Box sx={{ mb: 6 }}>
-              <DatePicker
+              {!values.allDay ? <DatePicker
                 selectsEnd
                 id='event-end-date'
                 endDate={values.endDate as EventDateType}
@@ -293,7 +338,7 @@ const AddEventSidebar = (props: AddEventSidebarType) => {
                 dateFormat={!values.allDay ? 'yyyy-MM-dd hh:mm' : 'yyyy-MM-dd'}
                 customInput={<PickersComponent label='End Date' registername='endDate' />}
                 onChange={(date: Date) => setValues({ ...values, endDate: new Date(date) })}
-              />
+              /> : null}
             </Box>
             <FormControl sx={{ mb: 6 }}>
               <FormControlLabel
@@ -303,15 +348,6 @@ const AddEventSidebar = (props: AddEventSidebarType) => {
                 }
               />
             </FormControl>
-            <TextField
-              fullWidth
-              type='url'
-              id='event-url'
-              sx={{ mb: 6 }}
-              label='Event URL'
-              value={values.url}
-              onChange={e => setValues({ ...values, url: e.target.value })}
-            />
             <FormControl fullWidth sx={{ mb: 6 }}>
               <InputLabel id='event-guests'>Guests</InputLabel>
               <Select
@@ -339,6 +375,58 @@ const AddEventSidebar = (props: AddEventSidebarType) => {
               value={values.description}
               onChange={e => setValues({ ...values, description: e.target.value })}
             />
+            {!(store.selectedEvent === null || (store.selectedEvent !== null && !store.selectedEvent.title.length)) ?
+            <FormControl fullWidth sx={{ mb: 6 }}>
+              <InputLabel id='event-scheduleUpdateCode'>更新対象</InputLabel>
+              <Select
+                label='ScheduleUpdateCode'
+                value={values.scheduleUpdateCode}
+                labelId='event-scheduleUpdateCode'
+                onChange={e => setValues({ ...values, scheduleUpdateCode: e.target.value })}
+              >
+                <MenuItem value='ONLY_THIS'>現在のスケジュール</MenuItem>
+                <MenuItem value='ALL'>全てのスケジュール</MenuItem>
+                <MenuItem value='THIS_AND_FUTURE'>現在とそれ以降のスケジュール</MenuItem>
+              </Select>
+            </FormControl> : null}
+
+
+            {(store.selectedEvent === null || (store.selectedEvent !== null && !store.selectedEvent.title.length)) ?
+            <FormControl fullWidth sx={{ mb: 6 }}>
+              <InputLabel id='event-repeatCode'>繰り返し設定</InputLabel>
+              <Select
+                label='RepeatCode'
+                value={values.repeatCode}
+                labelId='event-repeatCode'
+                onChange={e => {
+                  if (e.target.value === 'NONE') {
+                    setValues({ ...values, repeatCode: e.target.value, repeatEnd: undefined })
+                  } else {
+                    setValues({ ...values, repeatCode: e.target.value })
+                  }
+                }}>
+                <MenuItem value='NONE'>設定しない</MenuItem>
+                <MenuItem value='DAYS'>毎日</MenuItem>
+                <MenuItem value='WEEKS'>毎週</MenuItem>
+                <MenuItem value='MONTHS'>毎月</MenuItem>
+                <MenuItem value='YEARS'>毎年</MenuItem>
+              </Select>
+            </FormControl> : null}
+            {(store.selectedEvent === null || (store.selectedEvent !== null && !store.selectedEvent.title.length)) && values.repeatCode !== "NONE" ?
+            <Box sx={{ mb: 6 }}>
+              <DatePicker
+                selectsStart
+                id='event-repeatEnd'
+                endDate={values.endDate as EventDateType}
+                selected={values.repeatEnd as EventDateType}
+                showTimeSelect={values.repeatCode !== 'NONE'}
+                dateFormat={'yyyy-MM-dd'}
+                customInput={<PickersComponent label='リピート終了日' registername='repeatEnd' />}
+                onChange={(date: Date) => setValues({ ...values, repeatEnd: new Date(date) })}
+                onSelect={handleStartDate}
+              />
+            </Box> : null}
+
             <Box sx={{ display: 'flex', alignItems: 'center' }}>
               <RenderSidebarFooter />
             </Box>
