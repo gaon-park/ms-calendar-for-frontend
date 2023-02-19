@@ -38,8 +38,9 @@ function fromScheduleOfficial(scOff: ScheduleOfficial[]): EventType[] {
       allDay: e.allDay,
       start: new Date(e.start),
       end: e.end ? new Date(e.end) : undefined,
+      color: "#000000",
       extendedProps: {
-        calendar: 'Official',
+        view: 'Official',
         byAdmin: e.byAdmin,
         description: e.note,
         guests: [],
@@ -61,9 +62,11 @@ function fromSchedulePersonal(scPer: SchedulePersonalParent): EventType[] {
         allDay: e.allDay,
         start: new Date(e.start),
         end: e.end ? new Date(e.end) : undefined,
+        color: 'primary',
         extendedProps: {
           ownerId: e.ownerId,
-          calendar: 'Member',
+          view: e.isPublic == true ? 'Public' :
+            (e.isPublic == false ? 'Private' : 'Public'),
           calendarMemberId: memberId,
           description: e.note,
           isPublic: e.isPublic,

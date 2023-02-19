@@ -13,15 +13,17 @@ import Icon from 'src/@core/components/icon'
 
 // ** Types
 import { CalendarType, EventType } from 'src/types/apps/calendarTypes'
+import { generateDate } from 'src/@core/utils/calc-date'
 
 const blankEvent: EventType = {
   id: 0,
   title: '',
   start: new Date(),
-  end: undefined,
+  end: generateDate({minutes: 30}),
   allDay: false,
+  color: "#000000",
   extendedProps: {
-    calendar: undefined,
+    view: 'Public',
     byAdmin: undefined,
     repeatInfo: undefined,
     description: undefined,
@@ -139,7 +141,7 @@ const Calendar = (props: CalendarType) => {
         if (!store.isSignIn) return;
         const ev = { ...blankEvent }
         ev.start = info.date
-        ev.end = info.date
+        ev.end = generateDate({manualDate: info.date, minutes: 30})
         ev.allDay = true
 
         // @ts-ignore

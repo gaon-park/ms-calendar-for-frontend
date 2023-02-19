@@ -97,3 +97,19 @@ export const formatCVC = (value: string, cardNumber: string, Payment: PaymentTyp
 
   return clearValue.slice(0, maxLength)
 }
+
+export function convertDatetimeFormat(date: Date) {
+  const month = (date.getMonth() + 1).toString().padStart(2, "0");
+  const day = (date.getDate()).toString().padStart(2, "0");
+  const hour = (date.getHours()).toString().padStart(2, "0");
+  const min = (date.getMinutes()).toString().padStart(2, "0");
+
+  return date.getFullYear().toString() + "-" + month + "-" + day + "T" + hour + ":" + min;
+}
+
+export function convertDateFormat(date: Date) {
+  const month = (date.getMonth() + 1).toString().padStart(2, "0");
+  const day = (date.getDate()).toString().padStart(2, "0");
+
+  return date.getFullYear().toString() + "-" + month + "-" + day;
+}

@@ -6,7 +6,7 @@ import { ThemeColor } from 'src/@core/layouts/types'
 import { DeleteScheduleRequest, PostUserScheduleRequest, PutUserScheduleRequest, RepeatCode, ScheduleUpdateCode } from 'src/common/api/msBackend/user/schedule'
 
 export type CalendarFiltersType = 'Official' | 'My' | 'Member'
-export type CalendarViewType = 'Official' | 'Public' | 'Public'
+export type CalendarViewType = 'Official' | 'Public' | 'Private'
 
 export type EventDateType = Date | null | undefined
 
@@ -22,9 +22,11 @@ export type EventType = {
   allDay: boolean
   start: Date
   end: Date | undefined
+  color: string,
   extendedProps: {
     ownerId?: string,
     calendarMemberId?: string,
+    view: CalendarViewType,
     byAdmin?: boolean,
     repeatInfo?: EventRepeatInfo,
     description?: string,

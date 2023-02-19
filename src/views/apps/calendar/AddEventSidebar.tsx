@@ -29,6 +29,8 @@ import DatePickerWrapper from 'src/@core/styles/libs/react-datepicker'
 // ** Types
 import { EventDateType, AddEventSidebarType } from 'src/types/apps/calendarTypes'
 import { RepeatCode, ScheduleUpdateCode } from 'src/common/api/msBackend/user/schedule'
+import { generateDate } from 'src/@core/utils/calc-date'
+import { convertDateFormat, convertDatetimeFormat } from 'src/@core/utils/format'
 
 interface PickerProps {
   label?: string
@@ -54,28 +56,12 @@ const defaultState: DefaultStateType = {
   guests: [],
   allDay: true,
   description: '',
-  endDate: new Date(),
+  endDate: generateDate({minutes: 30}),
   repeatCode: 'None',
-  repeatEnd: new Date(),
+  repeatEnd: generateDate({date: 7}),
   view: 'Business',
   startDate: new Date(),
   scheduleUpdateCode: 'ONLY_THIS',
-}
-
-function convertDatetimeFormat(date: Date) {
-  const month = (date.getMonth() + 1).toString().padStart(2, "0");
-  const day = (date.getDate()).toString().padStart(2, "0");
-  const hour = (date.getHours()).toString().padStart(2, "0");
-  const min = (date.getMinutes()).toString().padStart(2, "0");
-
-  return date.getFullYear().toString() + "-" + month + "-" + day + "T" + hour + ":" + min;
-}
-
-function convertDateFormat(date: Date) {
-  const month = (date.getMonth() + 1).toString().padStart(2, "0");
-  const day = (date.getDate()).toString().padStart(2, "0");
-
-  return date.getFullYear().toString() + "-" + month + "-" + day;
 }
 
 const AddEventSidebar = (props: AddEventSidebarType) => {
@@ -155,9 +141,10 @@ const AddEventSidebar = (props: AddEventSidebarType) => {
   }
 
   const handleViewEvent = (e: SelectChangeEvent<any>) => {
-    setValues({ ...values, view: e.target.value })
     if (e.target.value === "Official") {
-      setValues({...values, allDay: false});
+      setValues({...values, allDay: false, view: e.target.value});
+    } else {
+      setValues({ ...values, view: e.target.value })
     }
   }
 
@@ -192,9 +179,9 @@ const AddEventSidebar = (props: AddEventSidebarType) => {
         view: event.extendedProps.forOfficial ? "Official" :
           (event.extendedProps.isPublic == true ? 'Public' :
           (event.extendedProps.isPublic == false ? 'Private' : 'Public')),
-        endDate: event.end ? event.end : event.start,
+        endDate: event.end ? event.end : generateDate({minutes: 30}),
         repeatCode: event.extendedProps.repeatInfo?.repeatCode ?? 'NONE',
-        repeatEnd: event.extendedProps.repeatInfo?.end ?? new Date(),
+        repeatEnd: event.extendedProps.repeatInfo?.end ?? generateDate({date: 7}),
         startDate: event.start !== null ? event.start : new Date(),
         scheduleUpdateCode: event.extendedProps.scheduleUpdateCode || 'ONLY_THIS',
       })

@@ -68,6 +68,7 @@ const AppCalendar = () => {
 
   useEffect(() => {
     // ちょっとわかんないとりあえず動きはする
+    // @ts-ignore
     dispatch(fetchEvents())
   }, [])
 
