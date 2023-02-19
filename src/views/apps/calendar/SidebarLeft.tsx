@@ -1,5 +1,6 @@
 // ** MUI Imports
 import Button from '@mui/material/Button'
+import Divider from '@mui/material/Divider'
 import Drawer from '@mui/material/Drawer'
 import Checkbox from '@mui/material/Checkbox'
 import Typography from '@mui/material/Typography'
@@ -9,6 +10,7 @@ import FormControlLabel from '@mui/material/FormControlLabel'
 import { ThemeColor } from 'src/@core/layouts/types'
 import { SidebarLeftType, CalendarFiltersType } from 'src/types/apps/calendarTypes'
 import { useAuth } from 'src/hooks/useAuth'
+import SidebarProfileSearch from './SidebarProfileSearch'
 
 const SidebarLeft = (props: SidebarLeftType) => {
   const { isSignIn } = useAuth();
@@ -93,6 +95,11 @@ const SidebarLeft = (props: SidebarLeftType) => {
           Calendars
         </Typography>
         {renderFilters}
+        <Divider />
+        <SidebarProfileSearch
+          store={store}
+          dispatch={dispatch}
+        />
       </Drawer>
     )
   } else {

@@ -152,7 +152,7 @@ export const appCalendarSlice = createSlice({
   initialState: {
     events: [],
     selectedEvent: null,
-    selectedCalendars: ['Official', 'My', 'Member'],
+    selectedCalendars: ['Official', 'My'],
     memberIds: [],
     isSignIn: false,
     myId: ""

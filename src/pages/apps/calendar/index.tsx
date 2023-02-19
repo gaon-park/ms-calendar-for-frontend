@@ -38,8 +38,7 @@ import { useAuth } from 'src/hooks/useAuth'
 // ** CalendarColors
 const calendarsColor: CalendarColors = {
   Official: 'warning',
-  My: 'success',
-  Member: 'info'
+  My: 'success'
 }
 
 const AppCalendar = () => {
@@ -49,7 +48,6 @@ const AppCalendar = () => {
   const [addEventSidebarOpen, setAddEventSidebarOpen] = useState<boolean>(false)
 
   // ** Hooks
-  useProfile()
   const { settings } = useSettings()
   const dispatch = useDispatch<AppDispatch>()
   const store = useSelector((state: RootState) => state.calendar)

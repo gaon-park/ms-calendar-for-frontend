@@ -5,7 +5,7 @@ import { Dispatch } from 'redux'
 import { ThemeColor } from 'src/@core/layouts/types'
 import { DeleteScheduleRequest, PostUserScheduleRequest, PutUserScheduleRequest, RepeatCode, ScheduleUpdateCode } from 'src/common/api/msBackend/user/schedule'
 
-export type CalendarFiltersType = 'Official' | 'My' | 'Member'
+export type CalendarFiltersType = 'Official' | 'My'
 export type CalendarViewType = 'Official' | 'Public' | 'Private'
 
 export type EventDateType = Date | null | undefined
@@ -13,7 +13,6 @@ export type EventDateType = Date | null | undefined
 export type CalendarColors = {
   Official: ThemeColor
   My: ThemeColor
-  Member: ThemeColor
 }
 
 export type EventType = {
@@ -86,6 +85,11 @@ export type SidebarLeftType = {
   handleAddEventSidebarToggle: () => void
   handleSelectEvent: (event: null | EventType) => void
   handleCalendarsUpdate: (val: CalendarFiltersType) => void
+}
+
+export type SidebarProfileSearchType = {
+  dispatch: Dispatch<any>
+  store: CalendarStoreType
 }
 
 export type AddEventSidebarType = {
