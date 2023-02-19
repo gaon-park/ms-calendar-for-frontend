@@ -4,7 +4,7 @@ import { useState, useEffect, forwardRef, useCallback, Fragment } from 'react'
 // ** MUI Imports
 import Box from '@mui/material/Box'
 import Drawer from '@mui/material/Drawer'
-import Select from '@mui/material/Select'
+import Select, { SelectChangeEvent } from '@mui/material/Select'
 import Switch from '@mui/material/Switch'
 import Button from '@mui/material/Button'
 import MenuItem from '@mui/material/MenuItem'
@@ -152,6 +152,13 @@ const AddEventSidebar = (props: AddEventSidebarType) => {
     }
     calendarApi.refetchEvents()
     handleSidebarClose()
+  }
+
+  const handleViewEvent = (e: SelectChangeEvent<any>) => {
+    setValues({ ...values, view: e.target.value })
+    if (e.target.value === "Official") {
+      setValues({...values, allDay: false});
+    }
   }
 
   const handleDeleteEvent = () => {
@@ -305,7 +312,7 @@ const AddEventSidebar = (props: AddEventSidebarType) => {
                 label='View'
                 value={values.view}
                 labelId='event-view'
-                onChange={e => setValues({ ...values, view: e.target.value })}
+                onChange={handleViewEvent}
               >
                 <MenuItem value='Official'>公式</MenuItem>
                 <MenuItem value='Public'>公開</MenuItem>
@@ -419,11 +426,9 @@ const AddEventSidebar = (props: AddEventSidebarType) => {
                 id='event-repeatEnd'
                 endDate={values.endDate as EventDateType}
                 selected={values.repeatEnd as EventDateType}
-                showTimeSelect={values.repeatCode !== 'NONE'}
                 dateFormat={'yyyy-MM-dd'}
                 customInput={<PickersComponent label='リピート終了日' registername='repeatEnd' />}
                 onChange={(date: Date) => setValues({ ...values, repeatEnd: new Date(date) })}
-                onSelect={handleStartDate}
               />
             </Box> : null}
 
