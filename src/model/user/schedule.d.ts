@@ -11,7 +11,6 @@ export interface IScheduleResponse {
 
 export interface IMember {
   id: string;
-  email: string;
   nickName: string;
   acceptedStatus: AcceptedStatus;
 }
