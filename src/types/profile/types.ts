@@ -25,4 +25,5 @@ export type ProfileTabType = {
   overview: ProfileOverviewType
   follows: IProfile[]
   followers: IProfile[]
+  isMyData: boolean
 }

@@ -1,6 +1,5 @@
 export interface IUserResponse {
   id: string;
-  email: string;
   nickName: string;
   accountId: string;
   avatarImg: string;
