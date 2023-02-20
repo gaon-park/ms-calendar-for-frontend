@@ -23,25 +23,22 @@ export const fetchEvents = createAsyncThunk<
   return fromEventType(response.data)
 })
 
-export const fetchOtherEvent = createAsyncThunk<
+export const fetchOtherEvents = createAsyncThunk<
   EventType[], string, { state: CalendarStoreType }
->('appCalendar/fetchOtherEvent', async (userId, { getState }) => {
+>('appCalendar/fetchOtherEvents', async (userId, { getState }) => {
   const response = await SearchOtherSchedule({
     userId: userId,
     from: generateDateBegin(),
     to: generateDateEnd(),
   })
 
-  console.log('fetch!')
-  console.log(getState().events)
-
-  return getState().events.concat(fromSchedulePersonal(response.data, userId))
+  return fromSchedulePersonal(response.data, userId)
 })
 
-export const removeOtherEvent = createAsyncThunk<
-  EventType[], string, { state: CalendarStoreType }
->('appCalendar/fetchOtherEvent', async (userId, { getState }) => {
-  return getState().events.filter((obj) => obj.bySearchUserId !== userId)
+export const removeOtherEvents = createAsyncThunk<
+  string, string, { state: CalendarStoreType }
+>('appCalendar/removeOtherEvents', (userId) => {
+  return userId
 })
 
 export function fromEventType(res: IScheduleResponse): EventType[] {
@@ -99,38 +96,6 @@ function fromSchedulePersonal(
     }
   })
 }
-
-// function fromSchedulePersonal(scPer: SchedulePersonalParent): EventType[] {
-//   const res: EventType[] = [];
-//   Object.keys(scPer).forEach((memberId: string) => {
-//     const colScp = scPer[memberId];
-//     colScp.forEach((e) => {
-//       const col: EventType = {
-//         id: e.scheduleId,
-//         title: e.title,
-//         allDay: e.allDay,
-//         start: new Date(e.start),
-//         end: e.end ? new Date(e.end) : undefined,
-//         color: 'primary',
-//         extendedProps: {
-//           ownerId: e.ownerId,
-//           view: e.isPublic == true ? 'Public' :
-//             (e.isPublic == false ? 'Private' : 'Public'),
-//           calendarMemberId: memberId,
-//           description: e.note,
-//           isPublic: e.isPublic,
-//           guests: e.members.map((m) => {
-//             return m.accountId
-//           }),
-//           forOfficial: false,
-//         }
-//       }
-//       res.push(col);
-//     });
-//   });
-
-//   return res;
-// }
 
 let fromDate: string | null = null;
 function generateDateBegin(): string {
@@ -224,13 +189,19 @@ export const appCalendarSlice = createSlice({
       if (state.selectedCalendars.length === 0) {
         state.events.length = 0
       }
-    },
+    }
   },
   extraReducers: builder => {
     builder.addCase(fetchEvents.fulfilled, (state, action) => {
       state.events = action.payload;
     })
-  }
+    .addCase(fetchOtherEvents.fulfilled, (state, action) => {
+      state.events = state.events.concat(action.payload);
+    })
+    .addCase(removeOtherEvents.fulfilled, (state, action) => {
+      state.events = state.events.filter((o) => o.bySearchUserId !== action.payload)
+    })
+  },
 })
 
 export const { handleSelectEvent, handleCalendarsUpdate, handleIsSignIn } = appCalendarSlice.actions
