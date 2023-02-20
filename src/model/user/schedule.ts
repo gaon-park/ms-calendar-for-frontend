@@ -1,6 +1,6 @@
 export interface IScheduleResponse {
   officials: ScheduleOfficial[];
-  personals: SchedulePersonalParent;
+  personals: SchedulePersonal[];
 }
 
 export interface ScheduleOfficial {

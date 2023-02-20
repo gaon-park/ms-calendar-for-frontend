@@ -15,16 +15,33 @@ import useSWR from "swr"
 import { SearchUserForScheduleInvite } from 'src/common/api/msBackend/search';
 
 import { getInitials } from 'src/@core/utils/get-initials'
+import { fetchOtherEvent, removeOtherEvent } from 'src/store/apps/calendar';
 
 const SidebarProfileSearch = (props: SidebarProfileSearchType) => {
+  const { dispatch } = props
   const [keyword, setKeyword] = useState('')
   const [open, setOpen] = useState<boolean>(false)
   const [options, setOptions] = useState<SimpleUserResponse[]>([])
   const loading = open && options.length === 0
 
   const limit = 4 // 同時閲覧できる最大ユーザ数
-  const [selected, setSelected] = useState<SimpleUserResponse[]>([])
-  const checkDisable = React.useCallback((option: SimpleUserResponse) => limit <= selected.length && !selected.includes(option), [limit, selected]);
+  const [selected, setSelected] = useState<string[]>([])
+  const checkDisable = React.useCallback((option: SimpleUserResponse) => limit <= selected.length && !selected.includes(option.id), [limit, selected]);
+
+  const handleChanged = async (newSelected: SimpleUserResponse[]) => {
+    const ids = newSelected.map((o) => o.id)
+    const addedId = ids.find((o) => !selected.includes(o))
+    const removedId = selected.find((o) => !ids.includes(o))
+
+    if (addedId !== undefined) {
+      dispatch(fetchOtherEvent(addedId))
+    }
+    if (removedId !== undefined) {
+      dispatch(removeOtherEvent(removedId))
+    }
+
+    setSelected(ids)
+  }
 
   const { data } = useSWR(
     { keyword },
@@ -57,7 +74,7 @@ const SidebarProfileSearch = (props: SidebarProfileSearchType) => {
           open={open}
           options={options}
           loading={loading}
-          onChange={(e, newSelected) => setSelected(newSelected)}
+          onChange={(e, newSelected) => handleChanged(newSelected)}
           onOpen={() => setOpen(true)}
           onClose={() => setOpen(false)}
           id='autocomplete-asynchronous-request'

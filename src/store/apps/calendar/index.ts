@@ -1,9 +1,9 @@
 // ** Redux Imports
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit'
 
-import { DeleteScheduleRequest, GetUserSchedule, PostUserSchedule, PostUserScheduleRequest, PutScheduleDelete, PutUserSchedule, PutUserScheduleRequest } from 'src/common/api/msBackend/user/schedule'
+import { DeleteScheduleRequest, GetUserSchedule, PostUserSchedule, PostUserScheduleRequest, PutScheduleDelete, PutUserSchedule, PutUserScheduleRequest, SearchOtherSchedule } from 'src/common/api/msBackend/user/schedule'
 
-import { IScheduleResponse, ScheduleOfficial, SchedulePersonalParent } from 'src/model/user/schedule'
+import { IScheduleResponse, ScheduleOfficial, SchedulePersonal } from 'src/model/user/schedule'
 import { EventType } from "src/types/apps/calendarTypes";
 
 // ** Types
@@ -12,15 +12,36 @@ import { CalendarStoreType } from 'src/types/apps/calendarTypes'
 // ** Fetch Events
 export const fetchEvents = createAsyncThunk<
   EventType[], undefined, { state: CalendarStoreType }
->('appCalendar/fetchEvents', async (undefined, {getState}) => {
+>('appCalendar/fetchEvents', async (undefined, { getState }) => {
   const { memberIds } = getState();
   const response = await GetUserSchedule({
-      userIds: memberIds ?? [],
-      from: generateDateBegin(),
-      to: generateDateEnd(),
+    userIds: memberIds ?? [],
+    from: generateDateBegin(),
+    to: generateDateEnd(),
+  })
+  
+  return fromEventType(response.data)
+})
+
+export const fetchOtherEvent = createAsyncThunk<
+  EventType[], string, { state: CalendarStoreType }
+>('appCalendar/fetchOtherEvent', async (userId, { getState }) => {
+  const response = await SearchOtherSchedule({
+    userId: userId,
+    from: generateDateBegin(),
+    to: generateDateEnd(),
   })
 
-  return fromEventType(response.data)
+  console.log('fetch!')
+  console.log(getState().events)
+
+  return getState().events.concat(fromSchedulePersonal(response.data, userId))
+})
+
+export const removeOtherEvent = createAsyncThunk<
+  EventType[], string, { state: CalendarStoreType }
+>('appCalendar/fetchOtherEvent', async (userId, { getState }) => {
+  return getState().events.filter((obj) => obj.bySearchUserId !== userId)
 })
 
 export function fromEventType(res: IScheduleResponse): EventType[] {
@@ -51,37 +72,65 @@ function fromScheduleOfficial(scOff: ScheduleOfficial[]): EventType[] {
   })
 }
 
-function fromSchedulePersonal(scPer: SchedulePersonalParent): EventType[] {
-  const res: EventType[] = [];
-  Object.keys(scPer).forEach((memberId: string) => {
-    const colScp = scPer[memberId];
-    colScp.forEach((e) => {
-      const col: EventType =  {
-        id: e.scheduleId,
-        title: e.title,
-        allDay: e.allDay,
-        start: new Date(e.start),
-        end: e.end ? new Date(e.end) : undefined,
-        color: 'primary',
-        extendedProps: {
-          ownerId: e.ownerId,
-          view: e.isPublic == true ? 'Public' :
-            (e.isPublic == false ? 'Private' : 'Public'),
-          calendarMemberId: memberId,
-          description: e.note,
-          isPublic: e.isPublic,
-          guests: e.members.map((m) => {
-            return m.accountId
-          }),
-          forOfficial: false,
-        }
+function fromSchedulePersonal(
+  scPer: SchedulePersonal[],
+  bySearchUserId?: string
+): EventType[] {
+  return scPer.map((e) => {
+    return {
+      bySearchUserId: bySearchUserId,
+      id: e.scheduleId,
+      title: e.title,
+      allDay: e.allDay,
+      start: new Date(e.start),
+      end: e.end ? new Date(e.end) : undefined,
+      color: "primary",
+      extendedProps: {
+        ownerId: e.ownerId,
+        view: e.isPublic == true ? 'Public' :
+          (e.isPublic == false ? 'Private' : 'Public'),
+        description: e.note,
+        isPublic: e.isPublic,
+        guests: e.members.map((m) => {
+          return m.accountId
+        }),
+        forOfficial: false,
       }
-      res.push(col);
-    });
-  });
-
-  return res;
+    }
+  })
 }
+
+// function fromSchedulePersonal(scPer: SchedulePersonalParent): EventType[] {
+//   const res: EventType[] = [];
+//   Object.keys(scPer).forEach((memberId: string) => {
+//     const colScp = scPer[memberId];
+//     colScp.forEach((e) => {
+//       const col: EventType = {
+//         id: e.scheduleId,
+//         title: e.title,
+//         allDay: e.allDay,
+//         start: new Date(e.start),
+//         end: e.end ? new Date(e.end) : undefined,
+//         color: 'primary',
+//         extendedProps: {
+//           ownerId: e.ownerId,
+//           view: e.isPublic == true ? 'Public' :
+//             (e.isPublic == false ? 'Private' : 'Public'),
+//           calendarMemberId: memberId,
+//           description: e.note,
+//           isPublic: e.isPublic,
+//           guests: e.members.map((m) => {
+//             return m.accountId
+//           }),
+//           forOfficial: false,
+//         }
+//       }
+//       res.push(col);
+//     });
+//   });
+
+//   return res;
+// }
 
 let fromDate: string | null = null;
 function generateDateBegin(): string {
@@ -121,7 +170,7 @@ export const addEvent = createAsyncThunk<
 // ** Update Event
 export const updateEvent = createAsyncThunk<
   string, PutUserScheduleRequest, { state: CalendarStoreType }
-> ('appCalendar/updateEvent', async (req, { dispatch, getState }) => {
+>('appCalendar/updateEvent', async (req, { dispatch, getState }) => {
   const { isSignIn } = getState();
 
   if (isSignIn) return "update failed";

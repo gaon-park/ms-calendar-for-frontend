@@ -16,6 +16,7 @@ export type CalendarColors = {
 }
 
 export type EventType = {
+  bySearchUserId?: string
   id: number
   title: string
   allDay: boolean
@@ -56,7 +57,7 @@ export type CalendarStoreType = {
   events: EventType[]
   selectedEvent: null | EventType
   selectedCalendars: CalendarFiltersType[] | string[],
-  memberIds: [],
+  memberIds: string[],
   isSignIn: boolean,
   myId: string
 }

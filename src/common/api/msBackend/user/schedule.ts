@@ -1,6 +1,6 @@
 import { MS_BACKEND_API_PATH } from "src/constants/msbackend";
 import { MsBackendAxios } from "../../axiosUtil";
-import { IScheduleResponse } from "src/model/user/schedule";
+import { IScheduleResponse, SchedulePersonal } from "src/model/user/schedule";
 
 export interface GetUserScheduleRequest {
   userIds: string[],
@@ -11,6 +11,25 @@ export interface GetUserScheduleRequest {
 export const GetUserSchedule = (req: GetUserScheduleRequest) => {
   return MsBackendAxios.get<IScheduleResponse>(
     MS_BACKEND_API_PATH.GET_SCHEDULE,
+    { params: req }
+  );
+}
+
+export interface GetUserScheduleRequest {
+  userIds: string[],
+  from: string;
+  to: string;
+}
+
+export interface SearchOtherScheduleRequest {
+  userId: string
+  from: string
+  to: string
+}
+
+export const SearchOtherSchedule = (req: SearchOtherScheduleRequest) => {
+  return MsBackendAxios.get<SchedulePersonal[]>(
+    MS_BACKEND_API_PATH.GET_OTHER_SCHEDULE,
     { params: req }
   );
 }
