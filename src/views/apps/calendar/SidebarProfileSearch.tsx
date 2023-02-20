@@ -3,129 +3,98 @@ import * as React from 'react';
 import Avatar from '@mui/material/Avatar';
 import Box from '@mui/material/Box'
 import TextField from '@mui/material/TextField'
-import List from '@mui/material/List';
-import ListItem from '@mui/material/ListItem';
-import ListItemText from '@mui/material/ListItemText';
-import ListItemAvatar from '@mui/material/ListItemAvatar';
-import Checkbox from '@mui/material/Checkbox';
-import InputAdornment from '@mui/material/InputAdornment'
-import Typography from '@mui/material/Typography';
-import AccountCircle from '@mui/icons-material/AccountCircle'
+import CustomAvatar from 'src/@core/components/mui/avatar'
 
 // ** Types
 import { SidebarProfileSearchType } from 'src/types/apps/calendarTypes'
+import { useEffect, useState } from 'react';
+import { Autocomplete, Chip, CircularProgress } from '@mui/material';
+import { SimpleUserResponse } from 'src/model/user/user';
+
+import useSWR from "swr"
+import { SearchUserForScheduleInvite } from 'src/common/api/msBackend/search';
+
+import { getInitials } from 'src/@core/utils/get-initials'
 
 const SidebarProfileSearch = (props: SidebarProfileSearchType) => {
+  const [keyword, setKeyword] = useState('')
 
-  const [checked, setChecked] = React.useState([1]);
+  const [open, setOpen] = useState<boolean>(false)
+  const [options, setOptions] = useState<SimpleUserResponse[]>([])
 
-  const handleToggle = (value: number) => () => {
-    const currentIndex = checked.indexOf(value);
-    const newChecked = [...checked];
+  const loading = open && options.length === 0
 
-    if (currentIndex === -1) {
-      newChecked.push(value);
-    } else {
-      newChecked.splice(currentIndex, 1);
+  const { data } = useSWR(
+    { keyword },
+    () => SearchUserForScheduleInvite({
+      keyword
+    }),
+    {
+      revalidateIfStale: false,
+      revalidateOnFocus: true,
+      revalidateOnReconnect: true
     }
+  )
 
-    setChecked(newChecked);
-  };
-
-  const handleTextChange = () => {
-    // ここで再検索処理
-  };
-
-  const renderUserSearch = [0, 1, 2, 3].map((v) => {
-    const labelId = `checkbox-list-secondary-label-${v}`;
-
-    return (
-      <ListItem
-        key={v}
-        disablePadding
-      >
-        {/* <ListItemButton> */}
-          <Checkbox
-            edge="end"
-            onChange={handleToggle(v)}
-            checked={false}
-            inputProps={{ 'aria-labelledby': labelId }}
-            sx={{
-              padding: 0,
-              marginRight: '1rem'
-            }}
-          />
-          <ListItemAvatar>
-            <Avatar
-              alt={`Avatar n°${v + 1}`}
-              src={`/static/images/avatar/${v + 1}.jpg`}
-            />
-          </ListItemAvatar>
-          <ListItemText id={labelId} primary={`Line item ${v + 1}`} />
-        {/* </ListItemButton> */}
-      </ListItem>
-    );
-  });
-
-  const renderResultUserSearch = [0, 1, 2, 3].map((v) => {
-    const labelId = `checkbox-list-secondary-label-${v}`;
-
-    return (
-      <ListItem
-        key={v}
-        disablePadding
-      >
-        {/* <ListItemButton> */}
-          <Checkbox
-            edge="end"
-            onChange={handleToggle(v)}
-            checked={true}
-            inputProps={{ 'aria-labelledby': labelId }}
-            sx={{
-              padding: 0,
-              marginRight: '1rem'
-            }}
-          />
-          <ListItemAvatar>
-            <Avatar
-              alt={`Avatar n°${v + 1}`}
-              src={`/static/images/avatar/${v + 1}.jpg`}
-            />
-          </ListItemAvatar>
-          <ListItemText id={labelId} primary={`Line item ${v + 1}`} />
-        {/* </ListItemButton> */}
-      </ListItem>
-    );
-  });
+  useEffect(() => {
+    if (typeof data !== 'undefined') {
+      setOptions(data.data)
+    }
+  }, [data])
 
   return (
     <React.Fragment>
-      <Box>
-        <TextField
-          id="input-with-icon-textfield"
-          InputProps={{
-            startAdornment: (
-              <InputAdornment position="start">
-                <AccountCircle />
-              </InputAdornment>
-            ),
+      <Box sx={{ display: 'flex', flexWrap: 'wrap' }}>
+        <Autocomplete
+          sx={{
+            width: 220
           }}
-          onChange={handleTextChange}
-          variant="standard"
+          multiple
+          open={open}
+          options={options}
+          loading={loading}
+          onOpen={() => setOpen(true)}
+          onClose={() => setOpen(false)}
+          id='autocomplete-asynchronous-request'
+          getOptionLabel={option => `${option.nickName}(@${option.nickName})`}
+          isOptionEqualToValue={(option, value) => (option.accountId === value.accountId || option.nickName === value.nickName)}
+          renderInput={params => (
+            <TextField
+              {...params}
+              onChange={e => setKeyword(e.target.value)}
+              label='Search User'
+              InputProps={{
+                ...params.InputProps,
+                endAdornment: (
+                  <React.Fragment>
+                    {loading ? <CircularProgress color='inherit' size={20} /> : null}
+                    {params.InputProps.endAdornment}
+                  </React.Fragment>
+                )
+              }}
+            />
+          )}
+          renderTags={(value: SimpleUserResponse[], getTagProps) =>
+            value.map((option: SimpleUserResponse, index: number) => (
+              <Chip
+                variant='outlined'
+                label={option.accountId}
+                {...(getTagProps({ index }) as {})}
+                key={option.accountId}
+                avatar={
+                  option.avatarImg !== null ? <Avatar src={option.avatarImg} alt={option.accountId} />
+                    : <CustomAvatar
+                      skin='light'
+                      color='primary'
+                    // sx={{ width: 40, height: 40, fontSize: '.875rem' }}
+                    >
+                      {getInitials(option.nickName)}
+                    </CustomAvatar>
+                }
+              />
+            ))
+          }
         />
-        {/* ユーザ検索 最大４件 follow+publicを複合で検索 ロジックとしてはfollowはあらかじめ全て持っておき、publicを動的に検索、それらの中から検索ワードに合うものを表示する。優先度はfollow,public */}
-        <List dense sx={{ width: '100%' }}>
-          {renderUserSearch}
-        </List>
-
-        {/* 検索対象 */}
-        <Typography variant='caption' sx={{ mt: 7, mb: 2, textTransform: 'uppercase' }}>
-          現在表示中のユーザ
-        </Typography>
-        <List dense sx={{ width: '100%' }}>
-          {/* store.myidsの情報をレンダリング */}
-          {renderResultUserSearch}
-        </List>
       </Box>
     </React.Fragment>
   )

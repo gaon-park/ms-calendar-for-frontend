@@ -14,3 +14,10 @@ export interface IUserResponse {
 export interface ILoginResponse {
   accessToken: string;
 }
+
+export interface SimpleUserResponse {
+  id: string
+  accountId: string
+  nickName: string
+  avatarImg: string | null
+}

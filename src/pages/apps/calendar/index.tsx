@@ -33,8 +33,7 @@ import {
   handleIsSignIn
 } from 'src/store/apps/calendar'
 import { useAuth } from 'src/hooks/useAuth'
-import { useRecoilValue } from 'recoil'
-import { myProfile } from 'src/store/profile/user'
+import { useProfile } from 'src/hooks/useProfile'
 
 // ** CalendarColors
 const calendarsColor: CalendarColors = {
@@ -47,12 +46,12 @@ const AppCalendar = () => {
   const [calendarApi, setCalendarApi] = useState<null | any>(null)
   const [leftSidebarOpen, setLeftSidebarOpen] = useState<boolean>(false)
   const [addEventSidebarOpen, setAddEventSidebarOpen] = useState<boolean>(false)
-  const profile = useRecoilValue(myProfile)
 
   // ** Hooks
   const { settings } = useSettings()
   const dispatch = useDispatch<AppDispatch>()
   const store = useSelector((state: RootState) => state.calendar)
+  const { profile } = useProfile()
 
   // ** Vars
   const leftSidebarWidth = 260
@@ -98,7 +97,6 @@ const AppCalendar = () => {
           handleAddEventSidebarToggle={handleAddEventSidebarToggle}
         /> : null
       }
-
       <Box
         sx={{
           p: 5,
@@ -137,7 +135,6 @@ const AppCalendar = () => {
           handleAddEventSidebarToggle={handleAddEventSidebarToggle}
         /> : null
       }
-
     </CalendarWrapper>
   )
 }

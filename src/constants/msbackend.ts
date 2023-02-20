@@ -5,6 +5,7 @@ const LOGOUT = "/api/logout" as const;
 const GET_SEARCH_USER = "/api/search/user" as const;
 const GET_SEARCH_USER_PROFILE = "/api/search/user/profile" as const;
 const GET_SEARCH_SCHEDULE = "/api/search/schedule" as const;
+const GET_SEARCH_USER_FOR_SCHEDULE_INVITE = "/api/search/schedule-invite-target" as const;
 
 const GET_USER_FOLLOW = "/api/user/follow" as const;
 const GET_USER_FOLLOWER = "/api/user/follower" as const;
@@ -36,6 +37,7 @@ export const MS_BACKEND_API_PATH = {
   GET_SEARCH_USER,
   GET_SEARCH_USER_PROFILE,
   GET_SEARCH_SCHEDULE,
+  GET_SEARCH_USER_FOR_SCHEDULE_INVITE,
 
   GET_USER_FOLLOW,
   GET_USER_FOLLOWER,
