@@ -59,9 +59,9 @@ const defaultState: DefaultStateType = {
   allDay: true,
   description: '',
   endDate: generateDate({ minutes: 30 }),
-  repeatCode: 'None',
+  repeatCode: '',
   repeatEnd: generateDate({ date: 7 }),
-  view: 'Business',
+  view: '',
   startDate: new Date(),
   scheduleUpdateCode: 'ONLY_THIS',
 }
@@ -123,7 +123,7 @@ const AddEventSidebar = (props: AddEventSidebarType) => {
     if (store.selectedEvent === null || (store.selectedEvent !== null && !store.selectedEvent.title.length)) {
       dispatch(addEvent(
         {
-          repeatInfo: (values.repeatCode !== 'NONE' && values.repeatEnd) ? {
+          repeatInfo: (values.repeatCode !== '' && values.repeatEnd) ? {
             repeatCode: values.repeatCode,
             end: convertDateFormat(values.repeatEnd)
           } : undefined,
@@ -183,7 +183,7 @@ const AddEventSidebar = (props: AddEventSidebarType) => {
           (event.extendedProps.isPublic == true ? 'Public' :
             (event.extendedProps.isPublic == false ? 'Private' : 'Public')),
         endDate: event.end ? event.end : generateDate({ minutes: 30 }),
-        repeatCode: event.extendedProps.repeatInfo?.repeatCode ?? 'NONE',
+        repeatCode: event.extendedProps.repeatInfo?.repeatCode ?? '',
         repeatEnd: event.extendedProps.repeatInfo?.end ?? generateDate({ date: 7 }),
         startDate: event.start !== null ? event.start : new Date(),
         scheduleUpdateCode: event.extendedProps.scheduleUpdateCode || 'ONLY_THIS',
@@ -398,20 +398,20 @@ const AddEventSidebar = (props: AddEventSidebarType) => {
                   value={values.repeatCode}
                   labelId='event-repeatCode'
                   onChange={e => {
-                    if (e.target.value === 'NONE') {
+                    if (e.target.value === '') {
                       setValues({ ...values, repeatCode: e.target.value, repeatEnd: undefined })
                     } else {
                       setValues({ ...values, repeatCode: e.target.value })
                     }
                   }}>
-                  <MenuItem value='NONE'>設定しない</MenuItem>
+                  <MenuItem value=''>設定しない</MenuItem>
                   <MenuItem value='DAYS'>毎日</MenuItem>
                   <MenuItem value='WEEKS'>毎週</MenuItem>
                   <MenuItem value='MONTHS'>毎月</MenuItem>
                   <MenuItem value='YEARS'>毎年</MenuItem>
                 </Select>
               </FormControl> : null}
-            {(store.selectedEvent === null || (store.selectedEvent !== null && !store.selectedEvent.title.length)) && values.repeatCode !== "NONE" ?
+            {(store.selectedEvent === null || (store.selectedEvent !== null && !store.selectedEvent.title.length)) && values.repeatCode !== "" ?
               <Box sx={{ mb: 6 }}>
                 <DatePicker
                   selectsStart
