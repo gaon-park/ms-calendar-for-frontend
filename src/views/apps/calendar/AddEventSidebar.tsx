@@ -31,6 +31,8 @@ import { EventDateType, AddEventSidebarType } from 'src/types/apps/calendarTypes
 import { RepeatCode, ScheduleUpdateCode } from 'src/common/api/msBackend/user/schedule'
 import { generateDate } from 'src/@core/utils/calc-date'
 import { convertDateFormat, convertDatetimeFormat } from 'src/@core/utils/format'
+import { useRecoilValue } from 'recoil'
+import { myProfile } from 'src/store/profile/user'
 
 interface PickerProps {
   label?: string
@@ -56,9 +58,9 @@ const defaultState: DefaultStateType = {
   guests: [],
   allDay: true,
   description: '',
-  endDate: generateDate({minutes: 30}),
+  endDate: generateDate({ minutes: 30 }),
   repeatCode: 'None',
-  repeatEnd: generateDate({date: 7}),
+  repeatEnd: generateDate({ date: 7 }),
   view: 'Business',
   startDate: new Date(),
   scheduleUpdateCode: 'ONLY_THIS',
@@ -81,6 +83,7 @@ const AddEventSidebar = (props: AddEventSidebarType) => {
 
   // ** States
   const [values, setValues] = useState<DefaultStateType>(defaultState)
+  const profile = useRecoilValue(myProfile)
 
   const {
     control,
@@ -111,7 +114,7 @@ const AddEventSidebar = (props: AddEventSidebarType) => {
       end: (!values.allDay && values.endDate) ? convertDatetimeFormat(values.endDate) : undefined,
       allDay: values.allDay,
       start: convertDatetimeFormat(values.startDate),
-      memberIds: typeof(values.guests) === "string" ? [values.guests] : (values.guests ?? []),
+      memberIds: typeof (values.guests) === "string" ? [values.guests] : (values.guests ?? []),
       note: values.description,
       isPublic: isPublic(),
       forOfficial: forOfficial()
@@ -142,7 +145,7 @@ const AddEventSidebar = (props: AddEventSidebarType) => {
 
   const handleViewEvent = (e: SelectChangeEvent<any>) => {
     if (e.target.value === "Official") {
-      setValues({...values, allDay: false, view: e.target.value});
+      setValues({ ...values, allDay: false, view: e.target.value });
     } else {
       setValues({ ...values, view: e.target.value })
     }
@@ -178,10 +181,10 @@ const AddEventSidebar = (props: AddEventSidebarType) => {
         description: event.extendedProps.description || '',
         view: event.extendedProps.forOfficial ? "Official" :
           (event.extendedProps.isPublic == true ? 'Public' :
-          (event.extendedProps.isPublic == false ? 'Private' : 'Public')),
-        endDate: event.end ? event.end : generateDate({minutes: 30}),
+            (event.extendedProps.isPublic == false ? 'Private' : 'Public')),
+        endDate: event.end ? event.end : generateDate({ minutes: 30 }),
         repeatCode: event.extendedProps.repeatInfo?.repeatCode ?? 'NONE',
-        repeatEnd: event.extendedProps.repeatInfo?.end ?? generateDate({date: 7}),
+        repeatEnd: event.extendedProps.repeatInfo?.end ?? generateDate({ date: 7 }),
         startDate: event.start !== null ? event.start : new Date(),
         scheduleUpdateCode: event.extendedProps.scheduleUpdateCode || 'ONLY_THIS',
       })
@@ -301,7 +304,9 @@ const AddEventSidebar = (props: AddEventSidebarType) => {
                 labelId='event-view'
                 onChange={handleViewEvent}
               >
-                <MenuItem value='Official'>公式</MenuItem>
+                {
+                  profile !== undefined && profile.role === 'ADMIN' ? <MenuItem value='Official'>公式</MenuItem> : null
+                }
                 <MenuItem value='Public'>公開</MenuItem>
                 <MenuItem value='Private'>非公開</MenuItem>
               </Select>
@@ -370,54 +375,54 @@ const AddEventSidebar = (props: AddEventSidebarType) => {
               onChange={e => setValues({ ...values, description: e.target.value })}
             />
             {!(store.selectedEvent === null || (store.selectedEvent !== null && !store.selectedEvent.title.length)) ?
-            <FormControl fullWidth sx={{ mb: 6 }}>
-              <InputLabel id='event-scheduleUpdateCode'>更新対象</InputLabel>
-              <Select
-                label='ScheduleUpdateCode'
-                value={values.scheduleUpdateCode}
-                labelId='event-scheduleUpdateCode'
-                onChange={e => setValues({ ...values, scheduleUpdateCode: e.target.value })}
-              >
-                <MenuItem value='ONLY_THIS'>現在のスケジュール</MenuItem>
-                <MenuItem value='ALL'>全てのスケジュール</MenuItem>
-                <MenuItem value='THIS_AND_FUTURE'>現在とそれ以降のスケジュール</MenuItem>
-              </Select>
-            </FormControl> : null}
+              <FormControl fullWidth sx={{ mb: 6 }}>
+                <InputLabel id='event-scheduleUpdateCode'>更新対象</InputLabel>
+                <Select
+                  label='ScheduleUpdateCode'
+                  value={values.scheduleUpdateCode}
+                  labelId='event-scheduleUpdateCode'
+                  onChange={e => setValues({ ...values, scheduleUpdateCode: e.target.value })}
+                >
+                  <MenuItem value='ONLY_THIS'>現在のスケジュール</MenuItem>
+                  <MenuItem value='ALL'>全てのスケジュール</MenuItem>
+                  <MenuItem value='THIS_AND_FUTURE'>現在とそれ以降のスケジュール</MenuItem>
+                </Select>
+              </FormControl> : null}
 
 
             {(store.selectedEvent === null || (store.selectedEvent !== null && !store.selectedEvent.title.length)) ?
-            <FormControl fullWidth sx={{ mb: 6 }}>
-              <InputLabel id='event-repeatCode'>繰り返し設定</InputLabel>
-              <Select
-                label='RepeatCode'
-                value={values.repeatCode}
-                labelId='event-repeatCode'
-                onChange={e => {
-                  if (e.target.value === 'NONE') {
-                    setValues({ ...values, repeatCode: e.target.value, repeatEnd: undefined })
-                  } else {
-                    setValues({ ...values, repeatCode: e.target.value })
-                  }
-                }}>
-                <MenuItem value='NONE'>設定しない</MenuItem>
-                <MenuItem value='DAYS'>毎日</MenuItem>
-                <MenuItem value='WEEKS'>毎週</MenuItem>
-                <MenuItem value='MONTHS'>毎月</MenuItem>
-                <MenuItem value='YEARS'>毎年</MenuItem>
-              </Select>
-            </FormControl> : null}
+              <FormControl fullWidth sx={{ mb: 6 }}>
+                <InputLabel id='event-repeatCode'>繰り返し設定</InputLabel>
+                <Select
+                  label='RepeatCode'
+                  value={values.repeatCode}
+                  labelId='event-repeatCode'
+                  onChange={e => {
+                    if (e.target.value === 'NONE') {
+                      setValues({ ...values, repeatCode: e.target.value, repeatEnd: undefined })
+                    } else {
+                      setValues({ ...values, repeatCode: e.target.value })
+                    }
+                  }}>
+                  <MenuItem value='NONE'>設定しない</MenuItem>
+                  <MenuItem value='DAYS'>毎日</MenuItem>
+                  <MenuItem value='WEEKS'>毎週</MenuItem>
+                  <MenuItem value='MONTHS'>毎月</MenuItem>
+                  <MenuItem value='YEARS'>毎年</MenuItem>
+                </Select>
+              </FormControl> : null}
             {(store.selectedEvent === null || (store.selectedEvent !== null && !store.selectedEvent.title.length)) && values.repeatCode !== "NONE" ?
-            <Box sx={{ mb: 6 }}>
-              <DatePicker
-                selectsStart
-                id='event-repeatEnd'
-                endDate={values.endDate as EventDateType}
-                selected={values.repeatEnd as EventDateType}
-                dateFormat={'yyyy-MM-dd'}
-                customInput={<PickersComponent label='リピート終了日' registername='repeatEnd' />}
-                onChange={(date: Date) => setValues({ ...values, repeatEnd: new Date(date) })}
-              />
-            </Box> : null}
+              <Box sx={{ mb: 6 }}>
+                <DatePicker
+                  selectsStart
+                  id='event-repeatEnd'
+                  endDate={values.endDate as EventDateType}
+                  selected={values.repeatEnd as EventDateType}
+                  dateFormat={'yyyy-MM-dd'}
+                  customInput={<PickersComponent label='リピート終了日' registername='repeatEnd' />}
+                  onChange={(date: Date) => setValues({ ...values, repeatEnd: new Date(date) })}
+                />
+              </Box> : null}
 
             <Box sx={{ display: 'flex', alignItems: 'center' }}>
               <RenderSidebarFooter />

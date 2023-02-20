@@ -23,6 +23,7 @@ export interface IProfile {
     heFollowMe: 'FOLLOW' | 'WAITING' | null
     ifollowHim: 'FOLLOW' | 'WAITING' | null
     notificationFlg: boolean;
+    role: string;
 }
 
 export interface IProfileResponse {

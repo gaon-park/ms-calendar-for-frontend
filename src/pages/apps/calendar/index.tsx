@@ -32,8 +32,9 @@ import {
   handleCalendarsUpdate,
   handleIsSignIn
 } from 'src/store/apps/calendar'
-import { useProfile } from 'src/hooks/useProfile'
 import { useAuth } from 'src/hooks/useAuth'
+import { useRecoilValue } from 'recoil'
+import { myProfile } from 'src/store/profile/user'
 
 // ** CalendarColors
 const calendarsColor: CalendarColors = {
@@ -46,6 +47,7 @@ const AppCalendar = () => {
   const [calendarApi, setCalendarApi] = useState<null | any>(null)
   const [leftSidebarOpen, setLeftSidebarOpen] = useState<boolean>(false)
   const [addEventSidebarOpen, setAddEventSidebarOpen] = useState<boolean>(false)
+  const profile = useRecoilValue(myProfile)
 
   // ** Hooks
   const { settings } = useSettings()
@@ -82,18 +84,21 @@ const AppCalendar = () => {
         ...(skin === 'bordered' && { border: theme => `1px solid ${theme.palette.divider}` })
       }}
     >
-      <SidebarLeft
-        store={store}
-        mdAbove={mdAbove}
-        dispatch={dispatch}
-        calendarsColor={calendarsColor}
-        leftSidebarOpen={leftSidebarOpen}
-        leftSidebarWidth={leftSidebarWidth}
-        handleSelectEvent={handleSelectEvent}
-        handleCalendarsUpdate={handleCalendarsUpdate}
-        handleLeftSidebarToggle={handleLeftSidebarToggle}
-        handleAddEventSidebarToggle={handleAddEventSidebarToggle}
-      />
+      {
+        profile !== undefined ? <SidebarLeft
+          store={store}
+          mdAbove={mdAbove}
+          dispatch={dispatch}
+          calendarsColor={calendarsColor}
+          leftSidebarOpen={leftSidebarOpen}
+          leftSidebarWidth={leftSidebarWidth}
+          handleSelectEvent={handleSelectEvent}
+          handleCalendarsUpdate={handleCalendarsUpdate}
+          handleLeftSidebarToggle={handleLeftSidebarToggle}
+          handleAddEventSidebarToggle={handleAddEventSidebarToggle}
+        /> : null
+      }
+
       <Box
         sx={{
           p: 5,
@@ -118,18 +123,21 @@ const AppCalendar = () => {
           handleAddEventSidebarToggle={handleAddEventSidebarToggle}
         />
       </Box>
-      <AddEventSidebar
-        store={store}
-        dispatch={dispatch}
-        addEvent={addEvent}
-        updateEvent={updateEvent}
-        deleteEvent={deleteEvent}
-        calendarApi={calendarApi}
-        drawerWidth={addEventSidebarWidth}
-        handleSelectEvent={handleSelectEvent}
-        addEventSidebarOpen={addEventSidebarOpen}
-        handleAddEventSidebarToggle={handleAddEventSidebarToggle}
-      />
+      {
+        profile !== undefined ? <AddEventSidebar
+          store={store}
+          dispatch={dispatch}
+          addEvent={addEvent}
+          updateEvent={updateEvent}
+          deleteEvent={deleteEvent}
+          calendarApi={calendarApi}
+          drawerWidth={addEventSidebarWidth}
+          handleSelectEvent={handleSelectEvent}
+          addEventSidebarOpen={addEventSidebarOpen}
+          handleAddEventSidebarToggle={handleAddEventSidebarToggle}
+        /> : null
+      }
+
     </CalendarWrapper>
   )
 }
