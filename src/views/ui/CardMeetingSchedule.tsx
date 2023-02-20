@@ -71,65 +71,67 @@ const data: DataType[] = [
 
 const CardMeetingSchedule = () => {
   return (
-    <Card>
-      <CardHeader
-        title='Meeting Schedule'
-        action={
-          <OptionsMenu
-            options={['Refresh', 'Share', 'Reschedule']}
-            iconButtonProps={{ size: 'small', sx: { color: 'text.primary' } }}
-          />
-        }
-      />
-      <CardContent>
-        {data.map((item: DataType, index: number) => {
-          return (
-            <Box
-              key={item.title}
-              sx={{
-                display: 'flex',
-                alignItems: 'center',
-                mb: index !== data.length - 1 ? 6.5 : undefined
-              }}
-            >
-              <Avatar src={item.src} sx={{ mr: 3, width: 38, height: 38 }} />
+    <Box>
+      <Card>
+        <CardHeader
+          title='Meeting Schedule'
+          action={
+            <OptionsMenu
+              options={['Refresh', 'Share', 'Reschedule']}
+              iconButtonProps={{ size: 'small', sx: { color: 'text.primary' } }}
+            />
+          }
+        />
+        <CardContent>
+          {data.map((item: DataType, index: number) => {
+            return (
               <Box
+                key={item.title}
                 sx={{
-                  width: '100%',
                   display: 'flex',
-                  flexWrap: 'wrap',
                   alignItems: 'center',
-                  justifyContent: 'space-between'
+                  mb: index !== data.length - 1 ? 6.5 : undefined
                 }}
               >
-                <Box sx={{ mr: 2, display: 'flex', mb: 0.4, flexDirection: 'column' }}>
-                  <Typography variant='body2' sx={{ mb: 0.5, fontWeight: 600, color: 'text.primary' }}>
-                    {item.title}
-                  </Typography>
-                  <Box
-                    sx={{
-                      display: 'flex',
-                      alignItems: 'center',
-                      '& svg': { mr: 1.5, color: 'text.secondary', verticalAlign: 'middle' }
-                    }}
-                  >
-                    <Icon fontSize='1rem' icon='mdi:calendar-blank-outline' />
-                    <Typography variant='caption'>{item.subtitle}</Typography>
+                <Avatar src={item.src} sx={{ mr: 3, width: 38, height: 38 }} />
+                <Box
+                  sx={{
+                    width: '100%',
+                    display: 'flex',
+                    flexWrap: 'wrap',
+                    alignItems: 'center',
+                    justifyContent: 'space-between'
+                  }}
+                >
+                  <Box sx={{ mr: 2, display: 'flex', mb: 0.4, flexDirection: 'column' }}>
+                    <Typography variant='body2' sx={{ mb: 0.5, fontWeight: 600, color: 'text.primary' }}>
+                      {item.title}
+                    </Typography>
+                    <Box
+                      sx={{
+                        display: 'flex',
+                        alignItems: 'center',
+                        '& svg': { mr: 1.5, color: 'text.secondary', verticalAlign: 'middle' }
+                      }}
+                    >
+                      <Icon fontSize='1rem' icon='mdi:calendar-blank-outline' />
+                      <Typography variant='caption'>{item.subtitle}</Typography>
+                    </Box>
                   </Box>
+                  <CustomChip
+                    skin='light'
+                    size='small'
+                    label={item.chipText}
+                    color={item.chipColor}
+                    sx={{ height: 20, mt: 0.4, fontSize: '0.75rem', fontWeight: 600 }}
+                  />
                 </Box>
-                <CustomChip
-                  skin='light'
-                  size='small'
-                  label={item.chipText}
-                  color={item.chipColor}
-                  sx={{ height: 20, mt: 0.4, fontSize: '0.75rem', fontWeight: 600 }}
-                />
               </Box>
-            </Box>
-          )
-        })}
-      </CardContent>
-    </Card>
+            )
+          })}
+        </CardContent>
+      </Card>
+    </Box>
   )
 }
 

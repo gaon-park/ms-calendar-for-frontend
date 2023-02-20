@@ -9,10 +9,12 @@ const Home = () => {
 
   return (
     <Grid container spacing={6}>
-      <Grid item sm={4} md={4}>
+      <Grid 
+      	sx={{ display: { xs: 'none', md: 'block', lg: 'block' } }}
+      item sm={4} md={4}>
         <CardMeetingSchedule />
       </Grid>
-      <Grid item xs={12} sm={8} md={8}>
+      <Grid item xs={12} md={8}>
         <CardPost />
       </Grid>
     </Grid>
