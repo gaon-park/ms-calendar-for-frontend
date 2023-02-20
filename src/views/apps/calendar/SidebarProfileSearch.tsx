@@ -18,11 +18,13 @@ import { getInitials } from 'src/@core/utils/get-initials'
 
 const SidebarProfileSearch = (props: SidebarProfileSearchType) => {
   const [keyword, setKeyword] = useState('')
-
   const [open, setOpen] = useState<boolean>(false)
   const [options, setOptions] = useState<SimpleUserResponse[]>([])
-
   const loading = open && options.length === 0
+
+  const limit = 4 // 同時閲覧できる最大ユーザ数
+  const [selected, setSelected] = useState<SimpleUserResponse[]>([])
+  const checkDisable = React.useCallback((option: SimpleUserResponse) => limit <= selected.length && !selected.includes(option), [limit, selected]);
 
   const { data } = useSWR(
     { keyword },
@@ -50,9 +52,12 @@ const SidebarProfileSearch = (props: SidebarProfileSearchType) => {
             width: 220
           }}
           multiple
+          fullWidth
+          getOptionDisabled={checkDisable}
           open={open}
           options={options}
           loading={loading}
+          onChange={(e, newSelected) => setSelected(newSelected)}
           onOpen={() => setOpen(true)}
           onClose={() => setOpen(false)}
           id='autocomplete-asynchronous-request'
@@ -86,7 +91,6 @@ const SidebarProfileSearch = (props: SidebarProfileSearchType) => {
                     : <CustomAvatar
                       skin='light'
                       color='primary'
-                    // sx={{ width: 40, height: 40, fontSize: '.875rem' }}
                     >
                       {getInitials(option.nickName)}
                     </CustomAvatar>
