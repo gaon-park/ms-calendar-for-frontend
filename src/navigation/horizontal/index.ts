@@ -12,11 +12,6 @@ const navigation = (): HorizontalNavItemsType => {
       title: 'Search User',
       icon: 'mdi:account-outline',
       path: '/apps/user/list'
-    },
-    {
-      title: 'Help',
-      icon: 'ion:help',
-      path: '/apps/help'
     }
   ]
 }
