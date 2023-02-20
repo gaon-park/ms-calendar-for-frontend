@@ -1,5 +1,4 @@
 // ** MUI Imports
-import * as React from 'react';
 import Avatar from '@mui/material/Avatar';
 import Box from '@mui/material/Box'
 import TextField from '@mui/material/TextField'
@@ -7,7 +6,7 @@ import CustomAvatar from 'src/@core/components/mui/avatar'
 
 // ** Types
 import { SidebarProfileSearchType } from 'src/types/apps/calendarTypes'
-import { useEffect, useState } from 'react';
+import { Fragment, useCallback, useEffect, useState } from 'react';
 import { Autocomplete, Chip, CircularProgress } from '@mui/material';
 import { SimpleUserResponse } from 'src/model/user/user';
 
@@ -15,7 +14,7 @@ import useSWR from "swr"
 import { SearchUserForScheduleInvite } from 'src/common/api/msBackend/search';
 
 import { getInitials } from 'src/@core/utils/get-initials'
-import { fetchOtherEvent, removeOtherEvent } from 'src/store/apps/calendar';
+import { fetchOtherEvents, removeOtherEvents } from 'src/store/apps/calendar';
 
 const SidebarProfileSearch = (props: SidebarProfileSearchType) => {
   const { dispatch } = props
@@ -26,7 +25,7 @@ const SidebarProfileSearch = (props: SidebarProfileSearchType) => {
 
   const limit = 4 // 同時閲覧できる最大ユーザ数
   const [selected, setSelected] = useState<string[]>([])
-  const checkDisable = React.useCallback((option: SimpleUserResponse) => limit <= selected.length && !selected.includes(option.id), [limit, selected]);
+  const checkDisable = useCallback((option: SimpleUserResponse) => limit <= selected.length && !selected.includes(option.id), [limit, selected]);
 
   const handleChanged = async (newSelected: SimpleUserResponse[]) => {
     const ids = newSelected.map((o) => o.id)
@@ -34,12 +33,11 @@ const SidebarProfileSearch = (props: SidebarProfileSearchType) => {
     const removedId = selected.find((o) => !ids.includes(o))
 
     if (addedId !== undefined) {
-      dispatch(fetchOtherEvent(addedId))
+      dispatch(fetchOtherEvents(addedId))
     }
     if (removedId !== undefined) {
-      dispatch(removeOtherEvent(removedId))
+      dispatch(removeOtherEvents(removedId))
     }
-
     setSelected(ids)
   }
 
@@ -62,7 +60,7 @@ const SidebarProfileSearch = (props: SidebarProfileSearchType) => {
   }, [data])
 
   return (
-    <React.Fragment>
+    <Fragment>
       <Box sx={{ display: 'flex', flexWrap: 'wrap' }}>
         <Autocomplete
           sx={{
@@ -88,10 +86,10 @@ const SidebarProfileSearch = (props: SidebarProfileSearchType) => {
               InputProps={{
                 ...params.InputProps,
                 endAdornment: (
-                  <React.Fragment>
+                  <Fragment>
                     {loading ? <CircularProgress color='inherit' size={20} /> : null}
                     {params.InputProps.endAdornment}
-                  </React.Fragment>
+                  </Fragment>
                 )
               }}
             />
@@ -117,7 +115,7 @@ const SidebarProfileSearch = (props: SidebarProfileSearchType) => {
           }
         />
       </Box>
-    </React.Fragment>
+    </Fragment>
   )
 }
 

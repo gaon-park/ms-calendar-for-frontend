@@ -36,15 +36,13 @@ export const fetchOtherEvent = createAsyncThunk<
     to: generateDateEnd(),
   })
 
-  const { calendar } = getState();
-
-  return calendar.events.concat(fromSchedulePersonal(response.data, userId))
+  return fromSchedulePersonal(response.data, userId)
 })
 
-export const removeOtherEvent = createAsyncThunk<
-  EventType[], string, { state: CalendarStoreType }
->('appCalendar/fetchOtherEvent', async (userId, { getState }) => {
-  return getState().events.filter((obj) => obj.bySearchUserId !== userId)
+export const removeOtherEvents = createAsyncThunk<
+  string, string, { state: CalendarStoreType }
+>('appCalendar/removeOtherEvents', (userId) => {
+  return userId
 })
 
 export function fromEventType(res: IScheduleResponse): EventType[] {
@@ -195,13 +193,19 @@ export const appCalendarSlice = createSlice({
       if (state.selectedCalendars.length === 0) {
         state.events.length = 0
       }
-    },
+    }
   },
   extraReducers: builder => {
     builder.addCase(fetchEvents.fulfilled, (state, action) => {
       state.events = action.payload;
     })
-  }
+    .addCase(fetchOtherEvents.fulfilled, (state, action) => {
+      state.events = state.events.concat(action.payload);
+    })
+    .addCase(removeOtherEvents.fulfilled, (state, action) => {
+      state.events = state.events.filter((o) => o.bySearchUserId !== action.payload)
+    })
+  },
 })
 
 export const { handleSelectEvent, handleCalendarsUpdate, handleIsSignIn } = appCalendarSlice.actions
