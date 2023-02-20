@@ -137,8 +137,6 @@ export const deleteEvent = createAsyncThunk<
   string, DeleteScheduleRequest, { state: CalendarStoreType }
 >('appCalendar/deleteEvent', async (req, { dispatch, getState }) => {
   const { isSignIn } = getState();
-
-  console.log(isSignIn);
   if (isSignIn) return "delete failed";
 
   const response = await PutScheduleDelete(req)
