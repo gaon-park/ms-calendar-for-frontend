@@ -69,7 +69,7 @@ const AppCalendar = () => {
     // ちょっとわかんないとりあえず動きはする
     // @ts-ignore
     dispatch(fetchEvents())
-  }, [])
+  }, [dispatch])
 
   const handleLeftSidebarToggle = () => setLeftSidebarOpen(!leftSidebarOpen)
 
