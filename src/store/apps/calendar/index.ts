@@ -199,7 +199,7 @@ export const appCalendarSlice = createSlice({
     builder.addCase(fetchEvents.fulfilled, (state, action) => {
       state.events = action.payload;
     })
-    .addCase(fetchOtherEvents.fulfilled, (state, action) => {
+    .addCase(fetchOtherEvent.fulfilled, (state, action) => {
       state.events = state.events.concat(action.payload);
     })
     .addCase(removeOtherEvents.fulfilled, (state, action) => {
