@@ -9,22 +9,26 @@ import { EventType } from "src/types/apps/calendarTypes";
 // ** Types
 import { CalendarStoreType } from 'src/types/apps/calendarTypes'
 
+interface StateCalendar {
+  calendar: CalendarStoreType
+}
+
 // ** Fetch Events
 export const fetchEvents = createAsyncThunk<
-  EventType[], undefined, { state: CalendarStoreType }
+  EventType[], undefined, { state: StateCalendar }
 >('appCalendar/fetchEvents', async (undefined, { getState }) => {
-  const { memberIds } = getState();
+  const { calendar } = getState();
   const response = await GetUserSchedule({
-    userIds: memberIds ?? [],
+    userIds: calendar.memberIds ?? [],
     from: generateDateBegin(),
     to: generateDateEnd(),
   })
-  
+
   return fromEventType(response.data)
 })
 
 export const fetchOtherEvent = createAsyncThunk<
-  EventType[], string, { state: CalendarStoreType }
+  EventType[], string, { state: StateCalendar }
 >('appCalendar/fetchOtherEvent', async (userId, { getState }) => {
   const response = await SearchOtherSchedule({
     userId: userId,
@@ -32,10 +36,9 @@ export const fetchOtherEvent = createAsyncThunk<
     to: generateDateEnd(),
   })
 
-  console.log('fetch!')
-  console.log(getState().events)
+  const { calendar } = getState();
 
-  return getState().events.concat(fromSchedulePersonal(response.data, userId))
+  return calendar.events.concat(fromSchedulePersonal(response.data, userId))
 })
 
 export const removeOtherEvent = createAsyncThunk<
@@ -100,38 +103,6 @@ function fromSchedulePersonal(
   })
 }
 
-// function fromSchedulePersonal(scPer: SchedulePersonalParent): EventType[] {
-//   const res: EventType[] = [];
-//   Object.keys(scPer).forEach((memberId: string) => {
-//     const colScp = scPer[memberId];
-//     colScp.forEach((e) => {
-//       const col: EventType = {
-//         id: e.scheduleId,
-//         title: e.title,
-//         allDay: e.allDay,
-//         start: new Date(e.start),
-//         end: e.end ? new Date(e.end) : undefined,
-//         color: 'primary',
-//         extendedProps: {
-//           ownerId: e.ownerId,
-//           view: e.isPublic == true ? 'Public' :
-//             (e.isPublic == false ? 'Private' : 'Public'),
-//           calendarMemberId: memberId,
-//           description: e.note,
-//           isPublic: e.isPublic,
-//           guests: e.members.map((m) => {
-//             return m.accountId
-//           }),
-//           forOfficial: false,
-//         }
-//       }
-//       res.push(col);
-//     });
-//   });
-
-//   return res;
-// }
-
 let fromDate: string | null = null;
 function generateDateBegin(): string {
   if (fromDate) return fromDate;
@@ -156,11 +127,11 @@ function generateDateEnd() {
 
 // ** Add Event
 export const addEvent = createAsyncThunk<
-  string, PostUserScheduleRequest, { state: CalendarStoreType }
+  string, PostUserScheduleRequest, { state: StateCalendar }
 >('appCalendar/addEvent', async (req, { dispatch, getState }) => {
-  const { isSignIn } = getState();
+  const { calendar } = getState();
 
-  if (isSignIn) return "register failed";
+  if (calendar.isSignIn) return "register failed";
   const response = await PostUserSchedule(req);
   await dispatch(fetchEvents())
 
@@ -169,11 +140,11 @@ export const addEvent = createAsyncThunk<
 
 // ** Update Event
 export const updateEvent = createAsyncThunk<
-  string, PutUserScheduleRequest, { state: CalendarStoreType }
+  string, PutUserScheduleRequest, { state: StateCalendar }
 >('appCalendar/updateEvent', async (req, { dispatch, getState }) => {
-  const { isSignIn } = getState();
+  const { calendar } = getState();
 
-  if (isSignIn) return "update failed";
+  if (calendar.isSignIn) return "update failed";
   const response = await PutUserSchedule(req);
 
   await dispatch(fetchEvents())
@@ -183,10 +154,10 @@ export const updateEvent = createAsyncThunk<
 
 // ** Delete Event
 export const deleteEvent = createAsyncThunk<
-  string, DeleteScheduleRequest, { state: CalendarStoreType }
+  string, DeleteScheduleRequest, { state: StateCalendar }
 >('appCalendar/deleteEvent', async (req, { dispatch, getState }) => {
-  const { isSignIn } = getState();
-  if (isSignIn) return "delete failed";
+  const { calendar } = getState();
+  if (calendar.isSignIn) return "delete failed";
 
   const response = await PutScheduleDelete(req)
   await dispatch(fetchEvents())
