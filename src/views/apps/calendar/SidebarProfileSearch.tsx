@@ -14,7 +14,7 @@ import useSWR from "swr"
 import { SearchUserForScheduleInvite } from 'src/common/api/msBackend/search';
 
 import { getInitials } from 'src/@core/utils/get-initials'
-import { fetchOtherEvents, removeOtherEvents } from 'src/store/apps/calendar';
+import { fetchOtherEvent, removeOtherEvents } from 'src/store/apps/calendar';
 
 const SidebarProfileSearch = (props: SidebarProfileSearchType) => {
   const { dispatch } = props
@@ -33,7 +33,7 @@ const SidebarProfileSearch = (props: SidebarProfileSearchType) => {
     const removedId = selected.find((o) => !ids.includes(o))
 
     if (addedId !== undefined) {
-      dispatch(fetchOtherEvents(addedId))
+      dispatch(fetchOtherEvent(addedId))
     }
     if (removedId !== undefined) {
       dispatch(removeOtherEvents(removedId))
