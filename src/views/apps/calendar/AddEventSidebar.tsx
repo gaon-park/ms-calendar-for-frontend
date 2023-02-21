@@ -232,7 +232,6 @@ const AddEventSidebar = (props: AddEventSidebarType) => {
       const plus: SimpleUserResponse[] = event.extendedProps.guests?.filter((o) => !optionIds.includes(o.id)) ?? []
       plus.forEach((o) => guestOptions.push(o))
 
-      console.log(plus)
       setGuestSelected(event.extendedProps.guests ?? [])
     }
   }, [setValue, store.selectedEvent])
