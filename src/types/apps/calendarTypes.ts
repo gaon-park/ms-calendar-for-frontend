@@ -59,6 +59,8 @@ export type EventStateType = {
 
 export type CalendarStoreType = {
   events: EventType[]
+  officialColor: ThemeColor
+  myColor: ThemeColor
   selectedEvent: null | EventType
   selectedCalendars: CalendarFiltersType[] | string[],
   memberIds: string[],
@@ -105,7 +107,6 @@ export type AddEventSidebarType = {
   dispatch: Dispatch<any>
   store: CalendarStoreType
   addEventSidebarOpen: boolean
-  calendarsColor: CalendarColors
   deleteEvent: (req: DeleteScheduleRequest) => void
   addEvent: (req: PostUserScheduleRequest) => void
   updateEvent: (req: PutUserScheduleRequest) => void

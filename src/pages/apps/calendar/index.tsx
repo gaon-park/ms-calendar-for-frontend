@@ -30,7 +30,8 @@ import {
   updateEvent,
   handleSelectEvent,
   handleIsSignIn,
-  handleSelectedUsers
+  handleSelectedUsers,
+  handleThemeSetting
 } from 'src/store/apps/calendar'
 import { useAuth } from 'src/hooks/useAuth'
 import { useProfile } from 'src/hooks/useProfile'
@@ -70,9 +71,13 @@ const AppCalendar = () => {
   }, [dispatch, store, isSignIn])
 
   useEffect(() => {
+    dispatch(handleThemeSetting([calendarsColor.Official, calendarsColor.My]))
+  }, [settings])
+
+  useEffect(() => {
     // ちょっとわかんないとりあえず動きはする
     // @ts-ignore
-    dispatch(fetchEvents([calendarsColor.Official, calendarsColor.My]))
+    dispatch(fetchEvents())
   }, [dispatch, settings])
 
   const handleLeftSidebarToggle = () => setLeftSidebarOpen(!leftSidebarOpen)
@@ -137,7 +142,6 @@ const AppCalendar = () => {
           handleSelectEvent={handleSelectEvent}
           addEventSidebarOpen={addEventSidebarOpen}
           handleAddEventSidebarToggle={handleAddEventSidebarToggle}
-          calendarsColor={calendarsColor}
         /> : null
       }
     </CalendarWrapper>

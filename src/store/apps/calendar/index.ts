@@ -16,8 +16,8 @@ interface StateCalendar {
 
 // ** Fetch Events
 export const fetchEvents = createAsyncThunk<
-  EventType[], ThemeColor[] | undefined, { state: StateCalendar }
->('appCalendar/fetchEvents', async (color, { getState }) => {
+  EventType[], undefined, { state: StateCalendar }
+>('appCalendar/fetchEvents', async (undefined, { getState }) => {
   const { calendar } = getState();
   const response = await GetUserSchedule({
     userIds: calendar.memberIds ?? [],
@@ -25,7 +25,7 @@ export const fetchEvents = createAsyncThunk<
     to: generateDateEnd(),
   })
 
-  return fromEventType(response.data, color)
+  return fromEventType(response.data, calendar.officialColor, calendar.myColor)
 })
 
 export const fetchOtherEvents = createAsyncThunk<
@@ -52,14 +52,17 @@ export const displayEvents = createAsyncThunk<
   return type
 })
 
-export function fromEventType(res: IScheduleResponse, color?: ThemeColor[]): EventType[] {
-  const off = fromScheduleOfficial(res.officials, color?.[0]);
-  const personal = fromSchedulePersonal(res.personals, color?.[1]);
+export function fromEventType(res: IScheduleResponse, officialColor: ThemeColor, myColor: ThemeColor): EventType[] {
+  const off = fromScheduleOfficial(res.officials, officialColor);
+  const personal = fromSchedulePersonal(res.personals, myColor);
 
   return off.concat(personal);
 }
 
-function fromScheduleOfficial(scOff: ScheduleOfficial[], color?: ThemeColor): EventType[] {
+function fromScheduleOfficial(
+  scOff: ScheduleOfficial[],
+  color: ThemeColor
+): EventType[] {
   return scOff.map((e) => {
     return {
       id: e.scheduleId,
@@ -67,7 +70,7 @@ function fromScheduleOfficial(scOff: ScheduleOfficial[], color?: ThemeColor): Ev
       allDay: e.allDay,
       start: new Date(e.start),
       end: e.end ? new Date(e.end) : undefined,
-      color: primaryGradient(color ?? ""),
+      color: primaryGradient(color),
       filterType: 'Official',
       extendedProps: {
         view: 'Official',
@@ -84,7 +87,7 @@ function fromScheduleOfficial(scOff: ScheduleOfficial[], color?: ThemeColor): Ev
 
 function fromSchedulePersonal(
   scPer: SchedulePersonal[],
-  color?: ThemeColor,
+  color: ThemeColor,
 ): EventType[] {
   return scPer.map((e) => {
     return {
@@ -93,7 +96,7 @@ function fromSchedulePersonal(
       allDay: e.allDay,
       start: new Date(e.start),
       end: e.end ? new Date(e.end) : undefined,
-      color: primaryGradient(color ?? ""),
+      color: primaryGradient(color),
       filterType: 'My',
       extendedProps: {
         ownerId: e.ownerId,
@@ -114,7 +117,6 @@ function fromSchedulePersonal(
 function fromScheduleOther(
   scPer: SchedulePersonal[],
   bySearchUserId: string,
-  color?: ThemeColor,
 ): EventType[] {
   return scPer.map((e) => {
     return {
@@ -124,7 +126,7 @@ function fromScheduleOther(
       allDay: e.allDay,
       start: new Date(e.start),
       end: e.end ? new Date(e.end) : undefined,
-      color: primaryGradient(color ?? ""),
+      color: primaryGradient(""),
       extendedProps: {
         ownerId: e.ownerId,
         view: e.isPublic == true ? 'Public' :
@@ -182,7 +184,7 @@ export const updateEvent = createAsyncThunk<
 >('appCalendar/updateEvent', async (req, { dispatch, getState }) => {
   const { calendar } = getState();
 
-  if (!calendar.isSignIn) return "update failed";  
+  if (!calendar.isSignIn) return "update failed";
   const response = await PutUserSchedule(req);
 
   await dispatch(fetchEvents())
@@ -207,6 +209,8 @@ export const appCalendarSlice = createSlice({
   name: 'appCalendar',
   initialState: {
     events: [],
+    officialColor: 'primary',
+    myColor: 'info',
     selectedEvent: null,
     selectedCalendars: ['Official', 'My'],
     memberIds: [],
@@ -226,6 +230,10 @@ export const appCalendarSlice = createSlice({
     },
     handleSelectedUsers: (state, action) => {
       state.selectedUsers = action.payload
+    },
+    handleThemeSetting: (state, action) => {
+      state.officialColor = action.payload[0]
+      state.myColor = action.payload[1]
     }
   },
   extraReducers: builder => {
@@ -241,13 +249,13 @@ export const appCalendarSlice = createSlice({
       .addCase(displayEvents.fulfilled, (state, action) => {
         state.events = state.events.map((o) => {
           if (o.filterType === action.payload) {
-            if (o.display === undefined || o.display === 'true') {
+            if (o.display === undefined || o.display === 'auto') {
               state.selectedCalendars = state.selectedCalendars.filter((o) => o !== action.payload)
               o.display = 'none'
             }
             else {
               state.selectedCalendars.push(action.payload)
-              o.display = 'true'
+              o.display = 'auto'
             }
 
             return o
@@ -259,7 +267,7 @@ export const appCalendarSlice = createSlice({
   },
 })
 
-export const { handleSelectEvent, handleIsSignIn, handleSelectedUsers } = appCalendarSlice.actions
+export const { handleSelectEvent, handleIsSignIn, handleSelectedUsers, handleThemeSetting } = appCalendarSlice.actions
 
 export default appCalendarSlice.reducer
 

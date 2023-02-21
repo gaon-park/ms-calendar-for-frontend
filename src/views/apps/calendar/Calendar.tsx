@@ -14,7 +14,7 @@ import Icon from 'src/@core/components/icon'
 // ** Types
 import { CalendarType, EventType } from 'src/types/apps/calendarTypes'
 import { generateDate } from 'src/@core/utils/calc-date'
-import { convertDateFormat, convertDatetimeFormat } from 'src/@core/utils/format'
+import { convertDatetimeFormat } from 'src/@core/utils/format'
 import { PutUserScheduleRequest } from 'src/common/api/msBackend/user/schedule'
 
 const blankEvent: EventType = {
