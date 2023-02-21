@@ -9,7 +9,7 @@ import CardContent from '@mui/material/CardContent'
 import CustomAvatar from 'src/@core/components/mui/avatar'
 
 // ** Icon Imports
-import Icon from 'src/@core/components/icon'
+
 
 // ** Types
 import { ProfileHeaderType } from 'src/types/profile/types'
@@ -21,6 +21,7 @@ import { getInitials } from 'src/@core/utils/get-initials'
 import { FollowCancel, FollowRequest } from 'src/common/api/msBackend/user/follow'
 import worldData from 'src/model/worldData'
 import Avatar from '@mui/material/Avatar/Avatar'
+import Icon from 'src/@core/components/icon'
 
 const ProfilePicture = styled(CustomAvatar)<CustomAvatarProps>(({ theme }) => ({
   width: 120,
@@ -43,7 +44,7 @@ const worldIcon = (world: string) => {
     }
   }
 
-  return 'mdi:map-marker-outline'
+  return null
 }
 
 interface APICallbackReq {
@@ -64,13 +65,14 @@ const UserProfileHeader = ({ data }: { data: ProfileHeaderType }) => {
     apiRequest()
     router.reload()
   }
+  const worldMark = worldIcon(data.world)
 
   return (
     <Card>
       <CardMedia
         component='img'
         alt='profile-header'
-        
+
         // todo coverImg
         image={'/images/pages/profile-banner.png'}
         sx={{
@@ -120,11 +122,16 @@ const UserProfileHeader = ({ data }: { data: ProfileHeaderType }) => {
               }}
             >
               <Box sx={{ mr: 5, display: 'flex', alignItems: 'center', '& svg': { mr: 1, color: 'text.secondary' } }}>
-              <Avatar alt='worldIcon' sx={{ width: 20, height: 20 }} src={worldIcon(data.world)} />
+                {
+                  worldMark !== null ?
+                    <Avatar alt='worldIcon' sx={{ width: 20, height: 20 }} src={worldMark} />
+                    : <Icon icon='clarity:world-line' />
+                }
+
                 <Typography sx={{ ml: 1, color: 'text.secondary', fontWeight: 600 }}>{data.world}</Typography>
               </Box>
               <Box sx={{ mr: 5, display: 'flex', alignItems: 'center', '& svg': { mr: 1, color: 'text.secondary' } }}>
-              <Icon icon='mdi:briefcase-outline' />
+                <Icon icon='mdi:briefcase-outline' />
                 <Typography sx={{ ml: 1, color: 'text.secondary', fontWeight: 600 }}>{data.job}</Typography>
               </Box>
             </Box>

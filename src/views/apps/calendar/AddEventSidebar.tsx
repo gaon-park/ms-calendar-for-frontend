@@ -296,13 +296,13 @@ const AddEventSidebar = (props: AddEventSidebarType) => {
       return (
         <Fragment>
           <Button variant='outlined' color='secondary' onClick={onAccept} sx={{ mr: 4 }}>
-            ACCEPT
+            수락
           </Button>
           <Button variant='outlined' color='secondary' onClick={onRefuse} sx={{ mr: 4 }}>
-            REFUSE
+            거절
           </Button>
           <Button type='submit' variant='contained' sx={{ mr: 4 }}>
-            Update
+            수정
           </Button>
         </Fragment>
       )
@@ -395,12 +395,12 @@ const AddEventSidebar = (props: AddEventSidebarType) => {
               />
               {errors.title && (
                 <FormHelperText sx={{ color: 'error.main' }} id='event-title-error'>
-                  This field is required
+                  이 필드는 필수입니다
                 </FormHelperText>
               )}
             </FormControl>
             <FormControl fullWidth sx={{ mb: 6 }}>
-              <InputLabel id='event-view'>公開設定</InputLabel>
+              <InputLabel id='event-view'>공개 범위 설정</InputLabel>
               <Select
                 label='View'
                 value={values.view}
@@ -410,8 +410,8 @@ const AddEventSidebar = (props: AddEventSidebarType) => {
                 {
                   profile !== undefined && profile.role === 'ADMIN' ? <MenuItem value='Official'>公式</MenuItem> : null
                 }
-                <MenuItem value='Public'>公開</MenuItem>
-                <MenuItem value='Private'>非公開</MenuItem>
+                <MenuItem value='Public'>모두에게</MenuItem>
+                <MenuItem value='Private'>참석자만</MenuItem>
               </Select>
             </FormControl>
             <Box sx={{ mb: 6 }}>
@@ -423,7 +423,7 @@ const AddEventSidebar = (props: AddEventSidebarType) => {
                 startDate={values.startDate as EventDateType}
                 showTimeSelect={!values.allDay}
                 dateFormat={!values.allDay ? 'yyyy-MM-dd HH:mm' : 'yyyy-MM-dd'}
-                customInput={<PickersComponent label='Start Date' registername='startDate' />}
+                customInput={<PickersComponent label='일정 시작' registername='startDate' />}
                 onChange={(date: Date) => setValues({ ...values, startDate: new Date(date) })}
                 onSelect={handleStartDate}
               />
@@ -438,13 +438,13 @@ const AddEventSidebar = (props: AddEventSidebarType) => {
                 startDate={values.startDate as EventDateType}
                 showTimeSelect={!values.allDay}
                 dateFormat={!values.allDay ? 'yyyy-MM-dd HH:mm' : 'yyyy-MM-dd'}
-                customInput={<PickersComponent label='End Date' registername='endDate' />}
+                customInput={<PickersComponent label='일정 종료' registername='endDate' />}
                 onChange={(date: Date) => setValues({ ...values, endDate: new Date(date) })}
               /> : null}
             </Box>
             <FormControl sx={{ mb: 6 }}>
               <FormControlLabel
-                label='All Day'
+                label='하루종일'
                 control={
                   <Switch checked={values.allDay} onChange={e => setValues({ ...values, allDay: e.target.checked })} />
                 }
@@ -521,22 +521,22 @@ const AddEventSidebar = (props: AddEventSidebarType) => {
             />
             {!(store.selectedEvent === null || (store.selectedEvent !== null && !store.selectedEvent.title.length)) ?
               <FormControl fullWidth sx={{ mb: 6 }}>
-                <InputLabel id='event-scheduleUpdateCode'>更新対象</InputLabel>
+                <InputLabel id='event-scheduleUpdateCode'>수정범위(반복)</InputLabel>
                 <Select
                   label='ScheduleUpdateCode'
                   value={values.scheduleUpdateCode}
                   labelId='event-scheduleUpdateCode'
                   onChange={e => setValues({ ...values, scheduleUpdateCode: e.target.value })}
                 >
-                  <MenuItem value='ONLY_THIS'>現在のスケジュール</MenuItem>
-                  <MenuItem value='ALL'>全てのスケジュール</MenuItem>
-                  <MenuItem value='THIS_AND_FUTURE'>現在とそれ以降のスケジュール</MenuItem>
+                  <MenuItem value='ONLY_THIS'>이 일정만</MenuItem>
+                  <MenuItem value='ALL'>반복중인 일정 모두</MenuItem>
+                  <MenuItem value='THIS_AND_FUTURE'>이 이후의 일정</MenuItem>
                 </Select>
               </FormControl> : null}
 
             {(store.selectedEvent === null || (store.selectedEvent !== null && !store.selectedEvent.title.length)) ?
               <FormControl fullWidth sx={{ mb: 6 }}>
-                <InputLabel id='event-repeatCode'>繰り返し設定</InputLabel>
+                <InputLabel id='event-repeatCode'>반복 설정</InputLabel>
                 <Select
                   label='RepeatCode'
                   value={values.repeatCode}
@@ -548,11 +548,11 @@ const AddEventSidebar = (props: AddEventSidebarType) => {
                       setValues({ ...values, repeatCode: e.target.value })
                     }
                   }}>
-                  <MenuItem value=''>設定しない</MenuItem>
-                  <MenuItem value='DAYS'>毎日</MenuItem>
-                  <MenuItem value='WEEKS'>毎週</MenuItem>
-                  <MenuItem value='MONTHS'>毎月</MenuItem>
-                  <MenuItem value='YEARS'>毎年</MenuItem>
+                  <MenuItem value=''>설정 없음</MenuItem>
+                  <MenuItem value='DAYS'>매일</MenuItem>
+                  <MenuItem value='WEEKS'>매주</MenuItem>
+                  <MenuItem value='MONTHS'>매월</MenuItem>
+                  <MenuItem value='YEARS'>매년</MenuItem>
                 </Select>
               </FormControl> : null}
             {(store.selectedEvent === null || (store.selectedEvent !== null && !store.selectedEvent.title.length)) && values.repeatCode !== "" ?
@@ -563,7 +563,7 @@ const AddEventSidebar = (props: AddEventSidebarType) => {
                   endDate={values.endDate as EventDateType}
                   selected={values.repeatEnd as EventDateType}
                   dateFormat={'yyyy-MM-dd'}
-                  customInput={<PickersComponent label='リピート終了日' registername='repeatEnd' />}
+                  customInput={<PickersComponent label='반복 종료' registername='repeatEnd' />}
                   onChange={(date: Date) => setValues({ ...values, repeatEnd: new Date(date) })}
                 />
               </Box> : null}

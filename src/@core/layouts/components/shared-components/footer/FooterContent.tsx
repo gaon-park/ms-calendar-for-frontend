@@ -14,8 +14,8 @@ const FooterContent = () => {
       <Typography sx={{ mr: 2 }}>
         {`© 2023, Made by `}
         {/* todo */}
-        <Link target='_blank' href='#'>
-          리부트 뽀돌
+        <Link target='_blank' href='https://open.kakao.com/o/sUlBFP5e'>
+          {` 리부트 뽀돌`}
         </Link>
       </Typography>
       <Typography sx={{ mr: 1, fontSize: 12 }}>
@@ -23,8 +23,8 @@ const FooterContent = () => {
       </Typography>
       {hidden ? null : (
         <Box sx={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', '& :not(:last-child)': { mr: 4 } }}>
-          <Link target="_top" href="mailto:ondol1224@gmail.com?subject=ms-hero 버그 제보">
-            버그 제보
+          <Link target='_blank' href='https://open.kakao.com/o/sUlBFP5e'>
+            {` 버그 제보`}
           </Link>
         </Box>
       )}

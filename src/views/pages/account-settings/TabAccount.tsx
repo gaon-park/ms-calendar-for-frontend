@@ -312,13 +312,13 @@ const TabAccount = () => {
                 </Grid>
                 <Grid item xs={12} sm={6}>
                   <FormControlLabel
-                    label='Public Flg'
+                    label='Public'
                     labelPlacement='end'
                     control={<Switch checked={formData.isPublic} onChange={e => setFormData({ ...formData, ['isPublic']: e.target.checked })} />} />
                 </Grid>
                 <Grid item xs={12} sm={6}>
                   <FormControlLabel
-                    label='Notification Flg'
+                    label='Notification'
                     labelPlacement='end'
                     control={<Switch checked={formData.notificationFlg} onChange={e => setFormData({ ...formData, ['notificationFlg']: e.target.checked })} />} />
                 </Grid>
