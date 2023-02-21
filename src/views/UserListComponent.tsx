@@ -101,14 +101,14 @@ const UserListComponent = (props: Props) => {
 
         const renderFollowActionItem = (user: IProfile) => {
             return (
-                user.ifollowHim === null ? (
+                user.iamFollowHim === null ? (
                     <MenuItem key={`action_follow_${user.id}`} onClick={() => {
                         handleRowOptionsClose()
                         FollowRequest({ personalKey: user.id })
                         if (user.isPublic) {
-                            user.ifollowHim = 'FOLLOW'
+                            user.iamFollowHim = 'FOLLOW'
                         } else {
-                            user.ifollowHim = 'WAITING'
+                            user.iamFollowHim = 'WAITING'
                         }
                         props.updatedUser(user)
                     }} sx={{ '& svg': { mr: 2 } }}>
@@ -119,7 +119,7 @@ const UserListComponent = (props: Props) => {
                     <MenuItem key={`action_cancel_${user.id}`} onClick={() => {
                         handleRowOptionsClose()
                         FollowCancel({ personalKey: user.id })
-                        user.ifollowHim = null
+                        user.iamFollowHim = null
                         props.updatedUser(user)
                     }} sx={{ '& svg': { mr: 2 } }}>
                         <Icon icon='mdi:account-plus-outline' fontSize={20} />
@@ -294,12 +294,12 @@ const UserListComponent = (props: Props) => {
                             />
                             : null
                     ) : (
-                        row.ifollowHim !== null ?
+                        row.iamFollowHim !== null ?
                             <CustomChip
                                 skin='light'
                                 size='small'
-                                label={row.ifollowHim === 'FOLLOW' ? '팔로우 하는중' : '상대 응답 대기'}
-                                color={row.ifollowHim === 'FOLLOW' ? 'success' : 'primary'}
+                                label={row.iamFollowHim === 'FOLLOW' ? '팔로우 하는중' : '상대 응답 대기'}
+                                color={row.iamFollowHim === 'FOLLOW' ? 'success' : 'primary'}
                                 sx={{ textTransform: 'capitalize' }}
                             />
                             : null

@@ -21,7 +21,7 @@ export interface IProfile {
     job: string;
     jobDetail: string;
     heFollowMe: 'FOLLOW' | 'WAITING' | null
-    ifollowHim: 'FOLLOW' | 'WAITING' | null
+    iamFollowHim: 'FOLLOW' | 'WAITING' | null
     notificationFlg: boolean;
     role: string;
 }

@@ -46,7 +46,7 @@ const UserProfileTab = ({ tab }: InferGetStaticPropsType<typeof getStaticProps>)
           world: profileData.world,
           job: profileData.jobDetail !== '' ? profileData.jobDetail : profileData.job,
           holdFlg: profile?.id === profileData.id,
-          ifollowHim: profileData.ifollowHim,
+          iamFollowHim: profileData.iamFollowHim,
           heFollowMe: profileData.heFollowMe,
         },
         overview: { profile: otherData.data.profile, followCount: otherData.data.acceptedFollowCount, followerCount: otherData.data.acceptedFollowerCount },
@@ -55,7 +55,7 @@ const UserProfileTab = ({ tab }: InferGetStaticPropsType<typeof getStaticProps>)
         isMyData: false
       }
       )
-    } else if (typeof profile !== 'undefined') {
+    } else if (typeof profile !== 'undefined' && typeof accountId === 'undefined') {
       setData({
         header: {
           id: profile.id,
@@ -64,7 +64,7 @@ const UserProfileTab = ({ tab }: InferGetStaticPropsType<typeof getStaticProps>)
           world: profile.world,
           job: profile.jobDetail !== '' ? profile.jobDetail : profile.job,
           holdFlg: true,
-          ifollowHim: null,
+          iamFollowHim: null,
           heFollowMe: null,
         },
         overview: { profile: profile, followCount: followCount, followerCount: followerCount },
@@ -72,7 +72,7 @@ const UserProfileTab = ({ tab }: InferGetStaticPropsType<typeof getStaticProps>)
         followers: follower,
         isMyData: true,
       })
-    }
+    } 
   }, [profile, otherData])
 
   return <UserProfile tab={tab} data={data} accountId={accountId as string} />

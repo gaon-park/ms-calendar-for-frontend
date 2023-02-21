@@ -10,7 +10,7 @@ export type ProfileHeaderType = {
   world: string
   job: string
   holdFlg: boolean
-  ifollowHim: 'FOLLOW' | 'WAITING' | null
+  iamFollowHim: 'FOLLOW' | 'WAITING' | null
   heFollowMe: 'FOLLOW' | 'WAITING' | null
 }
 

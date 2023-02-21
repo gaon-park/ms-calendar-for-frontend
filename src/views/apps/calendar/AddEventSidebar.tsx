@@ -285,10 +285,10 @@ const AddEventSidebar = (props: AddEventSidebarType) => {
       return (
         <Fragment>
           <Button type='submit' variant='contained' sx={{ mr: 4 }}>
-            Add
+            추가
           </Button>
           <Button variant='outlined' color='secondary' onClick={resetToEmptyValues}  sx={{ mr: 4 }}>
-            Reset
+            초기화
           </Button>
         </Fragment>
       )
@@ -296,10 +296,10 @@ const AddEventSidebar = (props: AddEventSidebarType) => {
       return (
         <Fragment>
           <Button variant='outlined' color='secondary' onClick={onAccept} sx={{ mr: 4 }}>
-            수락
+            참석
           </Button>
           <Button variant='outlined' color='secondary' onClick={onRefuse} sx={{ mr: 4 }}>
-            거절
+            불참
           </Button>
           <Button type='submit' variant='contained' sx={{ mr: 4 }}>
             수정

@@ -67,6 +67,8 @@ const UserProfileHeader = ({ data }: { data: ProfileHeaderType }) => {
   }
   const worldMark = worldIcon(data.world)
 
+  console.log(data.iamFollowHim)
+
   return (
     <Card>
       <CardMedia
@@ -142,7 +144,7 @@ const UserProfileHeader = ({ data }: { data: ProfileHeaderType }) => {
                 계정 정보 수정
               </Button>
             ) : (
-              data.ifollowHim ? (
+              data.iamFollowHim === 'FOLLOW' || data.iamFollowHim === 'WAITING' ? (
                 <Button variant='contained' startIcon={<Icon icon='mdi:account-minus-outline' fontSize={20} />} onClick={() => request(FollowCancel)}>
                   팔로우 취소
                 </Button>
