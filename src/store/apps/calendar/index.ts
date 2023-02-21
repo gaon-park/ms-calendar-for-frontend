@@ -26,7 +26,7 @@ export const fetchEvents = createAsyncThunk<
   })
 
   const events = fromEventType(response.data, calendar.officialColor, calendar.myColor)
-  
+
   return events.map((o: EventType) => {
     if (o.filterType !== undefined &&  !calendar.selectedCalendars.includes(o.filterType)) {
       return {...o, display: 'none'}
@@ -242,7 +242,7 @@ export const appCalendarSlice = createSlice({
     officialColor: 'primary',
     myColor: 'info',
     selectedEvent: null,
-    selectedCalendars: ['Official', 'My'],
+    selectedCalendars: ['My'],
     memberIds: [],
     selectedUsers: [],
     isSignIn: false,
