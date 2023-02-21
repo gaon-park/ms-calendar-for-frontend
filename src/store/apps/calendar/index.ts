@@ -27,9 +27,9 @@ export const fetchEvents = createAsyncThunk<
   return fromEventType(response.data)
 })
 
-export const fetchOtherEvent = createAsyncThunk<
+export const fetchOtherEvents = createAsyncThunk<
   EventType[], string, { state: StateCalendar }
->('appCalendar/fetchOtherEvent', async (userId, { getState }) => {
+>('appCalendar/fetchOtherEvents', async (userId, { getState }) => {
   const response = await SearchOtherSchedule({
     userId: userId,
     from: generateDateBegin(),
@@ -199,7 +199,7 @@ export const appCalendarSlice = createSlice({
     builder.addCase(fetchEvents.fulfilled, (state, action) => {
       state.events = action.payload;
     })
-    .addCase(fetchOtherEvent.fulfilled, (state, action) => {
+    .addCase(fetchOtherEvents.fulfilled, (state, action) => {
       state.events = state.events.concat(action.payload);
     })
     .addCase(removeOtherEvents.fulfilled, (state, action) => {
