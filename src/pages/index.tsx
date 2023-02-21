@@ -50,6 +50,9 @@ const HelpPage = () => {
             <Typography sx={{ mb: 2 }}>
               2. 일정 추가, 수정 시 멤버 초대는 팔로워이거나 계정이 공개 상태인 유저에게만 보낼 수 있습니다.
             </Typography>
+            <Typography sx={{ mb: 2 }}>
+              3. 반복 일정은 종료일 미설정 시, 최대 1년 후까지 반복됩니다.
+            </Typography>
           </CardContent>
         </Card>
       </Grid>
