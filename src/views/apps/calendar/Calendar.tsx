@@ -14,6 +14,8 @@ import Icon from 'src/@core/components/icon'
 // ** Types
 import { CalendarType, EventType } from 'src/types/apps/calendarTypes'
 import { generateDate } from 'src/@core/utils/calc-date'
+import { convertDateFormat, convertDatetimeFormat } from 'src/@core/utils/format'
+import { PutUserScheduleRequest } from 'src/common/api/msBackend/user/schedule'
 
 const blankEvent: EventType = {
   id: 0,
@@ -157,7 +159,19 @@ const Calendar = (props: CalendarType) => {
     */
       eventDrop({ event: droppedEvent }: any) {
         if (!store.isSignIn) return;
-        dispatch(updateEvent(droppedEvent))
+        const modififedEvent: PutUserScheduleRequest = {
+          scheduleId: droppedEvent.id,
+          title: droppedEvent.title,
+          start: convertDatetimeFormat(droppedEvent.start),
+          end: convertDatetimeFormat(droppedEvent.end),
+          allDay: droppedEvent.allDay,
+          memberIds: droppedEvent.extendedProps.guests,
+          isPublic: droppedEvent.extendedProps.isPublic,
+          scheduleUpdateCode: droppedEvent.extendedProps.scheduleUpdateCode ?? 'ONLY_THIS',
+          forOfficial: droppedEvent.extendedProps.forOfficial,
+          note: droppedEvent.extendedProps.description
+        }
+        dispatch(updateEvent(modififedEvent))
       },
 
       /*
@@ -166,7 +180,19 @@ const Calendar = (props: CalendarType) => {
     */
       eventResize({ event: resizedEvent }: any) {
         if (!store.isSignIn) return;
-        dispatch(updateEvent(resizedEvent))
+        const modififedEvent: PutUserScheduleRequest = {
+          scheduleId: resizedEvent.id,
+          title: resizedEvent.title,
+          start: convertDatetimeFormat(resizedEvent.start),
+          end: convertDatetimeFormat(resizedEvent.end),
+          allDay: resizedEvent.allDay,
+          memberIds: resizedEvent.extendedProps.guests,
+          isPublic: resizedEvent.extendedProps.isPublic,
+          scheduleUpdateCode: resizedEvent.extendedProps.scheduleUpdateCode ?? 'ONLY_THIS',
+          forOfficial: resizedEvent.extendedProps.forOfficial,
+          note: resizedEvent.extendedProps.description
+        }
+        dispatch(updateEvent(modififedEvent))
       },
 
       ref: calendarRef,
