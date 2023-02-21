@@ -17,11 +17,10 @@ import { getInitials } from 'src/@core/utils/get-initials'
 import { fetchOtherEvents, removeOtherEvents } from 'src/store/apps/calendar';
 
 const SidebarProfileSearch = (props: SidebarProfileSearchType) => {
-  const { dispatch } = props
+  const { dispatch, handleSelectedUsers } = props
   const [keyword, setKeyword] = useState('')
   const [open, setOpen] = useState<boolean>(false)
   const [options, setOptions] = useState<SimpleUserResponse[]>([])
-  const loading = open && options.length === 0
 
   const limit = 4 // 同時閲覧できる最大ユーザ数
   const [selected, setSelected] = useState<string[]>([])
@@ -39,6 +38,7 @@ const SidebarProfileSearch = (props: SidebarProfileSearchType) => {
       dispatch(removeOtherEvents(removedId))
     }
     setSelected(ids)
+    dispatch(handleSelectedUsers(newSelected))
   }
 
   const { data } = useSWR(
@@ -71,7 +71,7 @@ const SidebarProfileSearch = (props: SidebarProfileSearchType) => {
           getOptionDisabled={checkDisable}
           open={open}
           options={options}
-          loading={loading}
+          // loading={loading}
           onChange={(e, newSelected) => handleChanged(newSelected)}
           onOpen={() => setOpen(true)}
           onClose={() => setOpen(false)}
@@ -85,12 +85,6 @@ const SidebarProfileSearch = (props: SidebarProfileSearchType) => {
               label='Search User'
               InputProps={{
                 ...params.InputProps,
-                endAdornment: (
-                  <Fragment>
-                    {loading ? <CircularProgress color='inherit' size={20} /> : null}
-                    {params.InputProps.endAdornment}
-                  </Fragment>
-                )
               }}
             />
           )}

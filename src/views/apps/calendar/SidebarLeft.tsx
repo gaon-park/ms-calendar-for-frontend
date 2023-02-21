@@ -11,6 +11,7 @@ import { ThemeColor } from 'src/@core/layouts/types'
 import { SidebarLeftType, CalendarFiltersType } from 'src/types/apps/calendarTypes'
 import { useAuth } from 'src/hooks/useAuth'
 import SidebarProfileSearch from './SidebarProfileSearch'
+import { displayEvents } from 'src/store/apps/calendar'
 
 const SidebarLeft = (props: SidebarLeftType) => {
   const { isSignIn } = useAuth();
@@ -22,9 +23,9 @@ const SidebarLeft = (props: SidebarLeftType) => {
     leftSidebarOpen,
     leftSidebarWidth,
     handleSelectEvent,
-    handleCalendarsUpdate,
     handleLeftSidebarToggle,
-    handleAddEventSidebarToggle
+    handleAddEventSidebarToggle,
+    handleSelectedUsers
   } = props
 
   const colorsArr = calendarsColor ? Object.entries(calendarsColor) : []
@@ -39,7 +40,7 @@ const SidebarLeft = (props: SidebarLeftType) => {
               <Checkbox
                 color={value as ThemeColor}
                 checked={store.selectedCalendars.includes(key as CalendarFiltersType)}
-                onChange={() => dispatch(handleCalendarsUpdate(key as CalendarFiltersType))}
+                onChange={() => dispatch(displayEvents(key as CalendarFiltersType))}
               />
             }
           />
@@ -99,6 +100,7 @@ const SidebarLeft = (props: SidebarLeftType) => {
         <SidebarProfileSearch
           store={store}
           dispatch={dispatch}
+          handleSelectedUsers={handleSelectedUsers}
         />
       </Drawer>
     )

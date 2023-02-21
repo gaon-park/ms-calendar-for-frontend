@@ -33,6 +33,7 @@ import { generateDate } from 'src/@core/utils/calc-date'
 import { convertDateFormat, convertDatetimeFormat } from 'src/@core/utils/format'
 import { useRecoilValue } from 'recoil'
 import { myProfile } from 'src/store/profile/user'
+import { fetchEvents } from 'src/store/apps/calendar'
 
 interface PickerProps {
   label?: string
@@ -78,7 +79,8 @@ const AddEventSidebar = (props: AddEventSidebarType) => {
     deleteEvent,
     handleSelectEvent,
     addEventSidebarOpen,
-    handleAddEventSidebarToggle
+    handleAddEventSidebarToggle,
+    calendarsColor
   } = props
 
   // ** States
@@ -183,7 +185,7 @@ const AddEventSidebar = (props: AddEventSidebarType) => {
           (event.extendedProps.isPublic == true ? 'Public' :
             (event.extendedProps.isPublic == false ? 'Private' : 'Public')),
         endDate: event.end ? event.end : generateDate({ minutes: 30 }),
-        repeatCode: event.extendedProps.repeatInfo?.repeatCode ?? '',
+        repeatCode: event.extendedProps.repeatInfo?.repeatCode ?? 'NONE',
         repeatEnd: event.extendedProps.repeatInfo?.end ?? generateDate({ date: 7 }),
         startDate: event.start !== null ? event.start : new Date(),
         scheduleUpdateCode: event.extendedProps.scheduleUpdateCode || 'ONLY_THIS',

@@ -19,7 +19,7 @@ const blankEvent: EventType = {
   id: 0,
   title: '',
   start: new Date(),
-  end: generateDate({minutes: 30}),
+  end: generateDate({ minutes: 30 }),
   allDay: false,
   color: "#000000",
   extendedProps: {
@@ -30,7 +30,8 @@ const blankEvent: EventType = {
     isPublic: undefined,
     guests: [],
     forOfficial: false,
-    scheduleUpdateCode: 'ONLY_THIS'
+    scheduleUpdateCode: 'ONLY_THIS',
+    note: ''
   }
 }
 
@@ -141,7 +142,7 @@ const Calendar = (props: CalendarType) => {
         if (!store.isSignIn) return;
         const ev = { ...blankEvent }
         ev.start = info.date
-        ev.end = generateDate({manualDate: info.date, minutes: 30})
+        ev.end = generateDate({ manualDate: info.date, minutes: 30 })
         ev.allDay = true
 
         // @ts-ignore

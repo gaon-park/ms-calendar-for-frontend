@@ -29,17 +29,14 @@ import {
   deleteEvent,
   updateEvent,
   handleSelectEvent,
-  handleCalendarsUpdate,
-  handleIsSignIn
+  handleIsSignIn,
+  handleSelectedUsers
 } from 'src/store/apps/calendar'
 import { useAuth } from 'src/hooks/useAuth'
 import { useProfile } from 'src/hooks/useProfile'
+import { ThemeColor } from 'src/@core/layouts/types'
 
-// ** CalendarColors
-const calendarsColor: CalendarColors = {
-  Official: 'warning',
-  My: 'success'
-}
+const colorValue: ThemeColor[] = ['primary', 'secondary', 'error', 'warning', 'info', 'success']
 
 const AppCalendar = () => {
   // ** States
@@ -59,6 +56,13 @@ const AppCalendar = () => {
   const { skin, direction } = settings
   const mdAbove = useMediaQuery((theme: Theme) => theme.breakpoints.up('md'))
 
+  // ** CalendarColors
+  const colors = colorValue.filter((o) => settings.themeColor !== o)
+  const calendarsColor: CalendarColors = {
+    Official: colors[2],
+    My: settings.themeColor
+  }
+
   const { isSignIn } = useAuth();
 
   useEffect(() => {
@@ -68,8 +72,8 @@ const AppCalendar = () => {
   useEffect(() => {
     // ちょっとわかんないとりあえず動きはする
     // @ts-ignore
-    dispatch(fetchEvents())
-  }, [dispatch])
+    dispatch(fetchEvents([calendarsColor.Official, calendarsColor.My]))
+  }, [dispatch, settings])
 
   const handleLeftSidebarToggle = () => setLeftSidebarOpen(!leftSidebarOpen)
 
@@ -92,9 +96,9 @@ const AppCalendar = () => {
           leftSidebarOpen={leftSidebarOpen}
           leftSidebarWidth={leftSidebarWidth}
           handleSelectEvent={handleSelectEvent}
-          handleCalendarsUpdate={handleCalendarsUpdate}
           handleLeftSidebarToggle={handleLeftSidebarToggle}
           handleAddEventSidebarToggle={handleAddEventSidebarToggle}
+          handleSelectedUsers={handleSelectedUsers}
         /> : null
       }
       <Box
@@ -133,6 +137,7 @@ const AppCalendar = () => {
           handleSelectEvent={handleSelectEvent}
           addEventSidebarOpen={addEventSidebarOpen}
           handleAddEventSidebarToggle={handleAddEventSidebarToggle}
+          calendarsColor={calendarsColor}
         /> : null
       }
     </CalendarWrapper>

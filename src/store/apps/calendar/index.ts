@@ -4,10 +4,11 @@ import { createSlice, createAsyncThunk } from '@reduxjs/toolkit'
 import { DeleteScheduleRequest, GetUserSchedule, PostUserSchedule, PostUserScheduleRequest, PutScheduleDelete, PutUserSchedule, PutUserScheduleRequest, SearchOtherSchedule } from 'src/common/api/msBackend/user/schedule'
 
 import { IScheduleResponse, ScheduleOfficial, SchedulePersonal } from 'src/model/user/schedule'
-import { EventType } from "src/types/apps/calendarTypes";
+import { CalendarFiltersType, EventType } from "src/types/apps/calendarTypes";
 
 // ** Types
 import { CalendarStoreType } from 'src/types/apps/calendarTypes'
+import { ThemeColor } from 'src/@core/layouts/types'
 
 interface StateCalendar {
   calendar: CalendarStoreType
@@ -15,8 +16,8 @@ interface StateCalendar {
 
 // ** Fetch Events
 export const fetchEvents = createAsyncThunk<
-  EventType[], undefined, { state: StateCalendar }
->('appCalendar/fetchEvents', async (undefined, { getState }) => {
+  EventType[], ThemeColor[] | undefined, { state: StateCalendar }
+>('appCalendar/fetchEvents', async (color, { getState }) => {
   const { calendar } = getState();
   const response = await GetUserSchedule({
     userIds: calendar.memberIds ?? [],
@@ -24,12 +25,12 @@ export const fetchEvents = createAsyncThunk<
     to: generateDateEnd(),
   })
 
-  return fromEventType(response.data)
+  return fromEventType(response.data, color)
 })
 
 export const fetchOtherEvents = createAsyncThunk<
   EventType[], string, { state: StateCalendar }
->('appCalendar/fetchOtherEvents', async (userId, { getState }) => {
+>('appCalendar/fetchOtherEvents', async (userId) => {
   const response = await SearchOtherSchedule({
     userId: userId,
     from: generateDateBegin(),
@@ -45,14 +46,20 @@ export const removeOtherEvents = createAsyncThunk<
   return userId
 })
 
-export function fromEventType(res: IScheduleResponse): EventType[] {
-  const off = fromScheduleOfficial(res.officials);
-  const personal = fromSchedulePersonal(res.personals);
+export const displayEvents = createAsyncThunk<
+  string, CalendarFiltersType, { state: CalendarStoreType }
+>('appCalendar/displayEvents', (type) => {
+  return type
+})
+
+export function fromEventType(res: IScheduleResponse, color?: ThemeColor[]): EventType[] {
+  const off = fromScheduleOfficial(res.officials, color?.[0]);
+  const personal = fromSchedulePersonal(res.personals, undefined, color?.[1], 'My');
 
   return off.concat(personal);
 }
 
-function fromScheduleOfficial(scOff: ScheduleOfficial[]): EventType[] {
+function fromScheduleOfficial(scOff: ScheduleOfficial[], color?: ThemeColor): EventType[] {
   return scOff.map((e) => {
     return {
       id: e.scheduleId,
@@ -60,14 +67,16 @@ function fromScheduleOfficial(scOff: ScheduleOfficial[]): EventType[] {
       allDay: e.allDay,
       start: new Date(e.start),
       end: e.end ? new Date(e.end) : undefined,
-      color: "#000000",
+      color: primaryGradient(color ?? ""),
+      filterType: 'Official',
       extendedProps: {
         view: 'Official',
         byAdmin: e.byAdmin,
         description: e.note,
         guests: [],
         forOfficial: true,
-        scheduleUpdateCode: undefined
+        scheduleUpdateCode: undefined,
+        note: e.note ?? ''
       }
     }
   })
@@ -75,7 +84,9 @@ function fromScheduleOfficial(scOff: ScheduleOfficial[]): EventType[] {
 
 function fromSchedulePersonal(
   scPer: SchedulePersonal[],
-  bySearchUserId?: string
+  bySearchUserId?: string,
+  color?: ThemeColor,
+  filterType?: CalendarFiltersType
 ): EventType[] {
   return scPer.map((e) => {
     return {
@@ -85,7 +96,8 @@ function fromSchedulePersonal(
       allDay: e.allDay,
       start: new Date(e.start),
       end: e.end ? new Date(e.end) : undefined,
-      color: "primary",
+      color: primaryGradient(color ?? ""),
+      filterType: filterType,
       extendedProps: {
         ownerId: e.ownerId,
         view: e.isPublic == true ? 'Public' :
@@ -96,6 +108,7 @@ function fromSchedulePersonal(
           return m.accountId
         }),
         forOfficial: false,
+        note: e.note ?? ''
       }
     }
   })
@@ -170,6 +183,7 @@ export const appCalendarSlice = createSlice({
     selectedEvent: null,
     selectedCalendars: ['Official', 'My'],
     memberIds: [],
+    selectedUsers: [],
     isSignIn: false,
     myId: ""
   } as CalendarStoreType,
@@ -183,31 +197,57 @@ export const appCalendarSlice = createSlice({
     handleSelectEvent: (state, action) => {
       state.selectedEvent = action.payload
     },
-    handleCalendarsUpdate: (state, action) => {
-      const filterIndex = state.selectedCalendars.findIndex(i => i === action.payload)
-      if (state.selectedCalendars.includes(action.payload)) {
-        state.selectedCalendars.splice(filterIndex, 1)
-      } else {
-        state.selectedCalendars.push(action.payload)
-      }
-      if (state.selectedCalendars.length === 0) {
-        state.events.length = 0
-      }
+    handleSelectedUsers: (state, action) => {
+      state.selectedUsers = action.payload
     }
   },
   extraReducers: builder => {
     builder.addCase(fetchEvents.fulfilled, (state, action) => {
       state.events = action.payload;
     })
-    .addCase(fetchOtherEvents.fulfilled, (state, action) => {
-      state.events = state.events.concat(action.payload);
-    })
-    .addCase(removeOtherEvents.fulfilled, (state, action) => {
-      state.events = state.events.filter((o) => o.bySearchUserId !== action.payload)
-    })
+      .addCase(fetchOtherEvents.fulfilled, (state, action) => {
+        state.events = state.events.concat(action.payload);
+      })
+      .addCase(removeOtherEvents.fulfilled, (state, action) => {
+        state.events = state.events.filter((o) => o.bySearchUserId !== action.payload)
+      })
+      .addCase(displayEvents.fulfilled, (state, action) => {
+        state.events = state.events.map((o) => {
+          if (o.filterType === action.payload) {
+            if (o.display === undefined || o.display === 'true') {
+              state.selectedCalendars = state.selectedCalendars.filter((o) => o !== action.payload)
+              o.display = 'none'
+            }
+            else {
+              state.selectedCalendars.push(action.payload)
+              o.display = 'true'
+            }
+
+            return o
+          }
+
+          return o
+        })
+      })
   },
 })
 
-export const { handleSelectEvent, handleCalendarsUpdate, handleIsSignIn } = appCalendarSlice.actions
+export const { handleSelectEvent, handleIsSignIn, handleSelectedUsers } = appCalendarSlice.actions
 
 export default appCalendarSlice.reducer
+
+const primaryGradient = (color: string) => {
+  if (color === 'primary') {
+    return '#C6A7FE'
+  } else if (color === 'secondary') {
+    return '#9C9FA4'
+  } else if (color === 'success') {
+    return '#93DD5C'
+  } else if (color === 'error') {
+    return '#FF8C90'
+  } else if (color === 'warning') {
+    return '#FFCF5C'
+  } else {
+    return '#6ACDFF'
+  }
+}

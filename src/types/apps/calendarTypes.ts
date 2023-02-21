@@ -4,6 +4,7 @@ import { Dispatch } from 'redux'
 // ** Theme Type Import
 import { ThemeColor } from 'src/@core/layouts/types'
 import { DeleteScheduleRequest, PostUserScheduleRequest, PutUserScheduleRequest, RepeatCode, ScheduleUpdateCode } from 'src/common/api/msBackend/user/schedule'
+import { SimpleUserResponse } from 'src/model/user/user'
 
 export type CalendarFiltersType = 'Official' | 'My'
 export type CalendarViewType = 'Official' | 'Public' | 'Private'
@@ -23,6 +24,8 @@ export type EventType = {
   start: Date
   end: Date | undefined
   color: string,
+  display?: string,
+  filterType?: CalendarFiltersType,
   extendedProps: {
     ownerId?: string,
     calendarMemberId?: string,
@@ -33,7 +36,8 @@ export type EventType = {
     isPublic?: boolean,
     guests?: string[],
     forOfficial: boolean,
-    scheduleUpdateCode?: ScheduleUpdateCode;
+    scheduleUpdateCode?: ScheduleUpdateCode,
+    note: string,
   }
 }
 
@@ -58,6 +62,7 @@ export type CalendarStoreType = {
   selectedEvent: null | EventType
   selectedCalendars: CalendarFiltersType[] | string[],
   memberIds: string[],
+  selectedUsers: SimpleUserResponse[],
   isSignIn: boolean,
   myId: string
 }
@@ -85,12 +90,13 @@ export type SidebarLeftType = {
   handleLeftSidebarToggle: () => void
   handleAddEventSidebarToggle: () => void
   handleSelectEvent: (event: null | EventType) => void
-  handleCalendarsUpdate: (val: CalendarFiltersType) => void
+  handleSelectedUsers: (users: SimpleUserResponse[]) => void
 }
 
 export type SidebarProfileSearchType = {
   dispatch: Dispatch<any>
   store: CalendarStoreType
+  handleSelectedUsers: (users: SimpleUserResponse[]) => void
 }
 
 export type AddEventSidebarType = {
@@ -99,6 +105,7 @@ export type AddEventSidebarType = {
   dispatch: Dispatch<any>
   store: CalendarStoreType
   addEventSidebarOpen: boolean
+  calendarsColor: CalendarColors
   deleteEvent: (req: DeleteScheduleRequest) => void
   addEvent: (req: PostUserScheduleRequest) => void
   updateEvent: (req: PutUserScheduleRequest) => void
