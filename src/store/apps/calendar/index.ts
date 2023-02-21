@@ -129,7 +129,7 @@ export const addEvent = createAsyncThunk<
 >('appCalendar/addEvent', async (req, { dispatch, getState }) => {
   const { calendar } = getState();
 
-  if (calendar.isSignIn) return "register failed";
+  if (!calendar.isSignIn) return "register failed";
   const response = await PostUserSchedule(req);
   await dispatch(fetchEvents())
 
@@ -142,7 +142,7 @@ export const updateEvent = createAsyncThunk<
 >('appCalendar/updateEvent', async (req, { dispatch, getState }) => {
   const { calendar } = getState();
 
-  if (calendar.isSignIn) return "update failed";
+  if (!calendar.isSignIn) return "update failed";  
   const response = await PutUserSchedule(req);
 
   await dispatch(fetchEvents())
