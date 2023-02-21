@@ -78,6 +78,11 @@ const Calendar = (props: CalendarType) => {
           titleFormat: { year: 'numeric', month: 'long', day: 'numeric' }
         }
       },
+      eventTimeFormat: {
+        hour: '2-digit',
+        minute: '2-digit',
+        hour12: false
+      },
 
       /*
       Enable dragging and resizing event

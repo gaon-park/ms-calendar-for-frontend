@@ -40,6 +40,7 @@ import { SimpleUserResponse } from 'src/model/user/user'
 import { SearchUserForScheduleInvite } from 'src/common/api/msBackend/search'
 
 import useSWR from "swr"
+import { acceptEvent, refuseEvent } from 'src/store/apps/calendar'
 
 interface PickerProps {
   label?: string
@@ -145,6 +146,20 @@ const AddEventSidebar = (props: AddEventSidebarType) => {
 
   function isPublic() {
     return values.view === "Public"
+  }
+
+  const onAccept = () => {
+    if (store.selectedEvent !== null && store.selectedEvent.id !== null) {
+      dispatch(acceptEvent(store.selectedEvent.id)) 
+    }
+    handleSidebarClose()
+  }
+
+  const onRefuse = () => {
+    if (store.selectedEvent !== null && store.selectedEvent.id !== null) {
+      dispatch(refuseEvent(store.selectedEvent.id))
+    }
+    handleSidebarClose()
   }
 
   const onSubmit = (data: { title: string }) => {
@@ -266,10 +281,10 @@ const AddEventSidebar = (props: AddEventSidebarType) => {
     if (store.selectedEvent === null || (store.selectedEvent !== null && !store.selectedEvent.title.length)) {
       return (
         <Fragment>
-          <Button size='large' type='submit' variant='contained' sx={{ mr: 4 }}>
+          <Button type='submit' variant='contained' sx={{ mr: 4 }}>
             Add
           </Button>
-          <Button size='large' variant='outlined' color='secondary' onClick={resetToEmptyValues}>
+          <Button variant='outlined' color='secondary' onClick={resetToEmptyValues}  sx={{ mr: 4 }}>
             Reset
           </Button>
         </Fragment>
@@ -277,11 +292,14 @@ const AddEventSidebar = (props: AddEventSidebarType) => {
     } else {
       return (
         <Fragment>
-          <Button size='large' type='submit' variant='contained' sx={{ mr: 4 }}>
-            Update
+          <Button variant='outlined' color='secondary' onClick={onAccept} sx={{ mr: 4 }}>
+            ACCEPT
           </Button>
-          <Button size='large' variant='outlined' color='secondary' onClick={resetToStoredValues}>
-            Reset
+          <Button variant='outlined' color='secondary' onClick={onRefuse} sx={{ mr: 4 }}>
+            REFUSE
+          </Button>
+          <Button type='submit' variant='contained' sx={{ mr: 4 }}>
+            Update
           </Button>
         </Fragment>
       )
@@ -401,7 +419,7 @@ const AddEventSidebar = (props: AddEventSidebarType) => {
                 selected={values.startDate as EventDateType}
                 startDate={values.startDate as EventDateType}
                 showTimeSelect={!values.allDay}
-                dateFormat={!values.allDay ? 'yyyy-MM-dd hh:mm' : 'yyyy-MM-dd'}
+                dateFormat={!values.allDay ? 'yyyy-MM-dd HH:mm' : 'yyyy-MM-dd'}
                 customInput={<PickersComponent label='Start Date' registername='startDate' />}
                 onChange={(date: Date) => setValues({ ...values, startDate: new Date(date) })}
                 onSelect={handleStartDate}
@@ -416,7 +434,7 @@ const AddEventSidebar = (props: AddEventSidebarType) => {
                 minDate={values.startDate as EventDateType}
                 startDate={values.startDate as EventDateType}
                 showTimeSelect={!values.allDay}
-                dateFormat={!values.allDay ? 'yyyy-MM-dd hh:mm' : 'yyyy-MM-dd'}
+                dateFormat={!values.allDay ? 'yyyy-MM-dd HH:mm' : 'yyyy-MM-dd'}
                 customInput={<PickersComponent label='End Date' registername='endDate' />}
                 onChange={(date: Date) => setValues({ ...values, endDate: new Date(date) })}
               /> : null}
@@ -512,7 +530,6 @@ const AddEventSidebar = (props: AddEventSidebarType) => {
                   <MenuItem value='THIS_AND_FUTURE'>現在とそれ以降のスケジュール</MenuItem>
                 </Select>
               </FormControl> : null}
-
 
             {(store.selectedEvent === null || (store.selectedEvent !== null && !store.selectedEvent.title.length)) ?
               <FormControl fullWidth sx={{ mb: 6 }}>

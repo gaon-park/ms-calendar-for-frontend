@@ -1,7 +1,7 @@
 // ** Redux Imports
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit'
 
-import { DeleteScheduleRequest, GetUserSchedule, PostUserSchedule, PostUserScheduleRequest, PutScheduleDelete, PutUserSchedule, PutUserScheduleRequest, SearchOtherSchedule } from 'src/common/api/msBackend/user/schedule'
+import { DeleteScheduleRequest, GetUserSchedule, PostUserSchedule, PostUserScheduleRequest, PutScheduleAccept, PutScheduleDelete, PutScheduleRefuse, PutUserSchedule, PutUserScheduleRequest, SearchOtherSchedule } from 'src/common/api/msBackend/user/schedule'
 
 import { IScheduleResponse, ScheduleOfficial, SchedulePersonal } from 'src/model/user/schedule'
 import { CalendarFiltersType, EventType } from "src/types/apps/calendarTypes";
@@ -41,13 +41,13 @@ export const fetchOtherEvents = createAsyncThunk<
 })
 
 export const removeOtherEvents = createAsyncThunk<
-  string, string, { state: CalendarStoreType }
+  string, string, { state: StateCalendar }
 >('appCalendar/removeOtherEvents', (userId) => {
   return userId
 })
 
 export const displayEvents = createAsyncThunk<
-  string, CalendarFiltersType, { state: CalendarStoreType }
+  string, CalendarFiltersType, { state: StateCalendar }
 >('appCalendar/displayEvents', (type) => {
   return type
 })
@@ -58,6 +58,34 @@ export function fromEventType(res: IScheduleResponse, officialColor: ThemeColor,
 
   return off.concat(personal);
 }
+
+export const acceptEvent = createAsyncThunk<
+  string, number, { state: StateCalendar }
+>('appCalendar/acceptEvent', async (scheduleId, { dispatch, getState }) => {
+  const { calendar } = getState();
+  if (!calendar.isSignIn) return "accept failed";
+
+  const response = await PutScheduleAccept({
+    scheduleId
+  })
+  await dispatch(fetchEvents())
+
+  return response.data
+})
+
+export const refuseEvent = createAsyncThunk<
+  string, number, { state: StateCalendar }
+>('appCalendar/refuseEvent', async (scheduleId, { dispatch, getState }) => {
+  const { calendar } = getState();
+  if (!calendar.isSignIn) return "refuse failed";
+
+  const response = await PutScheduleRefuse({
+    scheduleId
+  })
+  await dispatch(fetchEvents())
+
+  return response.data
+})
 
 function fromScheduleOfficial(
   scOff: ScheduleOfficial[],
