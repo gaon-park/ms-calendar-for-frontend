@@ -2,7 +2,7 @@
 import { useEffect, ReactNode } from 'react'
 
 // ** MUI Imports
-import { Direction } from '@mui/material'
+import { Direction } from '@mui/material/styles/adaptV4Theme'
 
 // ** Emotion Imports
 import createCache from '@emotion/cache'

@@ -20,7 +20,7 @@ import { CustomAvatarProps } from 'src/@core/components/mui/avatar/types'
 import { getInitials } from 'src/@core/utils/get-initials'
 import { FollowCancel, FollowRequest } from 'src/common/api/msBackend/user/follow'
 import worldData from 'src/model/worldData'
-import { Avatar } from '@mui/material'
+import Avatar from '@mui/material/Avatar/Avatar'
 
 const ProfilePicture = styled(CustomAvatar)<CustomAvatarProps>(({ theme }) => ({
   width: 120,

@@ -24,13 +24,13 @@ import CustomAvatar from 'src/@core/components/mui/avatar'
 import { getInitials } from 'src/@core/utils/get-initials'
 
 // ** Types Imports
-import { Avatar } from '@mui/material'
 
 // ** data
 import worldData from 'src/model/worldData'
 import { FollowAccept, FollowCancel, FollowerDelete, FollowRequest } from 'src/common/api/msBackend/user/follow'
 import { IProfile } from 'src/model/user/profile'
 import { useRouter } from 'next/router'
+import Avatar from 'src/@core/components/mui/avatar'
 
 const worldIcon = (world: string) => {
     for (let i = 0; i < worldData.length; i++) {

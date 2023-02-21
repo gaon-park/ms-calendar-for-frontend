@@ -1,5 +1,5 @@
 // ** MUI Components
-import { Card } from '@mui/material'
+import Card from '@mui/material/Card/Card'
 import Grid from '@mui/material/Grid'
 import { useState } from 'react'
 import { IProfile } from 'src/model/user/profile'

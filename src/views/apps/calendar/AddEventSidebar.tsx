@@ -34,13 +34,16 @@ import { generateDate } from 'src/@core/utils/calc-date'
 import { convertDateFormat, convertDatetimeFormat } from 'src/@core/utils/format'
 import { useRecoilValue } from 'recoil'
 import { myProfile } from 'src/store/profile/user'
-import { Autocomplete, Chip, Avatar, Badge } from '@mui/material'
 import { getInitials } from 'src/@core/utils/get-initials'
 import { SimpleUserResponse } from 'src/model/user/user'
 import { SearchUserForScheduleInvite } from 'src/common/api/msBackend/search'
 
 import useSWR from "swr"
 import { acceptEvent, refuseEvent } from 'src/store/apps/calendar'
+import Chip from 'src/@core/components/mui/chip'
+import Avatar from 'src/@core/components/mui/avatar'
+import Autocomplete from '@mui/material/Autocomplete/Autocomplete'
+import Badge from 'src/@core/components/mui/badge'
 
 interface PickerProps {
   label?: string

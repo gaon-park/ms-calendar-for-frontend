@@ -10,8 +10,9 @@ import Image from "next/image";
 import BlankLayout from 'src/@core/layouts/BlankLayout'
 
 // ** Demo Imports
-import { Container, Grid } from '@mui/material'
 import { SignIn } from 'src/hooks/oauth'
+import Container from '@mui/material/Container/Container';
+import Grid from '@mui/material/Grid/Grid';
 
 const LoginPage = () => {
 

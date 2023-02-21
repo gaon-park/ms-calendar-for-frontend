@@ -22,13 +22,13 @@ import Icon from 'src/@core/components/icon'
 import { Settings } from 'src/@core/context/settingsContext'
 import { useRecoilValue, useSetRecoilState } from 'recoil'
 import { myProfile } from 'src/store/profile/user'
-import { Button } from '@mui/material'
 
 // ** Utils Import
 import { getInitials } from 'src/@core/utils/get-initials'
 import { AuthCookie } from 'src/common/cookie/cookies'
 import { isAuthenticated } from 'src/store/auth'
 import { IProfile } from 'src/model/user/profile'
+import Button from '@mui/material/Button/Button'
 
 interface Props {
   settings: Settings

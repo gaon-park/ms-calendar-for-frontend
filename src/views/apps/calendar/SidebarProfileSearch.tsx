@@ -7,7 +7,6 @@ import CustomAvatar from 'src/@core/components/mui/avatar'
 // ** Types
 import { SidebarProfileSearchType } from 'src/types/apps/calendarTypes'
 import { Fragment, useCallback, useEffect, useState } from 'react';
-import { Autocomplete, Chip } from '@mui/material';
 import { SimpleUserResponse } from 'src/model/user/user';
 
 import useSWR from "swr"
@@ -15,6 +14,8 @@ import { SearchUserForScheduleInvite } from 'src/common/api/msBackend/search';
 
 import { getInitials } from 'src/@core/utils/get-initials'
 import { fetchOtherEvents, removeOtherEvents } from 'src/store/apps/calendar';
+import Autocomplete from '@mui/material/Autocomplete/Autocomplete';
+import Chip from '@mui/material/Chip/Chip';
 
 const SidebarProfileSearch = (props: SidebarProfileSearchType) => {
   const { dispatch, handleSelectedUsers } = props
