@@ -37,7 +37,7 @@ export const fetchOtherEvents = createAsyncThunk<
     to: generateDateEnd(),
   })
 
-  return fromSchedulePersonal(response.data, userId)
+  return fromScheduleOther(response.data, userId)
 })
 
 export const removeOtherEvents = createAsyncThunk<
@@ -54,7 +54,7 @@ export const displayEvents = createAsyncThunk<
 
 export function fromEventType(res: IScheduleResponse, color?: ThemeColor[]): EventType[] {
   const off = fromScheduleOfficial(res.officials, color?.[0]);
-  const personal = fromSchedulePersonal(res.personals, undefined, color?.[1], 'My');
+  const personal = fromSchedulePersonal(res.personals, color?.[1]);
 
   return off.concat(personal);
 }
@@ -84,9 +84,37 @@ function fromScheduleOfficial(scOff: ScheduleOfficial[], color?: ThemeColor): Ev
 
 function fromSchedulePersonal(
   scPer: SchedulePersonal[],
-  bySearchUserId?: string,
   color?: ThemeColor,
-  filterType?: CalendarFiltersType
+): EventType[] {
+  return scPer.map((e) => {
+    return {
+      id: e.scheduleId,
+      title: e.title,
+      allDay: e.allDay,
+      start: new Date(e.start),
+      end: e.end ? new Date(e.end) : undefined,
+      color: primaryGradient(color ?? ""),
+      filterType: 'My',
+      extendedProps: {
+        ownerId: e.ownerId,
+        view: e.isPublic == true ? 'Public' :
+          (e.isPublic == false ? 'Private' : 'Public'),
+        description: e.note,
+        isPublic: e.isPublic,
+        guests: e.members.map((m) => {
+          return m.accountId
+        }),
+        forOfficial: false,
+        note: e.note ?? ''
+      }
+    }
+  })
+}
+
+function fromScheduleOther(
+  scPer: SchedulePersonal[],
+  bySearchUserId: string,
+  color?: ThemeColor,
 ): EventType[] {
   return scPer.map((e) => {
     return {
@@ -97,7 +125,6 @@ function fromSchedulePersonal(
       start: new Date(e.start),
       end: e.end ? new Date(e.end) : undefined,
       color: primaryGradient(color ?? ""),
-      filterType: filterType,
       extendedProps: {
         ownerId: e.ownerId,
         view: e.isPublic == true ? 'Public' :
