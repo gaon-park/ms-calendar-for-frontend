@@ -12,7 +12,7 @@ const FooterContent = () => {
   return (
     <Box sx={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', justifyContent: 'space-between' }}>
       <Typography sx={{ mr: 2 }}>
-        {`© 2023, Made by `}
+        {`© 2023-02-21, Made by `}
         {/* todo */}
         <Link target='_blank' href='https://open.kakao.com/o/sUlBFP5e'>
           {` 리부트 뽀돌`}
