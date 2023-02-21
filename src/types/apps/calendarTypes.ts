@@ -34,7 +34,7 @@ export type EventType = {
     repeatInfo?: EventRepeatInfo,
     description?: string,
     isPublic?: boolean,
-    guests?: string[],
+    guests?: SimpleUserResponse[],
     forOfficial: boolean,
     scheduleUpdateCode?: ScheduleUpdateCode,
     note: string,

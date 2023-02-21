@@ -104,9 +104,7 @@ function fromSchedulePersonal(
           (e.isPublic == false ? 'Private' : 'Public'),
         description: e.note,
         isPublic: e.isPublic,
-        guests: e.members.map((m) => {
-          return m.id
-        }),
+        guests: e.members,
         forOfficial: false,
         note: e.note ?? ''
       }
@@ -133,9 +131,7 @@ function fromScheduleOther(
           (e.isPublic == false ? 'Private' : 'Public'),
         description: e.note,
         isPublic: e.isPublic,
-        guests: e.members.map((m) => {
-          return m.id
-        }),
+        guests: e.members,
         forOfficial: false,
         note: e.note ?? ''
       }
@@ -263,6 +259,12 @@ export const appCalendarSlice = createSlice({
 
           return o
         })
+      })
+      .addCase(addEvent.fulfilled, (state, action) => {
+        state.selectedEvent = null
+      })
+      .addCase(deleteEvent.fulfilled, (state, action) => {
+        state.selectedEvent = null
       })
   },
 })

@@ -96,7 +96,7 @@ const AddEventSidebar = (props: AddEventSidebarType) => {
   const [guestOpen, setGuestOpen] = useState<boolean>(false)
   const [guestOptions, setGuestOptions] = useState<SimpleUserResponse[]>([])
 
-  const guestLimit = 5 // 同時閲覧できる最大ユーザ数
+  const guestLimit = 6 // 同時閲覧できる最大ユーザ数
   const [guestSelected, setGuestSelected] = useState<SimpleUserResponse[]>([])
   const checkDisable = useCallback((option: SimpleUserResponse) => guestLimit <= guestSelected.length && !guestSelected.includes(option), [guestLimit, guestSelected]);
 
@@ -216,7 +216,7 @@ const AddEventSidebar = (props: AddEventSidebarType) => {
       setValues({
         title: event.title || '',
         allDay: event.allDay,
-        guests: event.extendedProps.guests || [],
+        guests: event.extendedProps.guests?.map(o => o.id) || [],
         description: event.extendedProps.description || '',
         view: event.extendedProps.forOfficial ? "Official" :
           (event.extendedProps.isPublic == true ? 'Public' :
@@ -227,7 +227,13 @@ const AddEventSidebar = (props: AddEventSidebarType) => {
         startDate: event.start !== null ? event.start : new Date(),
         scheduleUpdateCode: event.extendedProps.scheduleUpdateCode || 'ONLY_THIS',
       })
-      setGuestSelected(guestOptions.filter((o) => event.extendedProps.guests?.includes(o.id)))
+
+      const optionIds = guestOptions.map((o) => o.id)
+      const plus: SimpleUserResponse[] = event.extendedProps.guests?.filter((o) => !optionIds.includes(o.id)) ?? []
+      plus.forEach((o) => guestOptions.push(o))
+
+      console.log(plus)
+      setGuestSelected(event.extendedProps.guests ?? [])
     }
   }, [setValue, store.selectedEvent])
 
@@ -310,7 +316,7 @@ const AddEventSidebar = (props: AddEventSidebarType) => {
         )
       }
     }
-    
+
     return null
   }
 
