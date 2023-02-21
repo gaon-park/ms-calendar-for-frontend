@@ -25,7 +25,13 @@ export const fetchEvents = createAsyncThunk<
     to: generateDateEnd(),
   })
 
-  return fromEventType(response.data, calendar.officialColor, calendar.myColor)
+  const events = fromEventType(response.data, calendar.officialColor, calendar.myColor)
+  
+  return events.map((o: EventType) => {
+    if (o.filterType !== undefined &&  !calendar.selectedCalendars.includes(o.filterType)) {
+      return {...o, display: 'none'}
+    } else return o
+  })
 })
 
 export const fetchOtherEvents = createAsyncThunk<
@@ -271,14 +277,26 @@ export const appCalendarSlice = createSlice({
         state.events = state.events.filter((o) => o.bySearchUserId !== action.payload)
       })
       .addCase(displayEvents.fulfilled, (state, action) => {
+        if (action.payload === 'Official' && state.selectedCalendars.includes('Official')) {
+          // display none
+          state.selectedCalendars = state.selectedCalendars.filter(o => o !== 'Official')
+        } else if (action.payload === 'Official' && !state.selectedCalendars.includes('Official')) {
+          // display auto
+          state.selectedCalendars.push('Official')
+        } else if (action.payload === 'My' && state.selectedCalendars.includes('My')) {
+          // display none
+          state.selectedCalendars = state.selectedCalendars.filter(o => o !== 'My')
+        } else {
+          // display auto
+          state.selectedCalendars.push('My')
+        }
+        console.log(state.selectedCalendars)
         state.events = state.events.map((o) => {
           if (o.filterType === action.payload) {
             if (o.display === undefined || o.display === 'auto') {
-              state.selectedCalendars = state.selectedCalendars.filter((o) => o !== action.payload)
               o.display = 'none'
             }
             else {
-              state.selectedCalendars.push(action.payload)
               o.display = 'auto'
             }
 
