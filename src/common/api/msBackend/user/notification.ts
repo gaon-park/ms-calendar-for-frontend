@@ -13,3 +13,14 @@ export const ReadAllNotifications = () => {
         MS_BACKEND_API_PATH.READ_ALL_NOTIFICATIONS,
     )
 }
+
+interface ReadOneNotificationRequest {
+    id: number
+}
+
+export const ReadOneNotification = (req: ReadOneNotificationRequest) => {
+    return MsBackendAxios.put<string>(
+        MS_BACKEND_API_PATH.READ_ONE_NOTIFICATION,
+        req
+    )
+}

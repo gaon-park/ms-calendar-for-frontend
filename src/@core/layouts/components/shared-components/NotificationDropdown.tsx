@@ -33,12 +33,15 @@ import { getInitials } from 'src/@core/utils/get-initials'
 import useSWR from "swr";
 import { useRecoilValue } from 'recoil'
 import { myProfile } from 'src/store/profile/user'
-import { GetNotifications, ReadAllNotifications } from 'src/common/api/msBackend/user/notification'
+import { GetNotifications, ReadAllNotifications, ReadOneNotification } from 'src/common/api/msBackend/user/notification'
+import { useRouter } from 'next/router'
 
 export type NotificationsType = {
+  notificationId: number
   meta: string
   title: string
   subtitle: string
+  linkPath: string
 } & (
     | { avatarAlt: string; avatarImg: string; avatarText?: never; avatarColor?: never; avatarIcon?: never }
     | {
@@ -129,6 +132,7 @@ const NotificationDropdown = (props: Props) => {
 
   // ** States
   const [anchorEl, setAnchorEl] = useState<(EventTarget & Element) | null>(null)
+  const router = useRouter()
 
   const profile = useRecoilValue(myProfile)
 
@@ -148,16 +152,20 @@ const NotificationDropdown = (props: Props) => {
       setNotifications(notificationsData.data.map((n) => (
         (n.avatarImg !== null) ?
           {
+            notificationId: n.notificationId,
             meta: n.meta,
             title: n.title,
             subtitle: n.subTitle,
             avatarImg: n.avatarImg,
             avatarAlt: n.avatarText,
+            linkPath: n.linkPath
           } : {
+            notificationId: n.notificationId,
             meta: n.meta,
             title: n.title,
             subtitle: n.subTitle,
-            avatarText: n.avatarText
+            avatarText: n.avatarText,
+            linkPath: n.linkPath
           }
       )))
     }
@@ -173,6 +181,11 @@ const NotificationDropdown = (props: Props) => {
     setAnchorEl(event.currentTarget)
   }
 
+  const handleRoute = (path: string) => {
+    handleDropdownClose()
+    router.push(path)
+  }
+
   const handleDropdownClose = () => {
     setAnchorEl(null)
   }
@@ -180,6 +193,12 @@ const NotificationDropdown = (props: Props) => {
   const readAllNotifications = () => {
     setNotifications([])
     ReadAllNotifications()
+  }
+
+  const handleReadOneNotification = (notification: NotificationsType) => {
+    setNotifications(notifications.filter((o) => o.notificationId !== notification.notificationId))
+    ReadOneNotification({ id: notification.notificationId })
+    handleRoute(notification.linkPath)
   }
 
   const RenderAvatar = ({ notification }: { notification: NotificationsType }) => {
@@ -241,7 +260,7 @@ const NotificationDropdown = (props: Props) => {
         </MenuItem>
         <ScrollWrapper hidden={hidden}>
           {notifications.map((notification: NotificationsType, index: number) => (
-            <MenuItem key={index} onClick={handleDropdownClose}>
+            <MenuItem key={index} onClick={() => handleReadOneNotification(notification)}>
               <Box sx={{ width: '100%', display: 'flex', alignItems: 'center' }}>
                 <RenderAvatar notification={notification} />
                 <Box sx={{ mx: 4, flex: '1 1', display: 'flex', overflow: 'hidden', flexDirection: 'column' }}>

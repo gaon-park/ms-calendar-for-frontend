@@ -52,7 +52,7 @@ const UserProfileTab = ({ tab }: InferGetStaticPropsType<typeof getStaticProps>)
         overview: { profile: otherData.data.profile, followCount: otherData.data.acceptedFollowCount, followerCount: otherData.data.acceptedFollowerCount },
         follows: otherData.data.follow,
         followers: otherData.data.follower,
-        isMyData: false
+        isMyData: (profileData.id === profile?.id)
       }
       )
     } else if (typeof profile !== 'undefined' && typeof accountId === 'undefined') {

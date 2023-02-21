@@ -67,8 +67,6 @@ const UserProfileHeader = ({ data }: { data: ProfileHeaderType }) => {
   }
   const worldMark = worldIcon(data.world)
 
-  console.log(data.iamFollowHim)
-
   return (
     <Card>
       <CardMedia

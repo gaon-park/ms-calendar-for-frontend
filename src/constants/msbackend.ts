@@ -21,6 +21,7 @@ const DELETE_ACCOUNT = "/api/user" as const;
 
 const GET_NOTIFICATIONS = "/api/user/notifications" as const;
 const READ_ALL_NOTIFICATIONS = "/api/user/notifications/read-all" as const;
+const READ_ONE_NOTIFICATION = "/api/user/notification/read" as const;
 
 const GET_OTHER_SCHEDULE = "/api/schedule/other" as const;
 const GET_SCHEDULE = "/api/schedule" as const;
@@ -54,6 +55,7 @@ export const MS_BACKEND_API_PATH = {
 
   GET_NOTIFICATIONS,
   READ_ALL_NOTIFICATIONS,
+  READ_ONE_NOTIFICATION,
 
   GET_OTHER_SCHEDULE,
   GET_SCHEDULE,
