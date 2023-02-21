@@ -260,10 +260,10 @@ export const appCalendarSlice = createSlice({
           return o
         })
       })
-      .addCase(addEvent.fulfilled, (state, action) => {
+      .addCase(addEvent.fulfilled, (state) => {
         state.selectedEvent = null
       })
-      .addCase(deleteEvent.fulfilled, (state, action) => {
+      .addCase(deleteEvent.fulfilled, (state) => {
         state.selectedEvent = null
       })
   },

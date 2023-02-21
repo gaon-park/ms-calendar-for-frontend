@@ -34,7 +34,7 @@ import { generateDate } from 'src/@core/utils/calc-date'
 import { convertDateFormat, convertDatetimeFormat } from 'src/@core/utils/format'
 import { useRecoilValue } from 'recoil'
 import { myProfile } from 'src/store/profile/user'
-import { Autocomplete, Chip, Avatar } from '@mui/material'
+import { Autocomplete, Chip, Avatar, Badge } from '@mui/material'
 import { getInitials } from 'src/@core/utils/get-initials'
 import { SimpleUserResponse } from 'src/model/user/user'
 import { SearchUserForScheduleInvite } from 'src/common/api/msBackend/search'
@@ -457,21 +457,33 @@ const AddEventSidebar = (props: AddEventSidebarType) => {
                   )}
                   renderTags={(value: SimpleUserResponse[], getTagProps) =>
                     value.map((option: SimpleUserResponse, index: number) => (
-                      <Chip
-                        variant='outlined'
-                        label={option.accountId}
-                        {...(getTagProps({ index }) as {})}
-                        key={option.accountId}
-                        avatar={
-                          option.avatarImg !== null ? <Avatar src={option.avatarImg} alt={option.accountId} />
-                            : <CustomAvatar
-                              skin='light'
-                              color='primary'
-                            >
-                              {getInitials(option.nickName)}
-                            </CustomAvatar>
-                        }
-                      />
+                      <Badge
+                        key={'invite_' + index}
+                        overlap='circular'
+                        badgeContent={<Icon icon={
+                          store.selectedEvent?.extendedProps.guests?.find((o) => o.id === option.id)?.acceptedStatus === 'ACCEPTED'
+                            ? 'material-symbols:check-circle-outline-sharp'
+                            : store.selectedEvent?.extendedProps.guests?.find((o) => o.id === option.id)?.acceptedStatus === 'REFUSED' ?
+                              'heroicons:x-circle' : ''
+                        } />}
+                        anchorOrigin={{ vertical: 'bottom', horizontal: 'left' }}>
+                        <Chip
+                          variant='outlined'
+                          label={option.accountId}
+                          {...(getTagProps({ index }) as {})}
+                          key={option.accountId}
+                          avatar={
+                            option.avatarImg !== null ?
+                              <Avatar src={option.avatarImg} alt={option.accountId} />
+                              : <CustomAvatar
+                                skin='light'
+                                color='primary'
+                              >
+                                {getInitials(option.nickName)}
+                              </CustomAvatar>
+                          }
+                        />
+                      </Badge>
                     ))
                   }
                 />

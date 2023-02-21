@@ -4,6 +4,7 @@ import { Dispatch } from 'redux'
 // ** Theme Type Import
 import { ThemeColor } from 'src/@core/layouts/types'
 import { DeleteScheduleRequest, PostUserScheduleRequest, PutUserScheduleRequest, RepeatCode, ScheduleUpdateCode } from 'src/common/api/msBackend/user/schedule'
+import { IMember } from 'src/model/user/schedule'
 import { SimpleUserResponse } from 'src/model/user/user'
 
 export type CalendarFiltersType = 'Official' | 'My'
@@ -34,7 +35,7 @@ export type EventType = {
     repeatInfo?: EventRepeatInfo,
     description?: string,
     isPublic?: boolean,
-    guests?: SimpleUserResponse[],
+    guests?: IMember[],
     forOfficial: boolean,
     scheduleUpdateCode?: ScheduleUpdateCode,
     note: string,
@@ -64,7 +65,7 @@ export type CalendarStoreType = {
   selectedEvent: null | EventType
   selectedCalendars: CalendarFiltersType[] | string[],
   memberIds: string[],
-  selectedUsers: SimpleUserResponse[],
+  selectedUsers: IMember[],
   isSignIn: boolean,
   myId: string
 }

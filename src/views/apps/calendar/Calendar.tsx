@@ -16,6 +16,7 @@ import { CalendarType, EventType } from 'src/types/apps/calendarTypes'
 import { generateDate } from 'src/@core/utils/calc-date'
 import { convertDatetimeFormat } from 'src/@core/utils/format'
 import { PutUserScheduleRequest } from 'src/common/api/msBackend/user/schedule'
+import { IMember } from 'src/model/user/schedule'
 
 const blankEvent: EventType = {
   id: 0,
@@ -165,7 +166,7 @@ const Calendar = (props: CalendarType) => {
           start: convertDatetimeFormat(droppedEvent.start),
           end: convertDatetimeFormat(droppedEvent.end),
           allDay: droppedEvent.allDay,
-          memberIds: droppedEvent.extendedProps.guests,
+          memberIds: droppedEvent.extendedProps.guests.map((o: IMember) => o.id),
           isPublic: droppedEvent.extendedProps.isPublic,
           scheduleUpdateCode: droppedEvent.extendedProps.scheduleUpdateCode ?? 'ONLY_THIS',
           forOfficial: droppedEvent.extendedProps.forOfficial,
@@ -186,7 +187,7 @@ const Calendar = (props: CalendarType) => {
           start: convertDatetimeFormat(resizedEvent.start),
           end: convertDatetimeFormat(resizedEvent.end),
           allDay: resizedEvent.allDay,
-          memberIds: resizedEvent.extendedProps.guests,
+          memberIds: resizedEvent.extendedProps.guests.map((o: IMember) => o.id),
           isPublic: resizedEvent.extendedProps.isPublic,
           scheduleUpdateCode: resizedEvent.extendedProps.scheduleUpdateCode ?? 'ONLY_THIS',
           forOfficial: resizedEvent.extendedProps.forOfficial,
