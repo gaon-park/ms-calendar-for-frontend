@@ -99,13 +99,13 @@ function fromSchedulePersonal(
       color: primaryGradient(color),
       filterType: 'My',
       extendedProps: {
-        ownerId: e.ownerId,
+        owner: e.owner,
         view: e.isPublic == true ? 'Public' :
           (e.isPublic == false ? 'Private' : 'Public'),
         description: e.note,
         isPublic: e.isPublic,
         guests: e.members.map((m) => {
-          return m.accountId
+          return m.id
         }),
         forOfficial: false,
         note: e.note ?? ''
@@ -128,13 +128,13 @@ function fromScheduleOther(
       end: e.end ? new Date(e.end) : undefined,
       color: primaryGradient(""),
       extendedProps: {
-        ownerId: e.ownerId,
+        owner: e.owner,
         view: e.isPublic == true ? 'Public' :
           (e.isPublic == false ? 'Private' : 'Public'),
         description: e.note,
         isPublic: e.isPublic,
         guests: e.members.map((m) => {
-          return m.accountId
+          return m.id
         }),
         forOfficial: false,
         note: e.note ?? ''

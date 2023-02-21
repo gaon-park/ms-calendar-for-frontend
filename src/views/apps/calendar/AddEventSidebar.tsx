@@ -15,6 +15,7 @@ import Typography from '@mui/material/Typography'
 import FormControl from '@mui/material/FormControl'
 import FormHelperText from '@mui/material/FormHelperText'
 import FormControlLabel from '@mui/material/FormControlLabel'
+import CustomAvatar from 'src/@core/components/mui/avatar'
 
 // ** Third Party Imports
 import DatePicker from 'react-datepicker'
@@ -33,6 +34,12 @@ import { generateDate } from 'src/@core/utils/calc-date'
 import { convertDateFormat, convertDatetimeFormat } from 'src/@core/utils/format'
 import { useRecoilValue } from 'recoil'
 import { myProfile } from 'src/store/profile/user'
+import { Autocomplete, Chip, Avatar } from '@mui/material'
+import { getInitials } from 'src/@core/utils/get-initials'
+import { SimpleUserResponse } from 'src/model/user/user'
+import { SearchUserForScheduleInvite } from 'src/common/api/msBackend/search'
+
+import useSWR from "swr"
 
 interface PickerProps {
   label?: string
@@ -84,6 +91,38 @@ const AddEventSidebar = (props: AddEventSidebarType) => {
   // ** States
   const [values, setValues] = useState<DefaultStateType>(defaultState)
   const profile = useRecoilValue(myProfile)
+
+  const [keyword, setKeyword] = useState('')
+  const [guestOpen, setGuestOpen] = useState<boolean>(false)
+  const [guestOptions, setGuestOptions] = useState<SimpleUserResponse[]>([])
+
+  const guestLimit = 5 // 同時閲覧できる最大ユーザ数
+  const [guestSelected, setGuestSelected] = useState<SimpleUserResponse[]>([])
+  const checkDisable = useCallback((option: SimpleUserResponse) => guestLimit <= guestSelected.length && !guestSelected.includes(option), [guestLimit, guestSelected]);
+
+  const handleGuestChanged = async (newSelected: SimpleUserResponse[]) => {
+    const ids = newSelected.map((o) => o.id)
+    setGuestSelected(newSelected)
+    setValues({ ...values, guests: ids })
+  }
+
+  const { data } = useSWR(
+    { keyword },
+    () => SearchUserForScheduleInvite({
+      keyword
+    }),
+    {
+      revalidateIfStale: false,
+      revalidateOnFocus: true,
+      revalidateOnReconnect: true
+    }
+  )
+
+  useEffect(() => {
+    if (typeof data !== 'undefined') {
+      setGuestOptions(data.data)
+    }
+  }, [data])
 
   const {
     control,
@@ -183,11 +222,12 @@ const AddEventSidebar = (props: AddEventSidebarType) => {
           (event.extendedProps.isPublic == true ? 'Public' :
             (event.extendedProps.isPublic == false ? 'Private' : 'Public')),
         endDate: event.end ? event.end : generateDate({ minutes: 30 }),
-        repeatCode: event.extendedProps.repeatInfo?.repeatCode ?? 'NONE',
+        repeatCode: event.extendedProps.repeatInfo?.repeatCode ?? '',
         repeatEnd: event.extendedProps.repeatInfo?.end ?? generateDate({ date: 7 }),
         startDate: event.start !== null ? event.start : new Date(),
         scheduleUpdateCode: event.extendedProps.scheduleUpdateCode || 'ONLY_THIS',
       })
+      setGuestSelected(guestOptions.filter((o) => event.extendedProps.guests?.includes(o.id)))
     }
   }, [setValue, store.selectedEvent])
 
@@ -243,6 +283,37 @@ const AddEventSidebar = (props: AddEventSidebarType) => {
     }
   }
 
+  const RenderOwner = () => {
+    if (store.selectedEvent !== null) {
+      const owner = store.selectedEvent.extendedProps.owner
+      if (owner !== undefined) {
+
+        return (
+          <>
+            <Box sx={{ mb: 6 }}>
+              <Chip
+                variant='outlined'
+                label={owner.accountId}
+                key={owner.accountId}
+                avatar={
+                  owner.avatarImg !== null ? <Avatar src={owner.avatarImg} alt={owner.accountId} />
+                    : <CustomAvatar
+                      skin='light'
+                      color='primary'
+                    >
+                      {getInitials(owner.nickName)}
+                    </CustomAvatar>
+                }
+              />
+            </Box>
+          </>
+        )
+      }
+    }
+    
+    return null
+  }
+
   return (
     <Drawer
       anchor='right'
@@ -280,6 +351,12 @@ const AddEventSidebar = (props: AddEventSidebarType) => {
       </Box>
       <Box className='sidebar-body' sx={{ p: theme => theme.spacing(5, 6) }}>
         <DatePickerWrapper>
+          {
+            values.view !== 'Official' && store.selectedEvent?.id !== 0 ?
+              (
+                RenderOwner()
+              ) : null
+          }
           <form onSubmit={handleSubmit(onSubmit)} autoComplete='off'>
             <FormControl fullWidth sx={{ mb: 6 }}>
               <Controller
@@ -348,21 +425,51 @@ const AddEventSidebar = (props: AddEventSidebarType) => {
               />
             </FormControl>
             <FormControl fullWidth sx={{ mb: 6 }}>
-              <InputLabel id='event-guests'>Guests</InputLabel>
-              <Select
-                multiple
-                label='Guests'
-                value={values.guests}
-                labelId='event-guests'
-                id='event-guests-select'
-                onChange={e => setValues({ ...values, guests: e.target.value })}
-              >
-                <MenuItem value='bruce'>Bruce</MenuItem>
-                <MenuItem value='clark'>Clark</MenuItem>
-                <MenuItem value='diana'>Diana</MenuItem>
-                <MenuItem value='john'>John</MenuItem>
-                <MenuItem value='barry'>Barry</MenuItem>
-              </Select>
+              <Box sx={{ display: 'flex', flexWrap: 'wrap' }}>
+                <Autocomplete
+                  multiple
+                  fullWidth
+                  getOptionDisabled={checkDisable}
+                  open={guestOpen}
+                  value={guestSelected}
+                  options={guestOptions}
+                  onChange={(e, newSelected) => handleGuestChanged(newSelected)}
+                  onOpen={() => setGuestOpen(true)}
+                  onClose={() => setGuestOpen(false)}
+                  id='autocomplete-asynchronous-request'
+                  getOptionLabel={option => `${option.nickName}(@${option.nickName})`}
+                  isOptionEqualToValue={(option, value) => (option.accountId === value.accountId || option.nickName === value.nickName)}
+                  renderInput={params => (
+                    <TextField
+                      {...params}
+                      onChange={e => setKeyword(e.target.value)}
+                      label='Guest'
+                      InputProps={{
+                        ...params.InputProps,
+                      }}
+                    />
+                  )}
+                  renderTags={(value: SimpleUserResponse[], getTagProps) =>
+                    value.map((option: SimpleUserResponse, index: number) => (
+                      <Chip
+                        variant='outlined'
+                        label={option.accountId}
+                        {...(getTagProps({ index }) as {})}
+                        key={option.accountId}
+                        avatar={
+                          option.avatarImg !== null ? <Avatar src={option.avatarImg} alt={option.accountId} />
+                            : <CustomAvatar
+                              skin='light'
+                              color='primary'
+                            >
+                              {getInitials(option.nickName)}
+                            </CustomAvatar>
+                        }
+                      />
+                    ))
+                  }
+                />
+              </Box>
             </FormControl>
             <TextField
               rows={4}

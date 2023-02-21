@@ -7,7 +7,7 @@ import CustomAvatar from 'src/@core/components/mui/avatar'
 // ** Types
 import { SidebarProfileSearchType } from 'src/types/apps/calendarTypes'
 import { Fragment, useCallback, useEffect, useState } from 'react';
-import { Autocomplete, Chip, CircularProgress } from '@mui/material';
+import { Autocomplete, Chip } from '@mui/material';
 import { SimpleUserResponse } from 'src/model/user/user';
 
 import useSWR from "swr"
@@ -22,7 +22,7 @@ const SidebarProfileSearch = (props: SidebarProfileSearchType) => {
   const [open, setOpen] = useState<boolean>(false)
   const [options, setOptions] = useState<SimpleUserResponse[]>([])
 
-  const limit = 4 // 同時閲覧できる最大ユーザ数
+  const limit = 5 // 同時閲覧できる最大ユーザ数
   const [selected, setSelected] = useState<string[]>([])
   const checkDisable = useCallback((option: SimpleUserResponse) => limit <= selected.length && !selected.includes(option.id), [limit, selected]);
 
@@ -71,7 +71,6 @@ const SidebarProfileSearch = (props: SidebarProfileSearchType) => {
           getOptionDisabled={checkDisable}
           open={open}
           options={options}
-          // loading={loading}
           onChange={(e, newSelected) => handleChanged(newSelected)}
           onOpen={() => setOpen(true)}
           onClose={() => setOpen(false)}

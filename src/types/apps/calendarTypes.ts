@@ -27,7 +27,7 @@ export type EventType = {
   display?: string,
   filterType?: CalendarFiltersType,
   extendedProps: {
-    ownerId?: string,
+    owner?: SimpleUserResponse,
     calendarMemberId?: string,
     view: CalendarViewType,
     byAdmin?: boolean,

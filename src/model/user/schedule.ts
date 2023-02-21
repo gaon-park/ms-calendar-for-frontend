@@ -1,3 +1,5 @@
+import { SimpleUserResponse } from "./user";
+
 export interface IScheduleResponse {
   officials: ScheduleOfficial[];
   personals: SchedulePersonal[];
@@ -23,13 +25,13 @@ export interface SchedulePersonal {
   end?: string;
   allDay: boolean;
   note?: string;
-  ownerId: string;
+  owner: SimpleUserResponse;
   isPublic: boolean;
   members: IMember[];
 }
 
 export interface IMember {
-  id?: string;
+  id: string;
   accountId: string;
   nickName: string;
   avatarImg: string;
