@@ -280,8 +280,14 @@ const AddEventSidebar = (props: AddEventSidebarType) => {
     )
   })
 
+  const checkUpdateBtn = () => {
+    if (profile === undefined) return false
+    if (!store.selectedEvent?.extendedProps.guests?.map(o => o.id).includes(profile.id)) return false
+    return true
+  }
+
   const RenderSidebarFooter = () => {
-    if (profile !== undefined) {
+    if (checkUpdateBtn()) {
       if (store.selectedEvent === null || (store.selectedEvent !== null && !store.selectedEvent.title.length)) {
         return (
           <Fragment>
@@ -308,7 +314,8 @@ const AddEventSidebar = (props: AddEventSidebarType) => {
           </Fragment>
         )
       }
-    } else return null
+    }
+    else return null
   }
 
   const RenderOwner = () => {
@@ -361,13 +368,13 @@ const AddEventSidebar = (props: AddEventSidebarType) => {
       >
         <Typography variant='h6'>
           {
-            profile !== undefined && store.selectedEvent?.filterType !== 'Official' ?
+            checkUpdateBtn() && store.selectedEvent?.filterType !== 'Official' ?
               store.selectedEvent !== null && store.selectedEvent.title.length ? '일정 수정' : '일정 추가'
               : '일정 확인'
           }
         </Typography>
         <Box sx={{ display: 'flex', alignItems: 'center' }}>
-          {profile !== undefined && store.selectedEvent?.filterType !== 'Official' ?
+          {checkUpdateBtn() && store.selectedEvent?.filterType !== 'Official' ?
             store.selectedEvent !== null && store.selectedEvent.title.length ? (
               <IconButton
                 size='small'
