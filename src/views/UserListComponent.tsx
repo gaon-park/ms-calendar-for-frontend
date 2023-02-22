@@ -2,7 +2,7 @@
 import { useState, MouseEvent } from 'react'
 
 // ** Next Imports
-import Link from 'next/link'
+
 
 // ** MUI Imports
 import Box from '@mui/material/Box'
@@ -31,6 +31,7 @@ import { FollowAccept, FollowCancel, FollowerDelete, FollowRequest } from 'src/c
 import { IProfile } from 'src/model/user/profile'
 import { useRouter } from 'next/router'
 import Avatar from 'src/@core/components/mui/avatar'
+import Link from '@mui/material/Link/Link'
 
 const worldIcon = (world: string) => {
     for (let i = 0; i < worldData.length; i++) {
@@ -183,9 +184,7 @@ const UserListComponent = (props: Props) => {
                         key={`${row.row.id}_0`}
                         sx={{ '& svg': { mr: 2 } }}
                         onClick={() => {
-                            router.push(
-                                `/user-profile/profile/?accountId=${row.row.accountId}`,
-                            )
+                            location.href = `/user-profile/profile/?accountId=${row.row.accountId}`
                         }}
                     >
                         <Icon icon='mdi:eye-outline' fontSize={20} />
@@ -211,7 +210,11 @@ const UserListComponent = (props: Props) => {
                     <Box sx={{ display: 'flex', alignItems: 'center' }}>
                         {renderClient(row)}
                         <Box sx={{ display: 'flex', alignItems: 'flex-start', flexDirection: 'column' }}>
-                            <StyledLink href={`/user-profile/profile/?accountId=${row.accountId}`}>{row.nickName}</StyledLink>
+                            <Link component="button"
+                                variant="body1"
+                                onClick={() => {
+                                    location.href = `/user-profile/profile/?accountId=${row.accountId}`
+                                }} >{row.nickName}</Link>
                             <Typography noWrap variant='caption'>
                                 {`@${row.accountId}`}
                             </Typography>
