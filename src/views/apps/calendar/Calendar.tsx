@@ -140,7 +140,6 @@ const Calendar = (props: CalendarType) => {
         sidebarToggle: {
           text: <Icon icon='mdi:menu' />,
           click() {
-            if (!store.isSignIn) return;
             handleLeftSidebarToggle()
           }
         }

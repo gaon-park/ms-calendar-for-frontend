@@ -290,7 +290,6 @@ export const appCalendarSlice = createSlice({
           // display auto
           state.selectedCalendars.push('My')
         }
-        console.log(state.selectedCalendars)
         state.events = state.events.map((o) => {
           if (o.filterType === action.payload) {
             if (o.display === undefined || o.display === 'auto') {
