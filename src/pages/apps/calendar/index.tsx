@@ -92,20 +92,18 @@ const AppCalendar = () => {
         ...(skin === 'bordered' && { border: theme => `1px solid ${theme.palette.divider}` })
       }}
     >
-      {
-        profile !== undefined ? <SidebarLeft
-          store={store}
-          mdAbove={mdAbove}
-          dispatch={dispatch}
-          calendarsColor={calendarsColor}
-          leftSidebarOpen={leftSidebarOpen}
-          leftSidebarWidth={leftSidebarWidth}
-          handleSelectEvent={handleSelectEvent}
-          handleLeftSidebarToggle={handleLeftSidebarToggle}
-          handleAddEventSidebarToggle={handleAddEventSidebarToggle}
-          handleSelectedUsers={handleSelectedUsers}
-        /> : null
-      }
+      <SidebarLeft
+        store={store}
+        mdAbove={mdAbove}
+        dispatch={dispatch}
+        calendarsColor={calendarsColor}
+        leftSidebarOpen={leftSidebarOpen}
+        leftSidebarWidth={leftSidebarWidth}
+        handleSelectEvent={handleSelectEvent}
+        handleLeftSidebarToggle={handleLeftSidebarToggle}
+        handleAddEventSidebarToggle={handleAddEventSidebarToggle}
+        handleSelectedUsers={handleSelectedUsers}
+      />
       <Box
         sx={{
           p: 5,
