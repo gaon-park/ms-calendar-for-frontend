@@ -8,6 +8,9 @@ import CardContent from '@mui/material/CardContent'
 // ** Icon Imports
 import Icon from 'src/@core/components/icon'
 import { ProfileOverviewType } from 'src/types/profile/types'
+import TableServerSide from 'src/views/dashboard/TableServerSide'
+import ApexChartWrapper from 'src/@core/styles/libs/react-apexcharts'
+import ApexAreaChart from 'src/views/dashboard/ApexAreaChart'
 
 // ** Type Import
 
@@ -17,8 +20,6 @@ const renderOverview = (overviewType: ProfileOverviewType) => {
   const overview = [
     { property: '계정ID', value: profile.accountId, icon: 'openmoji:id-button' },
     { property: '닉네임', value: profile.nickName, icon: 'openmoji:european-name-badge' },
-    { property: '월드', value: profile.world, icon: 'clarity:world-line' },
-    { property: '직업', value: profile.jobDetail ?? profile.job, icon: 'mdi:briefcase-outline' },
     { property: '팔로잉', value: followCount, icon: 'fluent-mdl2:follow-user' },
     { property: '팔로워', value: followerCount, icon: 'fluent-mdl2:follow-user' },
   ]
@@ -68,6 +69,14 @@ const AboutOverivew = (props: Props) => {
             </Box>
           </CardContent>
         </Card>
+      </Grid>
+      <Grid item xs={12}>
+        <TableServerSide />
+      </Grid>
+      <Grid item xs={12}>
+      <ApexChartWrapper>
+        <ApexAreaChart />
+      </ApexChartWrapper>
       </Grid>
     </Grid>
   )
