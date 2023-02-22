@@ -87,11 +87,9 @@ const Customizer = () => {
     layout,
     navHidden,
     direction,
-    appBarBlur,
     themeColor,
     navCollapsed,
     contentWidth,
-    verticalNavToggleType
   } = settings
 
   const handleChange = (field: keyof Settings, value: Settings[keyof Settings]): void => {
