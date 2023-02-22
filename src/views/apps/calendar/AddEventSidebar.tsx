@@ -283,6 +283,7 @@ const AddEventSidebar = (props: AddEventSidebarType) => {
   const checkUpdateBtn = () => {
     if (profile === undefined) return false
     if (!store.selectedEvent?.extendedProps.guests?.map(o => o.id).includes(profile.id)) return false
+    
     return true
   }
 
