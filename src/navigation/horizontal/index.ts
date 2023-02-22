@@ -9,9 +9,14 @@ const navigation = (): HorizontalNavItemsType => {
       path: '/apps/calendar'
     },
     {
-      title: '유저 검색',
+      title: '회원 검색',
       icon: 'mdi:account-outline',
       path: '/apps/user/list'
+    },
+    {
+      title: '도움말',
+      icon: 'ion:help',
+      path: '/help'
     }
   ]
 }
