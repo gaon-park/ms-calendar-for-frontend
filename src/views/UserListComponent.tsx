@@ -203,7 +203,7 @@ const UserListComponent = (props: Props) => {
             flex: 0.15,
             minWidth: 200,
             field: 'user',
-            headerName: 'User',
+            headerName: '유저',
             sortable: false,
             filterable: false,
             renderCell: ({ row }: CellType) => {
@@ -224,7 +224,7 @@ const UserListComponent = (props: Props) => {
             flex: 0.1,
             field: 'world',
             minWidth: 60,
-            headerName: 'World',
+            headerName: '월드',
             sortable: false,
             filterable: false,
             renderCell: ({ row }: CellType) => {
@@ -243,7 +243,7 @@ const UserListComponent = (props: Props) => {
         {
             flex: 0.1,
             minWidth: 60,
-            headerName: 'Job',
+            headerName: '직업 분류',
             field: 'job',
             sortable: false,
             filterable: false,
@@ -260,7 +260,7 @@ const UserListComponent = (props: Props) => {
         {
             flex: 0.1,
             minWidth: 110,
-            headerName: 'Job Detail',
+            headerName: '세부 직업',
             field: 'jobDetail',
             sortable: false,
             filterable: false,
@@ -278,7 +278,7 @@ const UserListComponent = (props: Props) => {
             flex: 0.08,
             minWidth: 80,
             field: 'followStatus',
-            headerName: 'Follow Status',
+            headerName: '팔로잉 체크',
             sortable: false,
             filterable: false,
             renderCell: ({ row }: CellType) => {
@@ -313,7 +313,7 @@ const UserListComponent = (props: Props) => {
             sortable: false,
             filterable: false,
             field: 'actions',
-            headerName: 'Actions',
+            headerName: '유저 액션',
             renderCell: ({ row }: CellType) => <RowOptions row={row} />
         }
     ]

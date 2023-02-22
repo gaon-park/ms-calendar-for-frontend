@@ -75,12 +75,12 @@ const UserList = () => {
     <Grid container spacing={6}>
       <Grid item xs={12}>
         <Card>
-          <CardHeader title='Search Filters' />
+          <CardHeader title='검색 필터' />
           <CardContent>
             <Grid container spacing={6}>
               <Grid item sm={4} xs={12}>
                 <FormControl fullWidth>
-                  <InputLabel id='world-select'>Select World</InputLabel>
+                  <InputLabel id='world-select'>월드 필터</InputLabel>
                   <Select
                     fullWidth
                     value={world}
@@ -88,9 +88,9 @@ const UserList = () => {
                     label='Select World'
                     labelId='world-select'
                     onChange={handleWorldChange}
-                    inputProps={{ placeholder: 'Select World' }}
+                    inputProps={{ placeholder: '월드 필터' }}
                   >
-                    <MenuItem key={`world_`} value=''>Select World</MenuItem>
+                    <MenuItem key={`world_`} value=''>월드 필터</MenuItem>
                     {
                       worldData.map((data, index) => (
                         <MenuItem key={`world_${index}`} value={data.value}>{data.value}</MenuItem>
@@ -101,7 +101,7 @@ const UserList = () => {
               </Grid>
               <Grid item sm={4} xs={12}>
                 <FormControl fullWidth>
-                  <InputLabel id='status-job'>Select Job</InputLabel>
+                  <InputLabel id='status-job'>직업 분류 필터</InputLabel>
                   <Select
                     fullWidth
                     value={job}
@@ -109,9 +109,9 @@ const UserList = () => {
                     label='Select Job'
                     labelId='job-select'
                     onChange={handleJobChange}
-                    inputProps={{ placeholder: 'Select Job' }}
+                    inputProps={{ placeholder: '직업 분류 필터' }}
                   >
-                    <MenuItem key={`job_`} value=''>Select Job</MenuItem>
+                    <MenuItem key={`job_`} value=''>직업 분류 필터</MenuItem>
                     {
                       jobDetailData.map((data, index) => (
                         <MenuItem key={`job_${index}`} value={data.category}>{data.category}</MenuItem>
@@ -122,7 +122,7 @@ const UserList = () => {
               </Grid>
               <Grid item sm={4} xs={12}>
                 <FormControl fullWidth>
-                  <InputLabel id='jobDetail-select'>Select JobDetail</InputLabel>
+                  <InputLabel id='jobDetail-select'>세부 직업 필터</InputLabel>
                   <Select
                     fullWidth
                     value={jobDetail}
@@ -130,9 +130,9 @@ const UserList = () => {
                     label='Select JobDetail'
                     labelId='jobDetail-select'
                     onChange={handleJobDetailChange}
-                    inputProps={{ placeholder: 'Select JobDetail' }}
+                    inputProps={{ placeholder: '세부 직업 필터' }}
                   >
-                    <MenuItem key={`jobDetail_`} value=''>Select JobDetail</MenuItem>
+                    <MenuItem key={`jobDetail_`} value=''>세부 직업 필터</MenuItem>
                     {
                       (job === ''
                         ? jobDetailData

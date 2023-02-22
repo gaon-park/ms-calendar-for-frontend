@@ -44,13 +44,13 @@ const Error401 = () => {
         <BoxWrapper>
           <Typography variant='h1'>401</Typography>
           <Typography variant='h5' sx={{ mb: 1, fontSize: '1.5rem !important' }}>
-            You are not authorized! 🔐
+            not_authorized 🔐
           </Typography>
-          <Typography variant='body2'>You don&prime;t have permission to access this page. Go Home!</Typography>
+          <Typography variant='body2'>인증되지 않은 유저이신 것 같아요!</Typography>
         </BoxWrapper>
         <Img height='487' alt='error-illustration' src='/images/pages/401.png' />
         <Button href='/' component={Link} variant='contained' sx={{ px: 5.5 }}>
-          Back to Home
+          홈으로 돌아가기
         </Button>
       </Box>
       <FooterIllustrations />

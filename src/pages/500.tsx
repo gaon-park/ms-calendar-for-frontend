@@ -55,11 +55,11 @@ const Error500 = () => {
           <Typography variant='h5' sx={{ mb: 1, fontSize: '1.5rem !important' }}>
             Internal server error 👨🏻‍💻
           </Typography>
-          <Typography variant='body2'>Oops, something went wrong!</Typography>
+          <Typography variant='body2'>으악, 뭔가 문제가 발생한 거 같아요. 관리자에게 연락해주세요!</Typography>
         </BoxWrapper>
         <Img height='487' alt='error-illustration' src='/images/pages/500.png' />
         <Button href='/' component={Link} variant='contained' sx={{ px: 5.5 }}>
-          Back to Home
+          홈으로 돌아가기
         </Button>
       </Box>
       <FooterIllustrations image={<TreeIllustration alt='tree' src='/images/pages/tree-3.png' />} />

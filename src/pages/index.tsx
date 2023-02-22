@@ -61,26 +61,20 @@ const HelpPage = () => {
           <CardHeader title='계정 관련 참고 사항 ⚙️'></CardHeader>
           <CardContent>
             <Typography sx={{ mb: 2 }}>
-              0. 여러분의 구글 이메일은 로그인 시 유저 식별을 위한 값입니다. 데이터 베이스에 저장할 뿐, 사이트에 공개하지 않습니다.
+              0. 여러분의 구글 이메일은 로그인 시 유저 식별을 위한 값이며, 초기 계정ID와 닉네임으로 사용됩니다.
             </Typography>
             <Typography sx={{ mb: 2 }}>
-              1. 계정을 비공개로 설정하는 경우, 팔로워가 아닌 유저에게는 '팔로워', '팔로우' 리스트 정보를 제공하지 않습니다. 
+              1. 계정을 비공개로 설정하는 경우, 팔로워가 아닌 유저에게는 '팔로워', '팔로우' 리스트를 제공하지 않습니다. 
             </Typography>
             <Typography sx={{ mb: 2 }}>
               2. 로그인 후 설정 가능한 계정ID는 같은 값이 존재할 수 없습니다. 닉네임은 중복가능합니다.
-            </Typography>
-            <Typography sx={{ mb: 2 }}>
-              3. Public: 계정을 공개, 비공개 상태로 바꿀 수 있습니다.
-            </Typography>
-            <Typography sx={{ mb: 2 }}>
-              4. Notification: 오른쪽 상단에 표시되는 알림을 받거나, 받지 않도록 할 수 있습니다.
             </Typography>
           </CardContent>
         </Card>
       </Grid>
       <Grid item xs={12}>
         <Card>
-          <CardHeader title='버그, 오타 제보 😞'></CardHeader>
+          <CardHeader title='버그, 오타 제보 😞 추가 기능 요청 🥰'></CardHeader>
           <CardContent>
             <Typography sx={{ mb: 2 }}>
               0. 오픈 카톡

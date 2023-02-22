@@ -169,13 +169,13 @@ const UserDropdown = (props: Props) => {
         <MenuItem sx={{ p: 0 }} onClick={() => handleDropdownClose('/user-profile/profile/')}>
           <Box sx={styles}>
             <Icon icon='mdi:account-outline' />
-            Profile
+            프로필
           </Box>
         </MenuItem>
         <MenuItem sx={{ p: 0 }} onClick={() => handleDropdownClose('/account-settings/account/')}>
           <Box sx={styles}>
             <Icon icon='mdi:cog-outline' />
-            Settings
+            설정
           </Box>
         </MenuItem>
         <Divider />
@@ -184,7 +184,7 @@ const UserDropdown = (props: Props) => {
           sx={{ py: 2, '& svg': { mr: 2, fontSize: '1.375rem', color: 'text.primary' } }}
         >
           <Icon icon='mdi:logout-variant' />
-          Logout
+          로그아웃
         </MenuItem>
       </Menu>
     </Fragment>
@@ -195,7 +195,7 @@ const UserDropdown = (props: Props) => {
           onClick={handleLogin}
           sx={{ py: 2, '& svg': { mr: 2, fontSize: '1.375rem', color: 'text.primary' } }}
         >
-          Login
+          로그인
         </Button>
         {/* </Menu> */}
       </Fragment>

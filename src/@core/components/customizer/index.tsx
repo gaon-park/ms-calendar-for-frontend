@@ -113,9 +113,8 @@ const Customizer = () => {
           }}
         >
           <Typography variant='h6' sx={{ fontWeight: 600, textTransform: 'uppercase' }}>
-            Theme Customizer
+            사이트 커스터마이저
           </Typography>
-          <Typography sx={{ color: 'text.secondary' }}>Customize & Preview in Real Time</Typography>
           <IconButton
             onClick={() => setOpen(false)}
             sx={{
@@ -136,43 +135,43 @@ const Customizer = () => {
               variant='caption'
               sx={{ mb: 4, color: 'text.disabled', textTransform: 'uppercase' }}
             >
-              Theming
+              테마
             </Typography>
 
             {/* Skin */}
             <Box sx={{ mb: 4 }}>
-              <Typography>Skin</Typography>
+              <Typography>스킨</Typography>
               <RadioGroup
                 row
                 value={skin}
                 onChange={e => handleChange('skin', e.target.value as Settings['skin'])}
                 sx={{ '& .MuiFormControlLabel-label': { fontSize: '.875rem', color: 'text.secondary' } }}
               >
-                <FormControlLabel value='default' label='Default' control={<Radio />} />
-                <FormControlLabel value='bordered' label='Bordered' control={<Radio />} />
+                <FormControlLabel value='default' label='기본' control={<Radio />} />
+                <FormControlLabel value='bordered' label='테두리 있음' control={<Radio />} />
               </RadioGroup>
             </Box>
 
             {/* Mode */}
             <Box sx={{ mb: 4 }}>
-              <Typography>Mode</Typography>
+              <Typography>밝기 모드</Typography>
               <RadioGroup
                 row
                 value={mode}
                 onChange={e => handleChange('mode', e.target.value as any)}
                 sx={{ '& .MuiFormControlLabel-label': { fontSize: '.875rem', color: 'text.secondary' } }}
               >
-                <FormControlLabel value='light' label='Light' control={<Radio />} />
-                <FormControlLabel value='dark' label='Dark' control={<Radio />} />
+                <FormControlLabel value='light' label='밝게' control={<Radio />} />
+                <FormControlLabel value='dark' label='어둡게' control={<Radio />} />
                 {layout === 'horizontal' ? null : (
-                  <FormControlLabel value='semi-dark' label='Semi Dark' control={<Radio />} />
+                  <FormControlLabel value='semi-dark' label='부분 어둡게' control={<Radio />} />
                 )}
               </RadioGroup>
             </Box>
 
             {/* Color Picker */}
             <div>
-              <Typography sx={{ mb: 2.5 }}>Primary Color</Typography>
+              <Typography sx={{ mb: 2.5 }}>메인 표시 색깔</Typography>
               <Box sx={{ display: 'flex' }}>
                 <ColorBox
                   onClick={() => handleChange('themeColor', 'primary')}
@@ -242,68 +241,58 @@ const Customizer = () => {
               variant='caption'
               sx={{ mb: 4, color: 'text.disabled', textTransform: 'uppercase' }}
             >
-              Layout
+              배치
             </Typography>
 
             {/* Content Width */}
             <Box sx={{ mb: 4 }}>
-              <Typography>Content Width</Typography>
+              <Typography>콘텐츠 너비</Typography>
               <RadioGroup
                 row
                 value={contentWidth}
                 onChange={e => handleChange('contentWidth', e.target.value as Settings['contentWidth'])}
                 sx={{ '& .MuiFormControlLabel-label': { fontSize: '.875rem', color: 'text.secondary' } }}
               >
-                <FormControlLabel value='full' label='Full' control={<Radio />} />
-                <FormControlLabel value='boxed' label='Boxed' control={<Radio />} />
+                <FormControlLabel value='full' label='꽉 차게' control={<Radio />} />
+                <FormControlLabel value='boxed' label='박스형' control={<Radio />} />
               </RadioGroup>
             </Box>
 
             {/* AppBar */}
             <Box sx={{ mb: 4 }}>
-              <Typography>AppBar Type</Typography>
+              <Typography>헤더 타입</Typography>
               <RadioGroup
                 row
                 value={appBar}
                 onChange={e => handleChange('appBar', e.target.value as Settings['appBar'])}
                 sx={{ '& .MuiFormControlLabel-label': { fontSize: '.875rem', color: 'text.secondary' } }}
               >
-                <FormControlLabel value='fixed' label='Fixed' control={<Radio />} />
-                <FormControlLabel value='static' label='Static' control={<Radio />} />
+                <FormControlLabel value='fixed' label='유동적으로' control={<Radio />} />
+                <FormControlLabel value='static' label='고정식' control={<Radio />} />
                 {layout === 'horizontal' ? null : (
-                  <FormControlLabel value='hidden' label='Hidden' control={<Radio />} />
+                  <FormControlLabel value='hidden' label='숨기기' control={<Radio />} />
                 )}
               </RadioGroup>
             </Box>
 
             {/* Footer */}
             <Box sx={{ mb: 4 }}>
-              <Typography>Footer Type</Typography>
+              <Typography>바닥글 타입</Typography>
               <RadioGroup
                 row
                 value={footer}
                 onChange={e => handleChange('footer', e.target.value as Settings['footer'])}
                 sx={{ '& .MuiFormControlLabel-label': { fontSize: '.875rem', color: 'text.secondary' } }}
               >
-                <FormControlLabel value='fixed' label='Fixed' control={<Radio />} />
-                <FormControlLabel value='static' label='Static' control={<Radio />} />
-                <FormControlLabel value='hidden' label='Hidden' control={<Radio />} />
+                <FormControlLabel value='fixed' label='유동적으로' control={<Radio />} />
+                <FormControlLabel value='static' label='고정식' control={<Radio />} />
+                <FormControlLabel value='hidden' label='숨기기' control={<Radio />} />
               </RadioGroup>
-            </Box>
-
-            {/* AppBar Blur */}
-            <Box sx={{ mb: 4, display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-              <Typography>AppBar Blur</Typography>
-              <Switch
-                name='appBarBlur'
-                checked={appBarBlur}
-                onChange={e => handleChange('appBarBlur', e.target.checked)}
-              />
             </Box>
 
             {/* RTL */}
             <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-              <Typography>RTL</Typography>
+              <Typography>좌우 반전</Typography>
               <Switch
                 name='direction'
                 checked={direction === 'rtl'}
@@ -320,12 +309,12 @@ const Customizer = () => {
               variant='caption'
               sx={{ mb: 4, color: 'text.disabled', textTransform: 'uppercase' }}
             >
-              Menu
+              메뉴(네비게이션 바)
             </Typography>
 
             {/* Menu Layout */}
             <Box sx={{ mb: layout === 'horizontal' && appBar === 'hidden' ? {} : 4 }}>
-              <Typography>Menu Layout</Typography>
+              <Typography>메뉴 배치</Typography>
               <RadioGroup
                 row
                 value={layout}
@@ -338,33 +327,15 @@ const Customizer = () => {
                 }}
                 sx={{ '& .MuiFormControlLabel-label': { fontSize: '.875rem', color: 'text.secondary' } }}
               >
-                <FormControlLabel value='vertical' label='Vertical' control={<Radio />} />
-                <FormControlLabel value='horizontal' label='Horizontal' control={<Radio />} />
+                <FormControlLabel value='vertical' label='수직형' control={<Radio />} />
+                <FormControlLabel value='horizontal' label='수평형' control={<Radio />} />
               </RadioGroup>
             </Box>
-
-            {/* Menu Toggle */}
-            {navHidden || layout === 'horizontal' ? null : (
-              <Box sx={{ mb: 4 }}>
-                <Typography>Menu Toggle</Typography>
-                <RadioGroup
-                  row
-                  value={verticalNavToggleType}
-                  onChange={e =>
-                    handleChange('verticalNavToggleType', e.target.value as Settings['verticalNavToggleType'])
-                  }
-                  sx={{ '& .MuiFormControlLabel-label': { fontSize: '.875rem', color: 'text.secondary' } }}
-                >
-                  <FormControlLabel value='accordion' label='Accordion' control={<Radio />} />
-                  <FormControlLabel value='collapse' label='Collapse' control={<Radio />} />
-                </RadioGroup>
-              </Box>
-            )}
 
             {/* Menu Collapsed */}
             {navHidden || layout === 'horizontal' ? null : (
               <Box sx={{ mb: 4, display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-                <Typography>Menu Collapsed</Typography>
+                <Typography>메뉴 사이즈 최소화</Typography>
                 <Switch
                   name='navCollapsed'
                   checked={navCollapsed}
@@ -376,7 +347,7 @@ const Customizer = () => {
             {/* Menu Hidden */}
             {layout === 'horizontal' && appBar === 'hidden' ? null : (
               <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-                <Typography>Menu Hidden</Typography>
+                <Typography>메뉴 숨기기</Typography>
                 <Switch
                   name='navHidden'
                   checked={navHidden}

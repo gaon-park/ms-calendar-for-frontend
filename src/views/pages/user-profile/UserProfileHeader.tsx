@@ -142,14 +142,18 @@ const UserProfileHeader = ({ data }: { data: ProfileHeaderType }) => {
                 계정 정보 수정
               </Button>
             ) : (
-              data.iamFollowHim === 'FOLLOW' || data.iamFollowHim === 'WAITING' ? (
+              data.iamFollowHim === 'FOLLOW' ? (
                 <Button variant='contained' startIcon={<Icon icon='mdi:account-minus-outline' fontSize={20} />} onClick={() => request(FollowCancel)}>
                   팔로우 취소
                 </Button>
               ) : (
-                <Button variant='contained' startIcon={<Icon icon='mdi:account-plus-outline' fontSize={20} />} onClick={() => request(FollowRequest)}>
+                data.iamFollowHim === 'WAITING' ? (
+                  <Button variant='contained' startIcon={<Icon icon='mdi:account-minus-outline' fontSize={20} />} onClick={() => request(FollowCancel)}>
+                    팔로우 요청 취소
+                  </Button>
+                ) : (<Button variant='contained' startIcon={<Icon icon='mdi:account-plus-outline' fontSize={20} />} onClick={() => request(FollowRequest)}>
                   팔로우 요청
-                </Button>
+                </Button>)
               )
             )
           }

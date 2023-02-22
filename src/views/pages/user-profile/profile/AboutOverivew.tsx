@@ -15,12 +15,12 @@ import { ProfileOverviewType } from 'src/types/profile/types'
 const renderOverview = (overviewType: ProfileOverviewType) => {
   const {profile, followCount, followerCount} = overviewType
   const overview = [
-    { property: 'Account Id', value: profile.accountId, icon: 'openmoji:id-button' },
-    { property: 'NickName', value: profile.nickName, icon: 'openmoji:european-name-badge' },
-    { property: 'World', value: profile.world, icon: 'clarity:world-line' },
-    { property: 'Job', value: profile.jobDetail ?? profile.job, icon: 'mdi:briefcase-outline' },
-    { property: 'Follow', value: followCount, icon: 'fluent-mdl2:follow-user' },
-    { property: 'Follower', value: followerCount, icon: 'fluent-mdl2:follow-user' },
+    { property: '계정ID', value: profile.accountId, icon: 'openmoji:id-button' },
+    { property: '닉네임', value: profile.nickName, icon: 'openmoji:european-name-badge' },
+    { property: '월드', value: profile.world, icon: 'clarity:world-line' },
+    { property: '직업', value: profile.jobDetail ?? profile.job, icon: 'mdi:briefcase-outline' },
+    { property: '팔로우', value: followCount, icon: 'fluent-mdl2:follow-user' },
+    { property: '팔로워', value: followerCount, icon: 'fluent-mdl2:follow-user' },
   ]
 
   return overview.map((item, index) => {
@@ -35,7 +35,7 @@ const renderOverview = (overviewType: ProfileOverviewType) => {
         }}
       >
         {
-          item.property === 'Follower' ? <Icon icon={item.icon} hFlip/> : <Icon icon={item.icon} />
+          item.property === '팔로워' ? <Icon icon={item.icon} hFlip/> : <Icon icon={item.icon} />
         }
         
         <Typography sx={{ mx: 2, fontWeight: 600, color: 'text.secondary' }}>
@@ -62,7 +62,7 @@ const AboutOverivew = (props: Props) => {
           <CardContent>
             <Box sx={{ mb: 6 }}>
               <Typography variant='caption' sx={{ mb: 5, display: 'block', textTransform: 'uppercase' }}>
-                About
+                소개
               </Typography>
               {renderOverview(props.overview)}
             </Box>

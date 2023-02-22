@@ -23,21 +23,21 @@ interface Props {
 
 const shortcuts: ShortcutsType[] = [
   {
-    title: 'Calendar',
+    title: '캘린더',
     url: '/apps/calendar',
-    subtitle: 'Appointments',
+    subtitle: '일정 확인, 관리',
     icon: 'mdi:calendar-month-outline'
   },
   {
-    title: 'Users',
+    title: '유저 검색',
     url: '/apps/user/list',
-    subtitle: 'Search Users',
+    subtitle: '유저 검색',
     icon: 'mdi:account-outline'
   },
   {
-    title: 'Settings',
+    title: '설정',
     icon: 'mdi:cog-outline',
-    subtitle: 'Account Settings',
+    subtitle: '계정 설정',
     url: '/account-settings/account'
   }
 ]

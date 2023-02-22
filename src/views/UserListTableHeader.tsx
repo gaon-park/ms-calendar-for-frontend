@@ -17,7 +17,7 @@ const UserListTableHeader = (props: TableHeaderProps) => {
         inputProps={{ maxLength: 15 }}
         fullWidth
         value={value}
-        placeholder='Search User By Keyword'
+        placeholder='검색 키워드'
         onChange={e => setKeyword(e.target.value)}
       />
     </Box>

@@ -84,7 +84,7 @@ const AccountSettings = ({ tab }: { tab: string}) => {
                   label={
                     <Box sx={{ display: 'flex', alignItems: 'center', ...(!hideText && { '& svg': { mr: 2 } }) }}>
                       <Icon icon='mdi:account-outline' />
-                      {!hideText && 'Account'}
+                      {!hideText && '계정'}
                     </Box>
                   }
                 />

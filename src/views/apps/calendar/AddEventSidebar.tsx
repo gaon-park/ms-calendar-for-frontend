@@ -358,7 +358,7 @@ const AddEventSidebar = (props: AddEventSidebarType) => {
         }}
       >
         <Typography variant='h6'>
-          {store.selectedEvent !== null && store.selectedEvent.title.length ? 'Update Event' : 'Add Event'}
+          {store.selectedEvent !== null && store.selectedEvent.title.length ? '일정 수정' : '일정 추가'}
         </Typography>
         <Box sx={{ display: 'flex', alignItems: 'center' }}>
           {store.selectedEvent !== null && store.selectedEvent.title.length ? (
@@ -390,7 +390,7 @@ const AddEventSidebar = (props: AddEventSidebarType) => {
                 control={control}
                 rules={{ required: true }}
                 render={({ field: { value, onChange } }) => (
-                  <TextField label='Title' value={value} onChange={onChange} error={Boolean(errors.title)} />
+                  <TextField label='표시 이름' value={value} onChange={onChange} error={Boolean(errors.title)} />
                 )}
               />
               {errors.title && (
@@ -469,7 +469,7 @@ const AddEventSidebar = (props: AddEventSidebarType) => {
                     <TextField
                       {...params}
                       onChange={e => setKeyword(e.target.value)}
-                      label='Guest'
+                      label='참석자'
                       InputProps={{
                         ...params.InputProps,
                       }}
@@ -514,7 +514,7 @@ const AddEventSidebar = (props: AddEventSidebarType) => {
               multiline
               fullWidth
               sx={{ mb: 6 }}
-              label='Description'
+              label='메모'
               id='event-description'
               value={values.description}
               onChange={e => setValues({ ...values, description: e.target.value })}

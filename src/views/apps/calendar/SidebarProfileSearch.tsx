@@ -82,7 +82,7 @@ const SidebarProfileSearch = (props: SidebarProfileSearchType) => {
             <TextField
               {...params}
               onChange={e => setKeyword(e.target.value)}
-              label='Search User'
+              label='다른 유저의 일정 표시'
               InputProps={{
                 ...params.InputProps,
               }}

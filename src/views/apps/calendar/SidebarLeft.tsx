@@ -35,7 +35,7 @@ const SidebarLeft = (props: SidebarLeftType) => {
         return (
           <FormControlLabel
             key={key}
-            label={key}
+            label={key === 'Official' ? '메이플 공식 이벤트' : '나의 일정'}
             control={
               <Checkbox
                 color={value as ThemeColor}
@@ -88,12 +88,12 @@ const SidebarLeft = (props: SidebarLeftType) => {
       >
         {isSignIn ?
           <Button fullWidth variant='contained' onClick={handleSidebarToggleSidebar}>
-            Add Event
+            일정 추가
           </Button>
         : null}
 
         <Typography variant='caption' sx={{ mt: 7, mb: 2, textTransform: 'uppercase' }}>
-          Calendars
+          표시 일정
         </Typography>
         {renderFilters}
         <Divider />

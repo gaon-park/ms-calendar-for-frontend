@@ -129,7 +129,7 @@ const UserProfile = (props: TabProps) => {
                     label={
                       <Box sx={{ display: 'flex', alignItems: 'center', ...(!hideText && { '& svg': { mr: 2 } }) }}>
                         <Icon fontSize={20} icon='mdi:account-outline' />
-                        {!hideText && 'Profile'}
+                        {!hideText && '프로필'}
                       </Box>
                     }
                   />
@@ -137,8 +137,8 @@ const UserProfile = (props: TabProps) => {
                     value='follow'
                     label={
                       <Box sx={{ display: 'flex', alignItems: 'center', ...(!hideText && { '& svg': { mr: 2 } }) }}>
-                        <Icon fontSize={20} icon='mdi:link' />
-                        {!hideText && 'Follow'}
+                        <Icon fontSize={20} icon='fluent-mdl2:follow-user' />
+                        {!hideText && '팔로잉'}
                       </Box>
                     }
                   />
@@ -146,8 +146,8 @@ const UserProfile = (props: TabProps) => {
                     value='follower'
                     label={
                       <Box sx={{ display: 'flex', alignItems: 'center', ...(!hideText && { '& svg': { mr: 2 } }) }}>
-                        <Icon fontSize={20} icon='mdi:link' />
-                        {!hideText && 'Follower'}
+                        <Icon fontSize={20} icon='fluent-mdl2:follow-user' hFlip/>
+                        {!hideText && '팔로워'}
                       </Box>
                     }
                   />

@@ -199,7 +199,7 @@ const TabAccount = () => {
         router.push("/logout");
       }).catch(() => {
         setResult(false)
-        setResultMessage('Failed.. Please contact the site administrator.')
+        setResultMessage('실패.. 관리자에게 연락해주세요.')
       })
   }
 
@@ -218,7 +218,7 @@ const TabAccount = () => {
 
                 <div>
                   <ButtonStyled component='label' variant='contained' htmlFor='account-settings-upload-image'>
-                    Upload New Photo
+                    이미지 업로드
                     <input
                       hidden
                       type='file'
@@ -229,10 +229,10 @@ const TabAccount = () => {
                     />
                   </ButtonStyled>
                   <ResetButtonStyled color='secondary' variant='outlined' onClick={handleInputImageReset}>
-                    Reset
+                    초기화
                   </ResetButtonStyled>
                   <Typography variant='caption' sx={{ mt: 4, display: 'block', color: 'text.disabled' }}>
-                    Allowed PNG or JPEG
+                    PNG, JPEG만 가능해요
                   </Typography>
                 </div>
               </Box>
@@ -243,8 +243,8 @@ const TabAccount = () => {
                   <TextField
                     fullWidth
                     inputProps={{ maxLength: 15 }}
-                    label='AccountID'
-                    placeholder='AccountID'
+                    label='계정ID'
+                    placeholder='계정ID'
                     value={formData.accountId}
                     onChange={e => handleAccountIdChange(e)}
                   />
@@ -253,17 +253,17 @@ const TabAccount = () => {
                   <TextField
                     fullWidth
                     inputProps={{ maxLength: 15 }}
-                    label='NickName'
-                    placeholder='NickName'
+                    label='닉네임'
+                    placeholder='닉네임'
                     value={formData.nickName}
                     onChange={e => handleNickNameChange(e)}
                   />
                 </Grid>
                 <Grid item xs={12} sm={6}>
                   <FormControl fullWidth>
-                    <InputLabel>Job</InputLabel>
+                    <InputLabel>직업 분류</InputLabel>
                     <Select
-                      label='Job'
+                      label='직업 분류'
                       value={formData.job}
                       onChange={e => setFormData({ ...formData, ['job']: e.target.value })}
                     >
@@ -277,9 +277,9 @@ const TabAccount = () => {
                 </Grid>
                 <Grid item xs={12} sm={6}>
                   <FormControl fullWidth>
-                    <InputLabel>JobDetail</InputLabel>
+                    <InputLabel>세부 직업</InputLabel>
                     <Select
-                      label='JobDetail'
+                      label='세부 직업'
                       value={formData.jobDetail}
                       onChange={e => setFormData({ ...formData, ['jobDetail']: e.target.value })}
                     >
@@ -296,9 +296,9 @@ const TabAccount = () => {
                 </Grid>
                 <Grid item xs={12} sm={12}>
                   <FormControl fullWidth>
-                    <InputLabel>World</InputLabel>
+                    <InputLabel>월드</InputLabel>
                     <Select
-                      label='World'
+                      label='월드'
                       value={formData.world}
                       onChange={e => setFormData({ ...formData, ['world']: e.target.value })}
                     >
@@ -312,22 +312,22 @@ const TabAccount = () => {
                 </Grid>
                 <Grid item xs={12} sm={6}>
                   <FormControlLabel
-                    label='Public'
+                    label='공개 계정'
                     labelPlacement='end'
                     control={<Switch checked={formData.isPublic} onChange={e => setFormData({ ...formData, ['isPublic']: e.target.checked })} />} />
                 </Grid>
                 <Grid item xs={12} sm={6}>
                   <FormControlLabel
-                    label='Notification'
+                    label='알림 설정'
                     labelPlacement='end'
                     control={<Switch checked={formData.notificationFlg} onChange={e => setFormData({ ...formData, ['notificationFlg']: e.target.checked })} />} />
                 </Grid>
                 <Grid item xs={12}>
                   <Button disabled={!saveBtn} variant='contained' sx={{ mr: 4 }} onClick={putUserProfile}>
-                    Save Changes
+                    변경 사항 저장
                   </Button>
                   <Button type='reset' variant='outlined' color='secondary' onClick={() => setFormData(initialData)}>
-                    Reset
+                    입력 초기화
                   </Button>
                 </Grid>
               </Grid>
@@ -339,7 +339,7 @@ const TabAccount = () => {
       {/* Delete Account Card */}
       <Grid item xs={12}>
         <Card>
-          <CardHeader title='Delete Account' />
+          <CardHeader title='계정 삭제' />
           <CardContent>
             <form onSubmit={handleSubmit(onSubmit)}>
               <Box sx={{ mb: 4 }}>
@@ -350,7 +350,7 @@ const TabAccount = () => {
                     rules={{ required: true }}
                     render={({ field }) => (
                       <FormControlLabel
-                        label='I confirm my account deactivation'
+                        label='계정에 연결된 모든 일정, 팔로우, 팔로워, 프로필 사진을 삭제할래요'
                         sx={errors.checkbox ? { '& .MuiTypography-root': { color: 'error.main' } } : null}
                         control={
                           <Checkbox
@@ -365,13 +365,13 @@ const TabAccount = () => {
                   />
                   {errors.checkbox && (
                     <FormHelperText sx={{ color: 'error.main' }} id='validation-basic-checkbox'>
-                      Please confirm you want to delete account
+                      계정을 삭제하시려면 체크박스에 체크해주세요.
                     </FormHelperText>
                   )}
                 </FormControl>
               </Box>
               <Button variant='contained' color='error' type='submit' disabled={errors.checkbox !== undefined}>
-                Deactivate Account
+                삭제
               </Button>
             </form>
           </CardContent>
@@ -384,16 +384,16 @@ const TabAccount = () => {
           <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
             <Box sx={{ maxWidth: '85%', textAlign: 'center', '& svg': { mb: 4, color: 'warning.main' } }}>
               <Icon icon='mdi:alert-circle-outline' fontSize='5.5rem' />
-              <Typography>Are you sure you would like to deactivate your account?</Typography>
+              <Typography>정말 삭제하시겠어요..?</Typography>
             </Box>
           </Box>
         </DialogContent>
         <DialogActions sx={{ justifyContent: 'center' }}>
           <Button variant='contained' onClick={() => deactivateAccount()}>
-            Yes
+            네
           </Button>
           <Button variant='outlined' color='secondary' onClick={() => handleClose()}>
-            Cancel
+            아니요
           </Button>
         </DialogActions>
       </Dialog>
@@ -421,7 +421,7 @@ const TabAccount = () => {
         </DialogContent>
         <DialogActions sx={{ justifyContent: 'center' }}>
           <Button variant='contained' color='success' onClick={handleSavedDialogClose}>
-            OK
+            확인
           </Button>
         </DialogActions>
       </Dialog>

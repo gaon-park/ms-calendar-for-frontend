@@ -116,12 +116,7 @@ const ShortcutsDropdown = (props: Props) => {
           sx={{ cursor: 'default', userSelect: 'auto', backgroundColor: 'transparent !important' }}
         >
           <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', width: '100%' }}>
-            <Typography sx={{ fontSize: '1.125rem', color: 'text.secondary', fontWeight: 600 }}>Shortcuts</Typography>
-            <Tooltip title='Add Shortcut' placement='top'>
-              <IconButton disableRipple>
-                <Icon icon='mdi:plus-circle-outline' />
-              </IconButton>
-            </Tooltip>
+            <Typography sx={{ fontSize: '1.125rem', color: 'text.secondary', fontWeight: 600 }}>바로가기</Typography>
           </Box>
         </MenuItem>
         <Divider sx={{ my: '0 !important' }} />

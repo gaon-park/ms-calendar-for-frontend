@@ -38,7 +38,7 @@ const LoginPage = () => {
         </Grid>
         <Grid container justifyContent="center">
           <Button variant="contained" color="success" onClick={() => SignIn()}>
-            SignIn with Google
+            구글 계정으로 로그인
           </Button>
         </Grid>
       </Box>
