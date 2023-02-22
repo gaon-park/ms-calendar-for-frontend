@@ -17,6 +17,7 @@ import { generateDate } from 'src/@core/utils/calc-date'
 import { convertDatetimeFormat } from 'src/@core/utils/format'
 import { PutUserScheduleRequest } from 'src/common/api/msBackend/user/schedule'
 import { IMember } from 'src/model/user/schedule'
+import { useProfile } from 'src/hooks/useProfile'
 
 const blankEvent: EventType = {
   id: 0,
@@ -39,6 +40,8 @@ const blankEvent: EventType = {
 }
 
 const Calendar = (props: CalendarType) => {
+  useProfile()
+
   // ** Props
   const {
     store,
