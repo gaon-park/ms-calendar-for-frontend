@@ -11,7 +11,8 @@ const AccountSettingsTab = ({ tab }: InferGetStaticPropsType<typeof getStaticPro
 export const getStaticPaths: GetStaticPaths = () => {
   return {
     paths: [
-      { params: { tab: 'account' } }
+      { params: { tab: 'account' } },
+      { params: { tab: 'security' } },
     ],
     fallback: false
   }

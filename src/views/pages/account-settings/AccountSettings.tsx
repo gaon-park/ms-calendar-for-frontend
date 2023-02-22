@@ -21,6 +21,7 @@ import Icon from 'src/@core/components/icon'
 
 // ** Demo Tabs Imports
 import TabAccount from 'src/views/pages/account-settings/TabAccount'
+import TabCubeInfo from './TabCubeInfo'
 
 const TabList = styled(MuiTabList)<TabListProps>(({ theme }) => ({
   '& .MuiTabs-indicator': {
@@ -53,7 +54,7 @@ const AccountSettings = ({ tab }: { tab: string}) => {
 
   const handleChange = (event: SyntheticEvent, value: string) => {
     setIsLoading(true)
-    router.push(`/pages/account-settings/${value.toLowerCase()}`).then(() => setIsLoading(false))
+    router.push(`/account-settings/${value.toLowerCase()}`).then(() => setIsLoading(false))
   }
 
   useEffect(() => {
@@ -65,6 +66,7 @@ const AccountSettings = ({ tab }: { tab: string}) => {
 
   const tabContentList: { [key: string]: ReactElement } = {
     account: <TabAccount />,
+    security: <TabCubeInfo />,
   }
 
   return (
@@ -85,6 +87,15 @@ const AccountSettings = ({ tab }: { tab: string}) => {
                     <Box sx={{ display: 'flex', alignItems: 'center', ...(!hideText && { '& svg': { mr: 2 } }) }}>
                       <Icon icon='mdi:account-outline' />
                       {!hideText && '계정'}
+                    </Box>
+                  }
+                />
+                <Tab
+                  value='security'
+                  label={
+                    <Box sx={{ display: 'flex', alignItems: 'center', ...(!hideText && { '& svg': { mr: 2 } }) }}>
+                      <Icon icon='mdi:lock-open-outline' />
+                      {!hideText && '큐브 API 키'}
                     </Box>
                   }
                 />

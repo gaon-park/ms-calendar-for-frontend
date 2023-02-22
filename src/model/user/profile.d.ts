@@ -33,3 +33,14 @@ export interface IProfileResponse {
     acceptedFollowCount: number;
     acceptedFollowerCount: number;
 }
+
+export interface PostApiKeyReq {
+    apiKey: String
+}
+
+export interface ApiKeyResponse {
+    apiKey: string
+    isValid: boolean
+    createdAt: string
+    expiredAt: string
+}

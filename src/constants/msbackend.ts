@@ -19,6 +19,9 @@ const GET_USER_PROFILE = "/api/user/profile" as const;
 const PUT_USER_PROFILE = "/api/user/profile" as const;
 const DELETE_ACCOUNT = "/api/user" as const;
 
+const POST_API_KEY = "/api/user/api-key" as const;
+const GET_API_KEY = "/api/user/api-key" as const;
+
 const GET_NOTIFICATIONS = "/api/user/notifications" as const;
 const READ_ALL_NOTIFICATIONS = "/api/user/notifications/read-all" as const;
 const READ_ONE_NOTIFICATION = "/api/user/notification/read" as const;
@@ -52,6 +55,9 @@ export const MS_BACKEND_API_PATH = {
   GET_USER_PROFILE,
   PUT_USER_PROFILE,
   DELETE_ACCOUNT,
+
+  POST_API_KEY,
+  GET_API_KEY,
 
   GET_NOTIFICATIONS,
   READ_ALL_NOTIFICATIONS,
