@@ -34,7 +34,6 @@ import {
   handleThemeSetting
 } from 'src/store/apps/calendar'
 import { useAuth } from 'src/hooks/useAuth'
-import { useProfile } from 'src/hooks/useProfile'
 import { ThemeColor } from 'src/@core/layouts/types'
 
 const colorValue: ThemeColor[] = ['primary', 'secondary', 'error', 'warning', 'info', 'success']
@@ -49,7 +48,6 @@ const AppCalendar = () => {
   const { settings } = useSettings()
   const dispatch = useDispatch<AppDispatch>()
   const store = useSelector((state: RootState) => state.calendar)
-  const { profile } = useProfile()
 
   // ** Vars
   const leftSidebarWidth = 260
@@ -128,20 +126,18 @@ const AppCalendar = () => {
           handleAddEventSidebarToggle={handleAddEventSidebarToggle}
         />
       </Box>
-      {
-        profile !== undefined ? <AddEventSidebar
-          store={store}
-          dispatch={dispatch}
-          addEvent={addEvent}
-          updateEvent={updateEvent}
-          deleteEvent={deleteEvent}
-          calendarApi={calendarApi}
-          drawerWidth={addEventSidebarWidth}
-          handleSelectEvent={handleSelectEvent}
-          addEventSidebarOpen={addEventSidebarOpen}
-          handleAddEventSidebarToggle={handleAddEventSidebarToggle}
-        /> : null
-      }
+      <AddEventSidebar
+        store={store}
+        dispatch={dispatch}
+        addEvent={addEvent}
+        updateEvent={updateEvent}
+        deleteEvent={deleteEvent}
+        calendarApi={calendarApi}
+        drawerWidth={addEventSidebarWidth}
+        handleSelectEvent={handleSelectEvent}
+        addEventSidebarOpen={addEventSidebarOpen}
+        handleAddEventSidebarToggle={handleAddEventSidebarToggle}
+      />
     </CalendarWrapper>
   )
 }

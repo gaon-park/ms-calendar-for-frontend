@@ -125,7 +125,6 @@ const Calendar = (props: CalendarType) => {
       },
 
       eventClick({ event: clickedEvent }: any) {
-        if (!store.isSignIn) return;
         dispatch(handleSelectEvent(clickedEvent))
         handleAddEventSidebarToggle()
 

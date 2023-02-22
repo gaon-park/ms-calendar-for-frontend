@@ -153,7 +153,7 @@ const AddEventSidebar = (props: AddEventSidebarType) => {
 
   const onAccept = () => {
     if (store.selectedEvent !== null && store.selectedEvent.id !== null) {
-      dispatch(acceptEvent(store.selectedEvent.id)) 
+      dispatch(acceptEvent(store.selectedEvent.id))
     }
     handleSidebarClose()
   }
@@ -281,32 +281,34 @@ const AddEventSidebar = (props: AddEventSidebarType) => {
   })
 
   const RenderSidebarFooter = () => {
-    if (store.selectedEvent === null || (store.selectedEvent !== null && !store.selectedEvent.title.length)) {
-      return (
-        <Fragment>
-          <Button type='submit' variant='contained' sx={{ mr: 4 }}>
-            추가
-          </Button>
-          <Button variant='outlined' color='secondary' onClick={resetToEmptyValues}  sx={{ mr: 4 }}>
-            초기화
-          </Button>
-        </Fragment>
-      )
-    } else {
-      return (
-        <Fragment>
-          <Button variant='outlined' color='secondary' onClick={onAccept} sx={{ mr: 4 }}>
-            참석
-          </Button>
-          <Button variant='outlined' color='secondary' onClick={onRefuse} sx={{ mr: 4 }}>
-            불참
-          </Button>
-          <Button type='submit' variant='contained' sx={{ mr: 4 }}>
-            수정
-          </Button>
-        </Fragment>
-      )
-    }
+    if (profile !== undefined) {
+      if (store.selectedEvent === null || (store.selectedEvent !== null && !store.selectedEvent.title.length)) {
+        return (
+          <Fragment>
+            <Button type='submit' variant='contained' sx={{ mr: 4 }}>
+              추가
+            </Button>
+            <Button variant='outlined' color='secondary' onClick={resetToEmptyValues} sx={{ mr: 4 }}>
+              초기화
+            </Button>
+          </Fragment>
+        )
+      } else {
+        return (
+          <Fragment>
+            <Button variant='outlined' color='secondary' onClick={onAccept} sx={{ mr: 4 }}>
+              참석
+            </Button>
+            <Button variant='outlined' color='secondary' onClick={onRefuse} sx={{ mr: 4 }}>
+              불참
+            </Button>
+            <Button type='submit' variant='contained' sx={{ mr: 4 }}>
+              수정
+            </Button>
+          </Fragment>
+        )
+      }
+    } else return null
   }
 
   const RenderOwner = () => {
@@ -358,18 +360,23 @@ const AddEventSidebar = (props: AddEventSidebarType) => {
         }}
       >
         <Typography variant='h6'>
-          {store.selectedEvent !== null && store.selectedEvent.title.length ? '일정 수정' : '일정 추가'}
+          {
+            profile !== undefined && store.selectedEvent?.filterType !== 'Official' ?
+              store.selectedEvent !== null && store.selectedEvent.title.length ? '일정 수정' : '일정 추가'
+              : '일정 확인'
+          }
         </Typography>
         <Box sx={{ display: 'flex', alignItems: 'center' }}>
-          {store.selectedEvent !== null && store.selectedEvent.title.length ? (
-            <IconButton
-              size='small'
-              onClick={handleDeleteEvent}
-              sx={{ color: 'text.primary', mr: store.selectedEvent !== null ? 1 : 0 }}
-            >
-              <Icon icon='mdi:delete-outline' fontSize={20} />
-            </IconButton>
-          ) : null}
+          {profile !== undefined && store.selectedEvent?.filterType !== 'Official' ?
+            store.selectedEvent !== null && store.selectedEvent.title.length ? (
+              <IconButton
+                size='small'
+                onClick={handleDeleteEvent}
+                sx={{ color: 'text.primary', mr: store.selectedEvent !== null ? 1 : 0 }}
+              >
+                <Icon icon='mdi:delete-outline' fontSize={20} />
+              </IconButton>
+            ) : null : null}
           <IconButton size='small' onClick={handleSidebarClose} sx={{ color: 'text.primary' }}>
             <Icon icon='mdi:close' fontSize={20} />
           </IconButton>
