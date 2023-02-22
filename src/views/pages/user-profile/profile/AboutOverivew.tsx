@@ -19,7 +19,7 @@ const renderOverview = (overviewType: ProfileOverviewType) => {
     { property: '닉네임', value: profile.nickName, icon: 'openmoji:european-name-badge' },
     { property: '월드', value: profile.world, icon: 'clarity:world-line' },
     { property: '직업', value: profile.jobDetail ?? profile.job, icon: 'mdi:briefcase-outline' },
-    { property: '팔로우', value: followCount, icon: 'fluent-mdl2:follow-user' },
+    { property: '팔로잉', value: followCount, icon: 'fluent-mdl2:follow-user' },
     { property: '팔로워', value: followerCount, icon: 'fluent-mdl2:follow-user' },
   ]
 
