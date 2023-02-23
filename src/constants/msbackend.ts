@@ -34,6 +34,8 @@ const PUT_API_SCHEDULE_REFUSE = "/api/schedule/refuse" as const;
 const PUT_API_SCHEDULE_DELETE = "/api/schedule/delete" as const;
 const PUT_API_SCHEDULE_ACCEPT = "/api/schedule/accept" as const;
 
+const GET_DASHBOARD_FOR_ITEM_TABLE = "/api/dashboard/for-item" as const;
+
 export const MS_BACKEND_API_PATH = {
   GET_OAUTH2_GOOGLE,
   POST_REISSUE_TOKEN,
@@ -70,4 +72,6 @@ export const MS_BACKEND_API_PATH = {
   PUT_API_SCHEDULE_REFUSE,
   PUT_API_SCHEDULE_DELETE,
   PUT_API_SCHEDULE_ACCEPT,
+
+  GET_DASHBOARD_FOR_ITEM_TABLE,
 };

@@ -8,7 +8,7 @@ const myCookie = new AuthCookie()
 
 export const MsBackendAxios = axios.create({
   baseURL: process.env.NEXT_PUBLIC_BACKEND_API_URL ?? "",
-  timeout: 50_000,
+  timeout: 100_000,
   paramsSerializer: {
     serialize: (params) => qs.stringify(params, { arrayFormat: "repeat" }),
   }

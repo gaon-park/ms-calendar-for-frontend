@@ -29,7 +29,7 @@ export const PostApiKey = (req: PostApiKeyReq) => {
 }
 
 export const GetApiKey = () => {
-  return MsBackendAxios.get<ApiKeyResponse | undefined>(
+  return MsBackendAxios.get<ApiKeyResponse>(
     MS_BACKEND_API_PATH.GET_API_KEY,
   )
 }

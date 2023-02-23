@@ -27,6 +27,7 @@ import CustomChip from 'src/@core/components/mui/chip'
 import CreateApiKey from 'src/views/pages/account-settings/cube/CreateApiKey'
 import { ApiKeyResponse } from 'src/model/user/profile'
 import { GetApiKey } from 'src/common/api/msBackend/user/profile'
+import { useProfile } from 'src/hooks/useProfile'
 
 interface ApiKeyListType {
   title: string
@@ -67,22 +68,23 @@ const recentDeviceData: RecentDeviceDataType[] = [
 ]
 
 const TabCubeInfo = () => {
-  const [apiKey, setApiKey] = useState<ApiKeyResponse | undefined>(undefined)
+  const [apiKey, setApiKey] = useState<ApiKeyResponse | null>(null)
+  const { profile } = useProfile()
 
   const { data } = useSWR(
-    {}, GetApiKey, {
+    'api-key', GetApiKey, {
     revalidateIfStale: false,
     revalidateOnFocus: true,
     revalidateOnReconnect: true
   })
 
   useEffect(() => {
-    if (data !== undefined && data.data !== undefined) {
+    if (data !== undefined && typeof data.data !== 'string') {
       setApiKey(data.data)
     }
   }, [data])
 
-  return (
+  return profile !== undefined ? (
     <Grid container spacing={6}>
       <Grid item xs={12}>
         <CreateApiKey />
@@ -90,7 +92,7 @@ const TabCubeInfo = () => {
 
       {/* API Key List & Access Card*/}
       {
-        apiKey !== undefined ? (
+        apiKey !== null && typeof apiKey !== 'string' ? (
           <Grid item xs={12}>
             <Card>
               <CardHeader title='등록 정보 확인' />
@@ -116,8 +118,8 @@ const TabCubeInfo = () => {
                       <Icon icon='mdi:content-copy' fontSize='1rem' />
                     </Box>
                   </Box>
-                  <Typography sx={{ color: 'text.secondary' }}>생성: {apiKey.createdAt.replace('T', ' ')}</Typography>
-                  <Typography sx={{ color: 'text.secondary' }}>만료: {apiKey.expiredAt.replace('T', ' ')}</Typography>
+                  <Typography sx={{ color: 'text.secondary' }}>생성: {apiKey.createdAt !== undefined ? apiKey.createdAt.replace('T', ' ') : ''}</Typography>
+                  <Typography sx={{ color: 'text.secondary' }}>만료: {apiKey.expiredAt !== undefined ? apiKey.expiredAt.replace('T', ' ') : ''}</Typography>
                 </Box>
               </CardContent>
             </Card>
@@ -125,6 +127,6 @@ const TabCubeInfo = () => {
         ) : null
       }
     </Grid>
-  )
+  ) : null
 }
 export default TabCubeInfo

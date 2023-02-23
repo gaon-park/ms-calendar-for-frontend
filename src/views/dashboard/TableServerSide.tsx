@@ -1,248 +1,347 @@
 // ** React Imports
-import { useEffect, useState, useCallback, ChangeEvent } from 'react'
+import { useState } from 'react'
 
 // ** MUI Imports
-import Box from '@mui/material/Box'
 import Card from '@mui/material/Card'
 import Typography from '@mui/material/Typography'
 import CardHeader from '@mui/material/CardHeader'
-import { DataGrid, GridColumns, GridRenderCellParams, GridSortModel } from '@mui/x-data-grid'
-
-// ** ThirdParty Components
-import axios from 'axios'
+import { DataGrid, GridColumns, GridRenderCellParams, GridValueGetterParams } from '@mui/x-data-grid'
 
 // ** Custom Components
-import CustomChip from 'src/@core/components/mui/chip'
-import CustomAvatar from 'src/@core/components/mui/avatar'
 import ServerSideToolbar from './ServerSideToolbar'
 
-// ** Types Imports
-import { ThemeColor } from 'src/@core/layouts/types'
-import { DataGridRowType } from 'src/types/apps/dashboard'
-
 // ** Utils Import
-import { getInitials } from 'src/@core/utils/get-initials'
+import { CubeHistoryResponse, CubeType } from 'src/model/dashboard/dashboard'
+import { CardContent, Grid, FormControl, InputLabel, Select, MenuItem, SelectChangeEvent, TextField, InputAdornment } from '@mui/material'
 
-interface StatusObj {
-  [key: number]: {
-    title: string
-    color: ThemeColor
-  }
-}
+const cubeList: CubeType[] = [
+  'SUSANG', 'JANGYIN', 'MYUNGJANG', 'RED', 'BLACK', 'ADDITIONAL'
+]
 
-type SortType = 'asc' | 'desc' | undefined | null
-
-// ** renders client column
-const renderClient = (params: GridRenderCellParams) => {
-  const { row } = params
-  const stateNum = Math.floor(Math.random() * 6)
-  const states = ['success', 'error', 'warning', 'info', 'primary', 'secondary']
-  const color = states[stateNum]
-
-  if (row.avatar.length) {
-    return <CustomAvatar src={`/images/avatars/${row.avatar}`} sx={{ mr: 3, width: '1.875rem', height: '1.875rem' }} />
-  } else {
-    return (
-      <CustomAvatar
-        skin='light'
-        color={color as ThemeColor}
-        sx={{ mr: 3, fontSize: '.8rem', width: '1.875rem', height: '1.875rem' }}
-      >
-        {getInitials(row.full_name ? row.full_name : 'John Doe')}
-      </CustomAvatar>
-    )
-  }
-}
-
-const statusObj: StatusObj = {
-  1: { title: 'current', color: 'primary' },
-  2: { title: 'professional', color: 'success' },
-  3: { title: 'rejected', color: 'error' },
-  4: { title: 'resigned', color: 'warning' },
-  5: { title: 'applied', color: 'info' }
+interface CubeInfo {
+  korean: string
 }
 
 const columns: GridColumns = [
   {
-    flex: 0.1,
-    minWidth: 100,
-    field: 'cube',
-    headerName: '큐브 종류',
-    renderCell: (params: GridRenderCellParams) => {
-      const { row } = params
-
-      return (
-        <Box sx={{ display: 'flex', alignItems: 'center' }}>
-          {renderClient(params)}
-          <Box sx={{ display: 'flex', flexDirection: 'column' }}>
-            <Typography noWrap variant='body2' sx={{ color: 'text.primary', fontWeight: 600 }}>
-              {row.full_name}
-            </Typography>
-            <Typography noWrap variant='caption'>
-              {row.email}
-            </Typography>
-          </Box>
-        </Box>
-      )
-    }
-  },
-  {
-    flex: 0.1,
-    minWidth: 100,
+    flex: 0.15,
+    sortable: false,
+    filterable: false,
+    minWidth: 120,
     field: 'item',
     headerName: '아이템',
-    renderCell: (params: GridRenderCellParams) => {
-      const { row } = params
-
-      return (
-        <Box sx={{ display: 'flex', alignItems: 'center' }}>
-          {renderClient(params)}
-          <Box sx={{ display: 'flex', flexDirection: 'column' }}>
-            <Typography noWrap variant='body2' sx={{ color: 'text.primary', fontWeight: 600 }}>
-              {row.full_name}
-            </Typography>
-            <Typography noWrap variant='caption'>
-              {row.email}
-            </Typography>
-          </Box>
-        </Box>
-      )
+    renderCell: (params: GridRenderCellParams) => (
+      <Typography noWrap variant='body2' sx={{ color: 'text.primary', fontWeight: 600, whiteSpace: 'pre-line' }}>
+        {params.row.targetItem}
+      </Typography>
+    ),
+    valueGetter: (params: GridValueGetterParams) => {
+      return params.row.targetItem
     }
   },
   {
     flex: 0.05,
-    minWidth: 120,
-    headerName: '등급업',
-    field: 'start_date',
+    sortable: false,
+    filterable: false,
+    minWidth: 100,
+    field: 'cube',
+    headerName: '큐브 종류',
     renderCell: (params: GridRenderCellParams) => (
-      <Typography variant='body2' sx={{ color: 'text.primary' }}>
-        {params.row.start_date}
+      <Typography noWrap variant='body2' sx={{ color: 'text.primary', fontWeight: 600 }}>
+        {getCubeInfo(params.row.cubeType).korean}
       </Typography>
-    )
+    ),
+    valueGetter: (params: GridValueGetterParams) => {
+      return getCubeInfo(params.row.cubeType).korean
+    }
   },
   {
-    flex: 0.175,
-    minWidth: 110,
-    field: 'salary',
+    flex: 0.2,
+    sortable: false,
+    filterable: false,
+    minWidth: 200,
+    field: 'before_option',
     headerName: '이전 옵션',
     renderCell: (params: GridRenderCellParams) => (
-      <Typography variant='body2' sx={{ color: 'text.primary' }}>
-        {params.row.salary}
+      <Typography variant='body2' sx={{ color: 'text.primary', whiteSpace: 'pre-line' }}>
+        {params.row.beforeOption1 + "\n" + params.row.beforeOption2 + "\n" + params.row.beforeOption3}
       </Typography>
-    )
+    ),
+    valueGetter: (params: GridValueGetterParams) => {
+      return params.row.beforeOption1 + "\n" + params.row.beforeOption2 + "\n" + params.row.beforeOption3
+    }
   },
   {
-    flex: 0.175,
-    field: 'age',
-    minWidth: 80,
+    flex: 0.2,
+    sortable: false,
+    filterable: false,
+    field: 'after_option',
+    minWidth: 200,
     headerName: '이후 옵션',
     renderCell: (params: GridRenderCellParams) => (
-      <Typography variant='body2' sx={{ color: 'text.primary' }}>
-        {params.row.age}
+      <Typography variant='body2' sx={{ color: 'text.primary', whiteSpace: 'pre-line' }}>
+        {params.row.afterOption1 + "\n" + params.row.afterOption2 + "\n" + params.row.afterOption3}
       </Typography>
-    )
+    ),
+    valueGetter: (params: GridValueGetterParams) => {
+      return params.row.afterOption1 + "\n" + params.row.afterOption2 + "\n" + params.row.afterOption3
+    }
   },
   {
-    flex: 0.175,
-    minWidth: 140,
-    field: 'status',
-    headerName: '결과 옵션',
-    renderCell: (params: GridRenderCellParams) => {
-      const status = statusObj[params.row.status]
-
-      return (
-        <CustomChip
-          size='small'
-          skin='light'
-          color={status.color}
-          label={status.title}
-          sx={{ '& .MuiChip-label': { textTransform: 'capitalize' } }}
-        />
-      )
+    flex: 0.05,
+    sortable: false,
+    filterable: false,
+    minWidth: 100,
+    headerName: '아이템 등급',
+    field: 'item_grade',
+    renderCell: (params: GridRenderCellParams) => (
+      <Typography variant='body2' sx={{ color: 'text.primary' }}>
+        {getGradeInfo(params.row.potentialOptionGrade)}
+      </Typography>
+    ),
+    valueGetter: (params: GridValueGetterParams) => {
+      return getGradeInfo(params.row.potentialOptionGrade)
     }
-  }
+  },
+  {
+    flex: 0.05,
+    minWidth: 50,
+    headerName: '등급업',
+    field: 'item_upgrade',
+    renderCell: (params: GridRenderCellParams) => (
+      <Typography variant='body2' sx={{ color: 'text.primary' }}>
+        {params.row.itemUpgrade ? 'o' : ''}
+      </Typography>
+    ),
+    valueGetter: (params: GridValueGetterParams) => {
+      return (params.row.itemUpgrade ? 'o' : '')
+    }
+  },
 ]
 
-const TableServerSide = () => {
+const getCubeInfo = (type: CubeType): CubeInfo => {
+  let res: CubeInfo
+  if (type === 'SUSANG') res = {
+    korean: '수상한 큐브'
+  }
+  else if (type === 'JANGYIN') res = {
+    korean: '장인의 큐브'
+  }
+  else if (type === 'MYUNGJANG') res = {
+    korean: '명장의 큐브'
+  }
+  else if (type === 'RED') res = {
+    korean: '레드 큐브'
+  }
+  else if (type === 'BLACK') res = {
+    korean: '블랙 큐브'
+  }
+  else res = {
+    korean: '에디셔널 큐브'
+  }
+  return res
+}
+
+const getGradeInfo = (value: 'RARE' | 'NORMAL' | 'EPIC' | 'UNIQUE' | 'LEGENDARY') => {
+  let res
+  if (value === 'RARE') res = '레어'
+  else if (value === 'NORMAL') res = '노말'
+  else if (value === 'EPIC') res = '에픽'
+  else if (value === 'UNIQUE') res = '유니크'
+  else res = '레전드리'
+
+  return res
+}
+
+const optionList = [
+  'STR', 'DEX', 'LUK', 'INT', '올스탯', '최대 HP', '공격력', '마력', '크리티컬 확률', '데미지', '보스 몬스터 공격 시 데미지', '몬스터 방어율 무시',
+  '크리티컬 데미지', '모든 스킬의 재사용 대기시간',
+  '메소 획득량', '아이템 드롭률'
+]
+
+interface Props {
+  rows: CubeHistoryResponse[]
+  itemList: string[]
+  item: string
+  setItem: (o: string) => void
+  cube: string
+  setCube: (o: string) => void
+  option1: string
+  setOption1: (o: string) => void
+  option2: string
+  setOption2: (o: string) => void
+  option3: string
+  setOption3: (o: string) => void
+  setOptionValue1: (o: number) => void
+  setOptionValue2: (o: number) => void
+  setOptionValue3: (o: number) => void
+}
+
+const TableServerSide = (props: Props) => {
+
   // ** State
-  const [page, setPage] = useState(0)
-  const [total, setTotal] = useState<number>(0)
-  const [sort, setSort] = useState<SortType>('asc')
-  const [pageSize, setPageSize] = useState<number>(7)
-  const [rows, setRows] = useState<DataGridRowType[]>([])
-  const [searchValue, setSearchValue] = useState<string>('')
-  const [sortColumn, setSortColumn] = useState<string>('full_name')
-
-  function loadServerRows(currentPage: number, data: DataGridRowType[]) {
-    return data.slice(currentPage * pageSize, (currentPage + 1) * pageSize)
-  }
-
-  const fetchTableData = useCallback(
-    async (sort: SortType, q: string, column: string) => {
-      // await axios
-      //   .get('/api/table/data', {
-      //     params: {
-      //       q,
-      //       sort,
-      //       column
-      //     }
-      //   })
-      //   .then(res => {
-      //     setTotal(res.data.total)
-      //     setRows(loadServerRows(page, res.data.data))
-      //   })
-    },
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    [page, pageSize]
-  )
-
-  useEffect(() => {
-    fetchTableData(sort, searchValue, sortColumn)
-  }, [fetchTableData, searchValue, sort, sortColumn])
-
-  const handleSortModel = (newModel: GridSortModel) => {
-    if (newModel.length) {
-      setSort(newModel[0].sort)
-      setSortColumn(newModel[0].field)
-      fetchTableData(newModel[0].sort, searchValue, newModel[0].field)
-    } else {
-      setSort('asc')
-      setSortColumn('full_name')
-    }
-  }
-
-  const handleSearch = (value: string) => {
-    setSearchValue(value)
-    fetchTableData(sort, value, sortColumn)
-  }
+  const [pageSize, setPageSize] = useState<number>(10)
 
   return (
     <Card>
       <CardHeader title='큐브 사용 건수 상위 10위 아이템 대상' />
+      <CardContent>
+        <Grid container spacing={6}>
+          <Grid item sm={12} md={6}>
+            <FormControl fullWidth>
+              <InputLabel id='item-select'>아이템</InputLabel>
+              <Select size='small'
+                fullWidth
+                value={props.item}
+                id='select-item'
+                label='아이템'
+                labelId='item-select'
+                onChange={(e) => props.setItem(e.target.value)}
+                inputProps={{ placeholder: '아이템' }}
+              >
+                <MenuItem key={`item_`} value=''>아이템</MenuItem>
+                {
+                  props.itemList.map((data, index) => (
+                    <MenuItem key={`item_${index}`} value={data}>{data}</MenuItem>
+                  ))
+                }
+              </Select>
+            </FormControl>
+          </Grid>
+          <Grid item sm={12} md={6}>
+            <FormControl fullWidth>
+              <InputLabel id='cube-select'>큐브</InputLabel>
+              <Select size='small'
+                fullWidth
+                value={props.cube}
+                id='select-cube'
+                label='큐브 '
+                labelId='cube-select'
+                onChange={(e) => props.setCube(e.target.value)}
+                inputProps={{ placeholder: '큐브' }}
+              >
+                <MenuItem key={`cube_`} value=''>큐브</MenuItem>
+                {
+                  cubeList.map((data, index) => (
+                    <MenuItem key={`cube_${index}`} value={data} sx={{ whiteSpace: 'break-spaces' }}>
+                      {getCubeInfo(data).korean}
+                    </MenuItem>
+                  ))
+                }
+              </Select>
+            </FormControl>
+          </Grid>
+          <Grid item sm={12} md={6}>
+            <FormControl fullWidth>
+              <InputLabel id='option1-select'>잠재옵션 첫째줄(결과)</InputLabel>
+              <Select size='small'
+                fullWidth
+                value={props.option1}
+                id='select-option1'
+                label='잠재옵션 첫째줄(결과)'
+                labelId='option1-select'
+                onChange={(e) => props.setOption1(e.target.value)}
+                inputProps={{ placeholder: '잠재옵션 첫째줄(결과)' }}
+              >
+                <MenuItem key={`option1_`} value=''>잠재옵션 첫째줄(결과)</MenuItem>
+                {
+                  optionList.map((data, index) => (
+                    <MenuItem key={`option1_${index}`} value={data}>{data}</MenuItem>
+                  ))
+                }
+              </Select>
+            </FormControl>
+          </Grid>
+          <Grid item sm={12} md={6}>
+            <FormControl fullWidth>
+              <TextField size='small'
+                type={'number'}
+                id='optionValue1'
+                label='첫째줄 옵션 값'
+                onChange={(e) => props.setOptionValue1(+e.target.value)}
+              />
+            </FormControl>
+          </Grid>
+          <Grid item sm={12} md={6}>
+            <FormControl fullWidth>
+              <InputLabel id='option2-select'>잠재옵션 둘째줄(결과)</InputLabel>
+              <Select size='small'
+                fullWidth
+                value={props.option2}
+                id='select-option2'
+                label='잠재옵션 둘째줄(결과)'
+                labelId='option2-select'
+                onChange={(e) => props.setOption2(e.target.value)}
+                inputProps={{ placeholder: '잠재옵션 둘째줄(결과)' }}
+              >
+                <MenuItem key={`option2_`} value=''>잠재옵션 둘째줄(결과)</MenuItem>
+                {
+                  optionList.map((data, index) => (
+                    <MenuItem key={`option2_${index}`} value={data}>{data}</MenuItem>
+                  ))
+                }
+              </Select>
+            </FormControl>
+          </Grid>
+          <Grid item sm={12} md={6}>
+            <FormControl fullWidth>
+              <TextField size='small'
+                type={'number'}
+                id='optionValue2'
+                label='둘째줄 옵션 값'
+                onChange={(e) => props.setOptionValue2(+e.target.value)}
+              />
+            </FormControl>
+          </Grid>
+          <Grid item sm={12} md={6}>
+            <FormControl fullWidth>
+              <InputLabel id='option3-select'>잠재옵션 셋째줄(결과)</InputLabel>
+              <Select size='small'
+                fullWidth
+                value={props.option3}
+                id='select-option3'
+                label='잠재옵션 셋째줄(결과)'
+                labelId='option3-select'
+                onChange={(e) => props.setOption3(e.target.value)}
+                inputProps={{ placeholder: '잠재옵션 셋째줄(결과)' }}
+              >
+                <MenuItem key={`option3_`} value=''>잠재옵션 셋째줄(결과)</MenuItem>
+                {
+                  optionList.map((data, index) => (
+                    <MenuItem key={`option3_${index}`} value={data}>{data}</MenuItem>
+                  ))
+                }
+              </Select>
+            </FormControl>
+          </Grid>
+          <Grid item sm={12} md={6}>
+            <FormControl fullWidth>
+              <TextField size='small'
+                type={'number'}
+                id='optionValue3'
+                label='셋째줄 옵션 값'
+                onChange={(e) => props.setOptionValue3(+e.target.value)}
+              />
+            </FormControl>
+          </Grid>
+        </Grid>
+      </CardContent>
       <DataGrid
         autoHeight
         pagination
-        rows={rows}
-        rowCount={total}
+        rows={props.rows}
+        rowHeight={80}
+        rowCount={props.rows.length}
         columns={columns}
         checkboxSelection
         pageSize={pageSize}
-        sortingMode='server'
-        paginationMode='server'
-        onSortModelChange={handleSortModel}
-        rowsPerPageOptions={[7, 10, 25, 50]}
-        onPageChange={newPage => setPage(newPage)}
+        rowsPerPageOptions={[10, 30, 50]}
         components={{ Toolbar: ServerSideToolbar }}
         onPageSizeChange={newPageSize => setPageSize(newPageSize)}
         componentsProps={{
           baseButton: {
             variant: 'outlined'
           },
-          toolbar: {
-            value: searchValue,
-            clearSearch: () => handleSearch(''),
-            onChange: (event: ChangeEvent<HTMLInputElement>) => handleSearch(event.target.value)
-          }
         }}
       />
     </Card>

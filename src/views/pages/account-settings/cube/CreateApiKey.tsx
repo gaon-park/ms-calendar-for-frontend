@@ -17,6 +17,8 @@ import DialogContent from '@mui/material/DialogContent/DialogContent'
 import DialogActions from '@mui/material/DialogActions/DialogActions'
 import Icon from 'src/@core/components/icon'
 import Box from '@mui/material/Box/Box'
+import { useRouter } from 'next/router'
+import { useProfile } from 'src/hooks/useProfile'
 
 const CreateApiKeyCard = () => {
   const [apiKey, setApiKey] = useState<string>('')
@@ -25,9 +27,11 @@ const CreateApiKeyCard = () => {
   const [savedDialogOpen, setSavedDialogOpen] = useState<boolean>(false)
   const [btnDisable, setBtnDisable] = useState<boolean>(false)
 
+  const router = useRouter()
+
   const onSubmit = async () => {
     setBtnDisable(true)
-    await PostApiKey({apiKey})
+    await PostApiKey({ apiKey })
       .then(() => {
         setResult(true)
         setResultMessage('데이터 집계완료!')
@@ -104,7 +108,7 @@ const CreateApiKeyCard = () => {
           </Box>
         </DialogContent>
         <DialogActions sx={{ justifyContent: 'center' }}>
-          <Button variant='contained' color='success' onClick={handleSavedDialogClose}>
+          <Button variant='contained' color='success' onClick={() => router.reload()}>
             확인
           </Button>
         </DialogActions>
