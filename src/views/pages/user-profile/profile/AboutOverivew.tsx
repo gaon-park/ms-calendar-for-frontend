@@ -18,7 +18,7 @@ import { CubeHistoryResponse } from 'src/model/dashboard/dashboard'
 import useSWR from "swr"
 
 const renderOverview = (overviewType: ProfileOverviewType) => {
-  const {profile, followCount, followerCount} = overviewType
+  const { profile, followCount, followerCount, isMyData } = overviewType
   const overview = [
     { property: '계정ID', value: profile.accountId, icon: 'openmoji:id-button' },
     { property: '닉네임', value: profile.nickName, icon: 'openmoji:european-name-badge' },
@@ -38,9 +38,9 @@ const renderOverview = (overviewType: ProfileOverviewType) => {
         }}
       >
         {
-          item.property === '팔로워' ? <Icon icon={item.icon} hFlip/> : <Icon icon={item.icon} />
+          item.property === '팔로워' ? <Icon icon={item.icon} hFlip /> : <Icon icon={item.icon} />
         }
-        
+
         <Typography sx={{ mx: 2, fontWeight: 600, color: 'text.secondary' }}>
           {`${item.property.charAt(0).toUpperCase() + item.property.slice(1)}:`}
         </Typography>
@@ -70,7 +70,7 @@ const AboutOverivew = (props: Props) => {
   const [optionValue3, setOptionValue3] = useState<number>(0)
 
   const { data } = useSWR(
-    { item, cube, option1, option2, option3, optionValue1, optionValue2, optionValue3 },
+    (props.overview.isMyData ? { item, cube, option1, option2, option3, optionValue1, optionValue2, optionValue3 } : null),
     () => GetItemDashboardPersonal({
       item, cube, option1, option2, option3, optionValue1, optionValue2, optionValue3
     }),
@@ -102,30 +102,34 @@ const AboutOverivew = (props: Props) => {
           </CardContent>
         </Card>
       </Grid>
-      <Grid item xs={12}>
-      <TableServerSide
-          rows={rows}
-          itemList={itemList}
-          item={item}
-          setItem={(o: string) => setItem(o)}
-          cube={cube}
-          setCube={(o: string) => setCube(o)}
-          option1={option1}
-          setOption1={(o: string) => setOption1(o)}
-          option2={option2}
-          setOption2={(o: string) => setOption2(o)}
-          option3={option3}
-          setOption3={(o: string) => setOption3(o)}
-          setOptionValue1={(o: number) => setOptionValue1(o)}
-          setOptionValue2={(o: number) => setOptionValue2(o)}
-          setOptionValue3={(o: number) => setOptionValue3(o)}
-        />
-      </Grid>
-      <Grid item xs={12}>
-      <ApexChartWrapper>
-        <ApexAreaChart />
-      </ApexChartWrapper>
-      </Grid>
+      {
+        props.overview.isMyData ? <Grid item xs={12}>
+          <TableServerSide
+            rows={rows}
+            itemList={itemList}
+            item={item}
+            setItem={(o: string) => setItem(o)}
+            cube={cube}
+            setCube={(o: string) => setCube(o)}
+            option1={option1}
+            setOption1={(o: string) => setOption1(o)}
+            option2={option2}
+            setOption2={(o: string) => setOption2(o)}
+            option3={option3}
+            setOption3={(o: string) => setOption3(o)}
+            setOptionValue1={(o: number) => setOptionValue1(o)}
+            setOptionValue2={(o: number) => setOptionValue2(o)}
+            setOptionValue3={(o: number) => setOptionValue3(o)}
+          />
+        </Grid> : null
+      }
+      {
+        props.overview.isMyData ? <Grid item xs={12}>
+          <ApexChartWrapper>
+            <ApexAreaChart />
+          </ApexChartWrapper>
+        </Grid> : null
+      }
     </Grid>
   )
 }

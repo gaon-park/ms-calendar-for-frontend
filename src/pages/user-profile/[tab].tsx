@@ -49,7 +49,12 @@ const UserProfileTab = ({ tab }: InferGetStaticPropsType<typeof getStaticProps>)
           iamFollowHim: profileData.iamFollowHim,
           heFollowMe: profileData.heFollowMe,
         },
-        overview: { profile: otherData.data.profile, followCount: otherData.data.acceptedFollowCount, followerCount: otherData.data.acceptedFollowerCount },
+        overview: {
+          profile: otherData.data.profile, 
+          followCount: otherData.data.acceptedFollowCount, 
+          followerCount: otherData.data.acceptedFollowerCount,
+          isMyData: (profileData.id === profile?.id)
+        },
         follows: otherData.data.follow,
         followers: otherData.data.follower,
         isMyData: (profileData.id === profile?.id)
@@ -67,12 +72,17 @@ const UserProfileTab = ({ tab }: InferGetStaticPropsType<typeof getStaticProps>)
           iamFollowHim: null,
           heFollowMe: null,
         },
-        overview: { profile: profile, followCount: followCount, followerCount: followerCount },
+        overview: { 
+          profile: profile, 
+          followCount: followCount, 
+          followerCount: followerCount,
+          isMyData: true
+        },
         follows: follow,
         followers: follower,
         isMyData: true,
       })
-    } 
+    }
   }, [profile, otherData])
 
   return <UserProfile tab={tab} data={data} accountId={accountId as string} />

@@ -18,6 +18,7 @@ export type ProfileOverviewType = {
   profile: IProfile
   followCount: number
   followerCount: number
+  isMyData: boolean
 }
 
 export type ProfileTabType = {
