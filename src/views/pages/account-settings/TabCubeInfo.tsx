@@ -1,19 +1,13 @@
 // ** React Imports
-import { ReactNode, useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 
 // ** MUI Imports
 import Box from '@mui/material/Box'
 import Card from '@mui/material/Card'
 import Grid from '@mui/material/Grid'
-import Table from '@mui/material/Table'
-import TableRow from '@mui/material/TableRow'
-import TableBody from '@mui/material/TableBody'
-import TableCell from '@mui/material/TableCell'
-import TableHead from '@mui/material/TableHead'
 import Typography from '@mui/material/Typography'
 import CardHeader from '@mui/material/CardHeader'
 import CardContent from '@mui/material/CardContent'
-import TableContainer from '@mui/material/TableContainer'
 
 import useSWR from "swr";
 
@@ -28,44 +22,6 @@ import CreateApiKey from 'src/views/pages/account-settings/cube/CreateApiKey'
 import { ApiKeyResponse } from 'src/model/user/profile'
 import { GetApiKey } from 'src/common/api/msBackend/user/profile'
 import { useProfile } from 'src/hooks/useProfile'
-
-interface ApiKeyListType {
-  title: string
-  access: string
-  date: string
-  key: string
-}
-
-interface RecentDeviceDataType {
-  date: string
-  device: string
-  location: string
-  browserName: string
-  browserIcon: ReactNode
-}
-
-const apiKeyList: ApiKeyListType[] = [
-  {
-    title: 'Server Key 1',
-    access: 'Full Access',
-    date: '28 Apr 2021, 18:20 GTM+4:10',
-    key: '23eaf7f0-f4f7-495e-8b86-fad3261282ac'
-  }
-]
-
-const recentDeviceData: RecentDeviceDataType[] = [
-  {
-    location: 'Switzerland',
-    device: 'HP Spectre 360',
-    date: '10, July 2021 20:07',
-    browserName: 'Chrome on Windows',
-    browserIcon: (
-      <Box component='span' sx={{ mr: 2.5, '& svg': { color: 'info.main' } }}>
-        <Icon icon='mdi:microsoft-windows' fontSize={20} />
-      </Box>
-    )
-  },
-]
 
 const TabCubeInfo = () => {
   const [apiKey, setApiKey] = useState<ApiKeyResponse | null>(null)

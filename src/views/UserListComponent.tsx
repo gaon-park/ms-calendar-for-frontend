@@ -8,7 +8,6 @@ import { useState, MouseEvent } from 'react'
 import Box from '@mui/material/Box'
 import Menu from '@mui/material/Menu'
 import { DataGrid } from '@mui/x-data-grid'
-import { styled } from '@mui/material/styles'
 import MenuItem from '@mui/material/MenuItem'
 import IconButton from '@mui/material/IconButton'
 import Typography from '@mui/material/Typography'
@@ -29,7 +28,6 @@ import { getInitials } from 'src/@core/utils/get-initials'
 import worldData from 'src/model/worldData'
 import { FollowAccept, FollowCancel, FollowerDelete, FollowRequest } from 'src/common/api/msBackend/user/follow'
 import { IProfile } from 'src/model/user/profile'
-import { useRouter } from 'next/router'
 import Avatar from 'src/@core/components/mui/avatar'
 import Link from '@mui/material/Link/Link'
 
@@ -46,17 +44,6 @@ const worldIcon = (world: string) => {
 interface CellType {
     row: IProfile
 }
-
-const StyledLink = styled(Link)(({ theme }) => ({
-    fontWeight: 600,
-    fontSize: '1rem',
-    cursor: 'pointer',
-    textDecoration: 'none',
-    color: theme.palette.text.secondary,
-    '&:hover': {
-        color: theme.palette.primary.main
-    }
-}))
 
 interface Props {
     users: IProfile[]
@@ -84,8 +71,6 @@ const UserListComponent = (props: Props) => {
             )
         }
     }
-
-    const router = useRouter()
 
     const RowOptions = (row: CellType) => {
         // ** State

@@ -35,7 +35,7 @@ export interface IProfileResponse {
 }
 
 export interface PostApiKeyReq {
-    apiKey: String
+    apiKey: string
 }
 
 export interface ApiKeyResponse {

@@ -12,7 +12,7 @@ import ServerSideToolbar from './ServerSideToolbar'
 
 // ** Utils Import
 import { CubeHistoryResponse, CubeType } from 'src/model/dashboard/dashboard'
-import { CardContent, Grid, FormControl, InputLabel, Select, MenuItem, SelectChangeEvent, TextField, InputAdornment } from '@mui/material'
+import { CardContent, Grid, FormControl, InputLabel, Select, MenuItem, TextField } from '@mui/material'
 
 const cubeList: CubeType[] = [
   'SUSANG', 'JANGYIN', 'MYUNGJANG', 'RED', 'BLACK', 'ADDITIONAL'
@@ -139,6 +139,7 @@ const getCubeInfo = (type: CubeType): CubeInfo => {
   else res = {
     korean: '에디셔널 큐브'
   }
+  
   return res
 }
 
@@ -181,6 +182,7 @@ const TableServerSide = (props: Props) => {
 
   // ** State
   const [pageSize, setPageSize] = useState<number>(10)
+  console.log(props.rows)
 
   return (
     <Card>
@@ -201,7 +203,7 @@ const TableServerSide = (props: Props) => {
               >
                 <MenuItem key={`item_`} value=''>아이템</MenuItem>
                 {
-                  props.itemList.map((data, index) => (
+                  props.itemList?.map((data, index) => (
                     <MenuItem key={`item_${index}`} value={data}>{data}</MenuItem>
                   ))
                 }
@@ -329,9 +331,9 @@ const TableServerSide = (props: Props) => {
       <DataGrid
         autoHeight
         pagination
-        rows={props.rows}
+        rows={props.rows ?? []}
         rowHeight={80}
-        rowCount={props.rows.length}
+        rowCount={props.rows?.length ?? 0}
         columns={columns}
         checkboxSelection
         pageSize={pageSize}

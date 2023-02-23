@@ -18,3 +18,14 @@ export interface ItemDashboardResponse {
     itemList: string[]
     cubeHistories: CubeHistoryResponse[]
 }
+
+export interface CubeEventRecordResponse {
+    category: string
+    cubeType: CubeType
+    count: number
+}
+
+export interface WholeRecordDashboardResponse {
+    categories: string[]
+    data: CubeEventRecordResponse[]
+}

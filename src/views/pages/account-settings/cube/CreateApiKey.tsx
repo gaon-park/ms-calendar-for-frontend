@@ -18,7 +18,6 @@ import DialogActions from '@mui/material/DialogActions/DialogActions'
 import Icon from 'src/@core/components/icon'
 import Box from '@mui/material/Box/Box'
 import { useRouter } from 'next/router'
-import { useProfile } from 'src/hooks/useProfile'
 
 const CreateApiKeyCard = () => {
   const [apiKey, setApiKey] = useState<string>('')
@@ -38,7 +37,7 @@ const CreateApiKeyCard = () => {
         setSavedDialogOpen(true)
         setBtnDisable(false)
       })
-      .catch(e => {
+      .catch(() => {
         setResult(false)
         setResultMessage('API Key가 유효하지 않은 것 같아요..')
         setSavedDialogOpen(true)
