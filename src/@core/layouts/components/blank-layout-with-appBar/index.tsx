@@ -43,7 +43,7 @@ const BlankLayoutAppBar = () => {
           minHeight: `${(theme.mixins.toolbar.minHeight as number) - (skin === 'bordered' ? 1 : 0)}px !important`
         }}
       >
-        <StyledLink href='/'>
+        <StyledLink href="javascript:window.location.href='/'">
           <svg
             width={30}
             height={25}
