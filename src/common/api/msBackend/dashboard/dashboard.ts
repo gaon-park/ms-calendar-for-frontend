@@ -21,3 +21,12 @@ export const GetItemDashboard = (req: ItemDashboardRequest) => {
         }
     )
 }
+
+export const GetItemDashboardPersonal = (req: ItemDashboardRequest) => {
+    return MsBackendAxios.get<ItemDashboardResponse>(
+        MS_BACKEND_API_PATH.GET_DASHBOARD_FOR_ITEM_TABLE_PERSONAL,
+        {
+            params: req
+        }
+    )
+}

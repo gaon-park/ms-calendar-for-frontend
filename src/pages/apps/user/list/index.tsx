@@ -75,7 +75,7 @@ const UserList = () => {
     <Grid container spacing={6}>
       <Grid item xs={12}>
         <Card>
-          <CardHeader title='검색 필터' />
+          <CardHeader title='회원 검색 (결과 최대 1000건)' />
           <CardContent>
             <Grid container spacing={6}>
               <Grid item sm={4} xs={12}>

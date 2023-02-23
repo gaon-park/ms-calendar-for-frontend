@@ -184,7 +184,7 @@ const TableServerSide = (props: Props) => {
 
   return (
     <Card>
-      <CardHeader title='큐브 사용 건수 상위 10위 아이템 대상' />
+      <CardHeader title='큐브 사용 내역 (상위 10위 아이템 기준, 결과 최대 1000건)' />
       <CardContent>
         <Grid container spacing={6}>
           <Grid item sm={12} md={6}>
