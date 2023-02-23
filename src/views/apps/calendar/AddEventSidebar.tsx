@@ -32,8 +32,6 @@ import { EventDateType, AddEventSidebarType } from 'src/types/apps/calendarTypes
 import { RepeatCode, ScheduleUpdateCode } from 'src/common/api/msBackend/user/schedule'
 import { generateDate } from 'src/@core/utils/calc-date'
 import { convertDateFormat, convertDatetimeFormat } from 'src/@core/utils/format'
-import { useRecoilValue } from 'recoil'
-import { myProfile } from 'src/store/profile/user'
 import { getInitials } from 'src/@core/utils/get-initials'
 import { SimpleUserResponse } from 'src/model/user/user'
 import { SearchUserForScheduleInvite } from 'src/common/api/msBackend/search'
@@ -44,6 +42,7 @@ import Chip from 'src/@core/components/mui/chip'
 import Avatar from 'src/@core/components/mui/avatar'
 import Autocomplete from '@mui/material/Autocomplete/Autocomplete'
 import Badge from 'src/@core/components/mui/badge'
+import { useProfile } from 'src/hooks/useProfile'
 
 interface PickerProps {
   label?: string
@@ -94,7 +93,7 @@ const AddEventSidebar = (props: AddEventSidebarType) => {
 
   // ** States
   const [values, setValues] = useState<DefaultStateType>(defaultState)
-  const profile = useRecoilValue(myProfile)
+  const {profile} = useProfile()
 
   const [keyword, setKeyword] = useState('')
   const [guestOpen, setGuestOpen] = useState<boolean>(false)
@@ -282,12 +281,14 @@ const AddEventSidebar = (props: AddEventSidebarType) => {
 
   const checkUpdateBtn = () => {
     if (profile === undefined) return false
+    if (!store.selectedEvent?.title.length) return true
     if (!store.selectedEvent?.extendedProps.guests?.map(o => o.id).includes(profile.id)) return false
     
     return true
   }
 
   const RenderSidebarFooter = () => {
+    console.log(checkUpdateBtn())
     if (checkUpdateBtn()) {
       if (store.selectedEvent === null || (store.selectedEvent !== null && !store.selectedEvent.title.length)) {
         return (
