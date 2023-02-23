@@ -288,7 +288,6 @@ const AddEventSidebar = (props: AddEventSidebarType) => {
   }
 
   const RenderSidebarFooter = () => {
-    console.log(checkUpdateBtn())
     if (checkUpdateBtn()) {
       if (store.selectedEvent === null || (store.selectedEvent !== null && !store.selectedEvent.title.length)) {
         return (

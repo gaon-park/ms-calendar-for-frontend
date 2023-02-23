@@ -177,7 +177,7 @@ let fromDate: string | null = null;
 function generateDateBegin(): string {
   if (fromDate) return fromDate;
   const today = new Date();
-  const beginDate = new Date(today.getFullYear(), today.getMonth(), 1);
+  const beginDate = new Date(today.getFullYear(), today.getMonth() - 1, 1);
   const month = (beginDate.getMonth() + 1).toString().padStart(2, "0");
   fromDate = beginDate.getFullYear().toString() + "-" + month + "-01"
 
@@ -188,7 +188,7 @@ let toDate: string | null = null;
 function generateDateEnd() {
   if (toDate) return toDate;
   const today = new Date();
-  const endDate = new Date(today.getFullYear(), today.getMonth() + 1, 0);
+  const endDate = new Date(today.getFullYear(), today.getMonth() + 2, 0);
   const month = (endDate.getMonth() + 1).toString().padStart(2, "0");
   toDate = endDate.getFullYear() + "-" + month + "-" + endDate.getDate()
 
