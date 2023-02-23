@@ -182,7 +182,6 @@ const TableServerSide = (props: Props) => {
 
   // ** State
   const [pageSize, setPageSize] = useState<number>(10)
-  console.log(props.rows)
 
   return (
     <Card>

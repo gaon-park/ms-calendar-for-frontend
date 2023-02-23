@@ -1,9 +1,6 @@
 // ** React Imports
 import { useState, SyntheticEvent, Fragment } from 'react'
 
-// ** Next Import
-import { useRouter } from 'next/router'
-
 // ** MUI Imports
 import Box from '@mui/material/Box'
 import Menu from '@mui/material/Menu'
@@ -51,7 +48,6 @@ const UserDropdown = (props: Props) => {
   const [anchorEl, setAnchorEl] = useState<Element | null>(null)
 
   // ** Hooks
-  const router = useRouter()
   const setIsAuth = useSetRecoilState<boolean>(isAuthenticated)
   const setMyProfile = useSetRecoilState<IProfile | undefined>(myProfile)
 
@@ -65,7 +61,7 @@ const UserDropdown = (props: Props) => {
 
   const handleDropdownClose = (url?: string) => {
     if (url) {
-      router.push(url)
+      location.href=url
     }
     setAnchorEl(null)
   }
@@ -90,11 +86,11 @@ const UserDropdown = (props: Props) => {
     new AuthCookie().clearCookies()
     setIsAuth(false)
     setMyProfile(undefined)
-    router.push('/')
+    location.href='/'
   }
 
   const handleLogin = () => {
-    router.push('/login')
+    location.href='/login'
   }
 
   return profile !== undefined ? (

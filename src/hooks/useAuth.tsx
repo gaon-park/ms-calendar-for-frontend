@@ -27,7 +27,7 @@ export const useAuth = () => {
             } else {
                 router.push("403");
             }
-            router.push("/");
+            location.href='/'
         },
         []
     );

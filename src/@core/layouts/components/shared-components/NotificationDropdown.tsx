@@ -34,7 +34,6 @@ import useSWR from "swr";
 import { useRecoilValue } from 'recoil'
 import { myProfile } from 'src/store/profile/user'
 import { GetNotifications, ReadAllNotifications, ReadOneNotification } from 'src/common/api/msBackend/user/notification'
-import { useRouter } from 'next/router'
 
 export type NotificationsType = {
   notificationId: number
@@ -132,7 +131,6 @@ const NotificationDropdown = (props: Props) => {
 
   // ** States
   const [anchorEl, setAnchorEl] = useState<(EventTarget & Element) | null>(null)
-  const router = useRouter()
 
   const profile = useRecoilValue(myProfile)
 
@@ -183,7 +181,7 @@ const NotificationDropdown = (props: Props) => {
 
   const handleRoute = (path: string) => {
     handleDropdownClose()
-    router.push(path)
+    location.href=path
   }
 
   const handleDropdownClose = () => {
