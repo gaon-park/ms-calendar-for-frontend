@@ -34,6 +34,9 @@ const HelpPage = () => {
                 - 나의 팔로워에서 삭제(팔로우 요청을 거절)
               </Typography>
             </Typography>
+            <Typography sx={{ mb: 2 }}>
+              4. 큐브 데이터를 확인하기 위한 API KEY 는 계정 설정 페이지 [큐브 API 키] 페이지에서 할 수 있습니다.
+            </Typography>
           </CardContent>
         </Card>
       </Grid>
