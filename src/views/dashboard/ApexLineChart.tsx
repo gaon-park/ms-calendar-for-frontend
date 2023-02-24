@@ -79,7 +79,7 @@ const ApexAreaChart = (mainProps: MainProps) => {
     <Card>
       <CardHeader
         title='전체 기록'
-        subheader='2022/11/25부터 집계된 모든 큐브 데이터(선택 기간이 3개월 이상인 경우, 달별 데이터로 조회합니다)'
+        subheader='2022/11/25부터 집계된 모든 큐브 데이터(선택 기간이 4개월 이상인 경우, 달별 데이터로 조회합니다)'
         subheaderTypographyProps={{ sx: { color: theme => `${theme.palette.text.disabled} !important` } }}
         sx={{
           flexDirection: ['column', 'row'],
