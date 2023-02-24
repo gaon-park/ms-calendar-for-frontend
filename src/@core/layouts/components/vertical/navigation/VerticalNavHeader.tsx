@@ -95,7 +95,7 @@ const VerticalNavHeader = (props: Props) => {
       {userNavMenuBranding ? (
         userNavMenuBranding(props)
       ) : (
-        <StyledLink href="javascript:window.location.href='/'">
+        <StyledLink href="/">
           <svg
             width={30}
             height={25}

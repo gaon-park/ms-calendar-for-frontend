@@ -14,11 +14,6 @@ export interface CubeHistoryResponse {
     itemUpgrade: boolean
 }
 
-export interface ItemDashboardResponse {
-    itemList: string[]
-    cubeHistories: CubeHistoryResponse[]
-}
-
 export interface CubeEventRecordResponse {
     category: string
     cubeType: CubeType

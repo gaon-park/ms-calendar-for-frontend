@@ -23,6 +23,12 @@ interface Props {
 
 const shortcuts: ShortcutsType[] = [
   {
+    url: '/',
+    title: '대시보드',
+    icon: 'mdi:chart-pie',
+    subtitle: '큐브 이벤트 검색'
+  },
+  {
     title: '캘린더',
     url: '/apps/calendar',
     subtitle: '일정 확인, 관리',

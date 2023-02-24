@@ -6,6 +6,7 @@ import Card from '@mui/material/Card'
 import Typography from '@mui/material/Typography'
 import CardHeader from '@mui/material/CardHeader'
 import { DataGrid, GridColumns, GridRenderCellParams, GridValueGetterParams } from '@mui/x-data-grid'
+import Autocomplete from '@mui/material/Autocomplete/Autocomplete';
 
 // ** Custom Components
 import ServerSideToolbar from './ServerSideToolbar'
@@ -182,15 +183,16 @@ const TableServerSide = (props: Props) => {
 
   // ** State
   const [pageSize, setPageSize] = useState<number>(10)
+  const [open, setOpen] = useState<boolean>(false)
 
   return (
     <Card>
-      <CardHeader title='큐브 사용 내역 (상위 10위 아이템 기준, 결과 최대 1000건)' />
+      <CardHeader title='큐브 사용 내역 (결과 최대 1000건)' />
       <CardContent>
         <Grid container spacing={6}>
-          <Grid item sm={12} md={6}>
+          <Grid item sm={12} md={6} xs={6}>
             <FormControl fullWidth>
-              <InputLabel id='item-select'>아이템</InputLabel>
+              {/* <InputLabel id='item-select'>아이템</InputLabel>
               <Select size='small'
                 fullWidth
                 value={props.item}
@@ -206,10 +208,30 @@ const TableServerSide = (props: Props) => {
                     <MenuItem key={`item_${index}`} value={data}>{data}</MenuItem>
                   ))
                 }
-              </Select>
+              </Select> */}
+              <Autocomplete
+          fullWidth
+          size='small'
+          open={open}
+          options={props.itemList}
+          onChange={(e, newSelected) => props.setItem(newSelected ?? "")}
+          onOpen={() => setOpen(true)}
+          onClose={() => setOpen(false)}
+          id='autocomplete-asynchronous-request'
+          isOptionEqualToValue={(option, value) => option === value}
+          renderInput={params => (
+            <TextField
+              {...params}
+              label='아이템'
+              InputProps={{
+                ...params.InputProps,
+              }}
+            />
+          )}
+        />
             </FormControl>
           </Grid>
-          <Grid item sm={12} md={6}>
+          <Grid item sm={12} md={6} xs={6}>
             <FormControl fullWidth>
               <InputLabel id='cube-select'>큐브</InputLabel>
               <Select size='small'
@@ -232,7 +254,7 @@ const TableServerSide = (props: Props) => {
               </Select>
             </FormControl>
           </Grid>
-          <Grid item sm={12} md={6}>
+          <Grid item sm={12} md={6} xs={6}>
             <FormControl fullWidth>
               <InputLabel id='option1-select'>잠재옵션 첫째줄(결과)</InputLabel>
               <Select size='small'
@@ -253,7 +275,7 @@ const TableServerSide = (props: Props) => {
               </Select>
             </FormControl>
           </Grid>
-          <Grid item sm={12} md={6}>
+          <Grid item sm={12} md={6} xs={6}>
             <FormControl fullWidth>
               <TextField size='small'
                 type={'number'}
@@ -263,7 +285,7 @@ const TableServerSide = (props: Props) => {
               />
             </FormControl>
           </Grid>
-          <Grid item sm={12} md={6}>
+          <Grid item sm={12} md={6} xs={6}>
             <FormControl fullWidth>
               <InputLabel id='option2-select'>잠재옵션 둘째줄(결과)</InputLabel>
               <Select size='small'
@@ -284,7 +306,7 @@ const TableServerSide = (props: Props) => {
               </Select>
             </FormControl>
           </Grid>
-          <Grid item sm={12} md={6}>
+          <Grid item sm={12} md={6} xs={6}>
             <FormControl fullWidth>
               <TextField size='small'
                 type={'number'}
@@ -294,7 +316,7 @@ const TableServerSide = (props: Props) => {
               />
             </FormControl>
           </Grid>
-          <Grid item sm={12} md={6}>
+          <Grid item sm={12} md={6} xs={6}>
             <FormControl fullWidth>
               <InputLabel id='option3-select'>잠재옵션 셋째줄(결과)</InputLabel>
               <Select size='small'
@@ -315,7 +337,7 @@ const TableServerSide = (props: Props) => {
               </Select>
             </FormControl>
           </Grid>
-          <Grid item sm={12} md={6}>
+          <Grid item sm={12} md={6} xs={6}>
             <FormControl fullWidth>
               <TextField size='small'
                 type={'number'}

@@ -196,7 +196,7 @@ const TabAccount = () => {
   const deactivateAccount = async () => {
     await DeleteAccount()
       .then(() => {
-        router.push("/logout");
+        location.href = '/'
       }).catch(() => {
         setResult(false)
         setResultMessage('실패.. 관리자에게 연락해주세요.')
@@ -350,7 +350,7 @@ const TabAccount = () => {
                     rules={{ required: true }}
                     render={({ field }) => (
                       <FormControlLabel
-                        label='계정에 연결된 모든 일정, 팔로잉, 팔로워, 프로필 사진을 삭제할래요'
+                        label='계정에 연결된 모든 큐브 이벤트, 일정, 팔로잉, 팔로워, 프로필 사진을 삭제할래요'
                         sx={errors.checkbox ? { '& .MuiTypography-root': { color: 'error.main' } } : null}
                         control={
                           <Checkbox

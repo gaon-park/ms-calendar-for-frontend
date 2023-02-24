@@ -39,7 +39,7 @@ const AppBarContent = (props: Props) => {
       {userAppBarBranding ? (
         userAppBarBranding(props)
       ) : (
-        <StyledLink href="javascript:window.location.href='/'">
+        <StyledLink href="/">
           <svg
             width={30}
             height={25}

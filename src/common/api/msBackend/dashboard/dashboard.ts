@@ -1,6 +1,18 @@
 import { MsBackendAxios } from "../../axiosUtil";
 import { MS_BACKEND_API_PATH } from "src/constants/msbackend";
-import { ItemDashboardResponse, WholeRecordDashboardResponse } from "src/model/dashboard/dashboard";
+import { CubeHistoryResponse, WholeRecordDashboardResponse } from "src/model/dashboard/dashboard";
+
+export const GetItemFilterOptions = () => {
+    return MsBackendAxios.get<string[]>(
+        MS_BACKEND_API_PATH.GET_ITEM_FILTER_OPTIONS,
+    )
+}
+
+export const GetItemFilterOptionsPersonal = () => {
+    return MsBackendAxios.get<string[]>(
+        MS_BACKEND_API_PATH.GET_ITEM_FILTER_OPTIONS_PERSONAL,
+    )
+}
 
 export interface ItemDashboardRequest {
     item: string
@@ -14,7 +26,7 @@ export interface ItemDashboardRequest {
 }
 
 export const GetItemDashboard = (req: ItemDashboardRequest) => {
-    return MsBackendAxios.get<ItemDashboardResponse>(
+    return MsBackendAxios.get<CubeHistoryResponse[]>(
         MS_BACKEND_API_PATH.GET_DASHBOARD_FOR_ITEM_TABLE,
         {
             params: req
@@ -23,7 +35,7 @@ export const GetItemDashboard = (req: ItemDashboardRequest) => {
 }
 
 export const GetItemDashboardPersonal = (req: ItemDashboardRequest) => {
-    return MsBackendAxios.get<ItemDashboardResponse>(
+    return MsBackendAxios.get<CubeHistoryResponse[]>(
         MS_BACKEND_API_PATH.GET_DASHBOARD_FOR_ITEM_TABLE_PERSONAL,
         {
             params: req
