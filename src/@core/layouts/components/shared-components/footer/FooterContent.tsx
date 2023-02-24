@@ -14,8 +14,8 @@ const FooterContent = () => {
       <Typography sx={{ mr: 2 }}>
         {`© 2023, Made by `}
         {/* todo */}
-        <Link target='_blank' href='https://open.kakao.com/o/sUlBFP5e'>
-          {` 리부트 뽀돌`}
+        <Link target='_blank' href='https://open.kakao.com/o/sBRuuZDe'>
+          {` 뽀돌`}
         </Link>
       </Typography>
       <Typography sx={{ mr: 1, fontSize: 12 }}>

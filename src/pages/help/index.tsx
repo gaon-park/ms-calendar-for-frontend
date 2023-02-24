@@ -81,8 +81,8 @@ const HelpPage = () => {
           <CardContent>
             <Typography sx={{ mb: 2 }}>
               0. 오픈 카톡
-              <Link target='_blank' href='https://open.kakao.com/o/sUlBFP5e'>
-                {` 리부트 뽀돌`}
+              <Link target='_blank' href='https://open.kakao.com/o/sBRuuZDe'>
+                {` 뽀돌`}
               </Link>
             </Typography>
             <Typography sx={{ mb: 2 }}>
