@@ -7,7 +7,7 @@ import Spinner from 'src/@core/components/spinner'
 const Home = () => {
 
   useEffect(() => {
-      const homeRoute = '/dashboards/analytics/common'
+      const homeRoute = '/dashboards/record/common'
 
       // Redirect user to Home URL
       window.location.href = homeRoute

@@ -24,3 +24,24 @@ export interface WholeRecordDashboardResponse {
     categories: string[]
     data: CubeEventRecordResponse[]
 }
+
+export interface CubeCount {
+    allCount: number
+    susangCount: number
+    jangyinCount: number
+    myungjangCount: number
+    redCount: number
+    blackCount: number
+    additionalCount: number
+}
+
+export interface CubeItemCount {
+    item: string
+    cubeCount: CubeCount
+}
+
+export interface CubeOverviewResponse {
+    registeredApiKeyCount: number | null
+    counts: CubeCount
+    topTenItems: CubeItemCount[]
+}

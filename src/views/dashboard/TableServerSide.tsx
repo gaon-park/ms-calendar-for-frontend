@@ -13,7 +13,13 @@ import ServerSideToolbar from './ServerSideToolbar'
 
 // ** Utils Import
 import { CubeHistoryResponse, CubeType } from 'src/model/dashboard/dashboard'
-import { CardContent, Grid, FormControl, InputLabel, Select, MenuItem, TextField } from '@mui/material'
+import CardContent from '@mui/material/CardContent/CardContent'
+import Grid from '@mui/material/Grid/Grid'
+import FormControl from '@mui/material/FormControl/FormControl'
+import TextField from '@mui/material/TextField/TextField'
+import InputLabel from '@mui/material/InputLabel/InputLabel'
+import Select from '@mui/material/Select/Select'
+import MenuItem from '@mui/material/MenuItem/MenuItem'
 
 const cubeList: CubeType[] = [
   'SUSANG', 'JANGYIN', 'MYUNGJANG', 'RED', 'BLACK', 'ADDITIONAL'
@@ -140,7 +146,7 @@ const getCubeInfo = (type: CubeType): CubeInfo => {
   else res = {
     korean: '에디셔널 큐브'
   }
-  
+
   return res
 }
 
@@ -192,43 +198,26 @@ const TableServerSide = (props: Props) => {
         <Grid container spacing={6}>
           <Grid item sm={12} md={6} xs={6}>
             <FormControl fullWidth>
-              {/* <InputLabel id='item-select'>아이템</InputLabel>
-              <Select size='small'
-                fullWidth
-                value={props.item}
-                id='select-item'
-                label='아이템'
-                labelId='item-select'
-                onChange={(e) => props.setItem(e.target.value)}
-                inputProps={{ placeholder: '아이템' }}
-              >
-                <MenuItem key={`item_`} value=''>아이템</MenuItem>
-                {
-                  props.itemList?.map((data, index) => (
-                    <MenuItem key={`item_${index}`} value={data}>{data}</MenuItem>
-                  ))
-                }
-              </Select> */}
               <Autocomplete
-          fullWidth
-          size='small'
-          open={open}
-          options={props.itemList}
-          onChange={(e, newSelected) => props.setItem(newSelected ?? "")}
-          onOpen={() => setOpen(true)}
-          onClose={() => setOpen(false)}
-          id='autocomplete-asynchronous-request'
-          isOptionEqualToValue={(option, value) => option === value}
-          renderInput={params => (
-            <TextField
-              {...params}
-              label='아이템'
-              InputProps={{
-                ...params.InputProps,
-              }}
-            />
-          )}
-        />
+                fullWidth
+                size='small'
+                open={open}
+                options={props.itemList}
+                onChange={(e, newSelected) => props.setItem(newSelected ?? "")}
+                onOpen={() => setOpen(true)}
+                onClose={() => setOpen(false)}
+                id='autocomplete-asynchronous-request'
+                isOptionEqualToValue={(option, value) => option === value}
+                renderInput={params => (
+                  <TextField
+                    {...params}
+                    label='아이템'
+                    InputProps={{
+                      ...params.InputProps,
+                    }}
+                  />
+                )}
+              />
             </FormControl>
           </Grid>
           <Grid item sm={12} md={6} xs={6}>

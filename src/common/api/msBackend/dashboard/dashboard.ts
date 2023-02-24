@@ -1,6 +1,18 @@
 import { MsBackendAxios } from "../../axiosUtil";
 import { MS_BACKEND_API_PATH } from "src/constants/msbackend";
-import { CubeHistoryResponse, WholeRecordDashboardResponse } from "src/model/dashboard/dashboard";
+import { CubeOverviewResponse, CubeHistoryResponse, WholeRecordDashboardResponse } from "src/model/dashboard/dashboard";
+
+export const GetCubeOverview = () => {
+    return MsBackendAxios.get<CubeOverviewResponse>(
+        MS_BACKEND_API_PATH.GET_CUBE_OVERVIEW,
+    )
+}
+
+export const GetCubeOverviewPersonal = () => {
+    return MsBackendAxios.get<CubeOverviewResponse>(
+        MS_BACKEND_API_PATH.GET_CUBE_OVERVIEW_PERSONAL,
+    )
+}
 
 export const GetItemFilterOptions = () => {
     return MsBackendAxios.get<string[]>(

@@ -42,6 +42,9 @@ const GET_ITEM_FILTER_OPTIONS_PERSONAL = "/api/dashboard/personal/item-options" 
 const GET_WHOLE_RECORD_DASHBOARD = "/api/dashboard/whole-record" as const;
 const GET_WHOLE_RECORD_DASHBOARD_PERSONAL = "/api/dashboard/personal/whole-record" as const;
 
+const GET_CUBE_OVERVIEW = "/api/dashboard/cube-overview" as const;
+const GET_CUBE_OVERVIEW_PERSONAL = "/api/dashboard/personal/cube-overview" as const;
+
 export const MS_BACKEND_API_PATH = {
   GET_OAUTH2_GOOGLE,
   POST_REISSUE_TOKEN,
@@ -86,4 +89,6 @@ export const MS_BACKEND_API_PATH = {
   GET_ITEM_FILTER_OPTIONS_PERSONAL,
   GET_WHOLE_RECORD_DASHBOARD,
   GET_WHOLE_RECORD_DASHBOARD_PERSONAL,
+  GET_CUBE_OVERVIEW,
+  GET_CUBE_OVERVIEW_PERSONAL,
 };

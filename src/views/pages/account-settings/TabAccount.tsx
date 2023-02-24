@@ -38,7 +38,6 @@ import { IProfile, PutJsonRequest } from 'src/model/user/profile'
 import worldData from 'src/model/worldData'
 import jobDetailData from 'src/model/jobDetailData'
 import { DeleteAccount, PutJsonUserProfile } from 'src/common/api/msBackend/user/profile'
-import { useRouter } from 'next/router'
 import { useProfile } from 'src/hooks/useProfile'
 import { useSetRecoilState } from 'recoil'
 import { myProfile } from 'src/store/profile/user'
@@ -96,7 +95,6 @@ const TabAccount = () => {
   const [result, setResult] = useState<boolean>(true)
   const [savedDialogOpen, setSavedDialogOpen] = useState<boolean>(false)
   const [saveBtn, setSaveBtn] = useState<boolean>(true)
-  const router = useRouter();
 
   const setMyProfile = useSetRecoilState<IProfile | undefined>(myProfile)
 

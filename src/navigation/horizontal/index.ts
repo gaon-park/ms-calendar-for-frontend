@@ -8,12 +8,22 @@ const navigation = (): HorizontalNavItemsType => {
       title: '대시보드',
       children: [
         {
-          title: '전체 큐브 데이터',
+          title: '전체 데이터 누적',
           icon: 'mdi:chart-donut',
+          path: '/dashboards/record/common'
+        },
+        {
+          title: '내 데이터 누적',
+          icon: 'mdi:chart-donut',
+          path: '/dashboards/record/personal'
+        },
+        {
+          title: '전체 큐브 데이터 검색',
+          icon: 'mdi:chart-timeline-variant',
           path: '/dashboards/analytics/common'
         },
         {
-          title: '내 큐브 데이터',
+          title: '내 큐브 데이터 검색',
           icon: 'mdi:chart-timeline-variant',
           path: '/dashboards/analytics/personal'
         },

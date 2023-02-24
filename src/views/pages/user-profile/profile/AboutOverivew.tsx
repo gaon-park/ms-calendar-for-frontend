@@ -8,22 +8,6 @@ import CardContent from '@mui/material/CardContent'
 // ** Icon Imports
 import Icon from 'src/@core/components/icon'
 import { ProfileOverviewType } from 'src/types/profile/types'
-import TableServerSide from 'src/views/dashboard/TableServerSide'
-import ApexChartWrapper from 'src/@core/styles/libs/react-apexcharts'
-import ApexLineChart from 'src/views/dashboard/ApexLineChart'
-import { useState, useEffect } from 'react'
-import { GetItemDashboardPersonal, GetWholeRecordDashboardPersonal } from 'src/common/api/msBackend/dashboard/dashboard'
-import { CubeHistoryResponse } from 'src/model/dashboard/dashboard'
-
-import useSWR from "swr"
-import { ApexOptions } from 'apexcharts'
-import { useTheme } from '@mui/material/styles'
-
-const areaColors = {
-  red: '#FF8C90',
-  black: '#9C9FA4',
-  additional: '#93DD5C'
-}
 
 const renderOverview = (overviewType: ProfileOverviewType) => {
   const { profile, followCount, followerCount } = overviewType
