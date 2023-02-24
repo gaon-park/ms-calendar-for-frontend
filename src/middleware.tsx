@@ -14,6 +14,8 @@ export function middleware(req: NextRequest) {
     req.nextUrl.pathname.startsWith("/login"),
     req.nextUrl.pathname.startsWith("/help"),
     req.nextUrl.pathname.startsWith("/auth/callback/google"),
+    req.nextUrl.pathname.startsWith("/dashboards/record/common"),
+    req.nextUrl.pathname.startsWith("/dashboards/analytics/common"),
     req.nextUrl.pathname === "/"
   ].some((value) => { return value; })
   if (
