@@ -22,8 +22,6 @@ const areaColors = {
 const RecordDashboardCommon = () => {
   useProfile()
 
-  window.location.href = '/dashboards/record/common'
-
   // ** Hook
   const theme = useTheme()
 
@@ -76,6 +74,8 @@ const RecordDashboardCommon = () => {
   const [options, setOptions] = useState<ApexOptions>(initialData)
   const [series, setSeries] = useState<SeryType[]>([])
 
+  const url = '/dashboards/record/personal'
+
   const swrOptions = {
     revalidateIfStale: false,
     revalidateOnFocus: true,
@@ -83,7 +83,7 @@ const RecordDashboardCommon = () => {
   }
 
   const { data: wholeData } = useSWR(
-    { startDate, endDate },
+    { url, startDate, endDate },
     () => GetWholeRecordDashboardPersonal({
       startDate: startDate.toISOString().split("T")[0],
       endDate: endDate.toISOString().split("T")[0]

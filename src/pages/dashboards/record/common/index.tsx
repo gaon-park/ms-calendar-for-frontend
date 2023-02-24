@@ -22,8 +22,6 @@ const areaColors = {
 const RecordDashboardCommon = () => {
     useProfile()
 
-    window.location.href = '/dashboards/record/common'
-
     // ** Hook
     const theme = useTheme()
 
@@ -82,8 +80,10 @@ const RecordDashboardCommon = () => {
         revalidateOnReconnect: true
     }
 
+    const url = '/dashboards/record/common'
+
     const { data: wholeData } = useSWR(
-        { startDate, endDate },
+        { url, startDate, endDate },
         () => GetWholeRecordDashboard({
             startDate: startDate.toISOString().split("T")[0],
             endDate: endDate.toISOString().split("T")[0]

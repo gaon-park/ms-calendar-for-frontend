@@ -11,8 +11,6 @@ import useSWR from "swr"
 const DashboardCommon = () => {
   useProfile()
 
-  window.location.href = '/dashboards/analytics/common'
-
   const [rows, setRows] = useState<CubeHistoryResponse[]>([])
   const [itemList, setItemList] = useState<string[]>([])
   const [item, setItem] = useState<string>('')
@@ -24,8 +22,10 @@ const DashboardCommon = () => {
   const [optionValue2, setOptionValue2] = useState<number>(0)
   const [optionValue3, setOptionValue3] = useState<number>(0)
 
+  const url = '/dashboards/analytics/common'
+
   const { data } = useSWR(
-    { item, cube, option1, option2, option3, optionValue1, optionValue2, optionValue3 },
+    { url, item, cube, option1, option2, option3, optionValue1, optionValue2, optionValue3 },
     () => GetItemDashboard({
       item, cube, option1, option2, option3, optionValue1, optionValue2, optionValue3
     }),
