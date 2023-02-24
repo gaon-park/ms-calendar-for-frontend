@@ -11,6 +11,8 @@ import useSWR from "swr"
 const DashboardPersonal = () => {
   useProfile()
 
+  window.location.href = '/dashboards/analytics/personal'
+
   const [rows, setRows] = useState<CubeHistoryResponse[]>([])
   const [itemList, setItemList] = useState<string[]>([])
   const [item, setItem] = useState<string>('')

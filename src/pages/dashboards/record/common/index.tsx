@@ -22,6 +22,8 @@ const areaColors = {
 const RecordDashboardCommon = () => {
     useProfile()
 
+    window.location.href = '/dashboards/record/common'
+
     // ** Hook
     const theme = useTheme()
 
