@@ -35,13 +35,7 @@ export interface CubeCount {
     additionalCount: number
 }
 
-export interface CubeItemCount {
-    item: string
-    cubeCount: CubeCount
-}
-
 export interface CubeOverviewResponse {
     registeredApiKeyCount: number | null
     counts: CubeCount
-    topTenItems: CubeItemCount[]
 }

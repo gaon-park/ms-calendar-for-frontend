@@ -124,7 +124,7 @@ const RecordDashboardCommon = () => {
         if (typeof cubeCounts !== 'undefined') {
             setCubeOverview(cubeCounts.data)
         }
-    }, [cubeCounts])
+    }, [cubeCounts])  
 
     return (
         <Grid container spacing={6}>
