@@ -17,9 +17,7 @@ import CardContent from '@mui/material/CardContent/CardContent'
 import Grid from '@mui/material/Grid/Grid'
 import FormControl from '@mui/material/FormControl/FormControl'
 import TextField from '@mui/material/TextField/TextField'
-import InputLabel from '@mui/material/InputLabel/InputLabel'
-import Select from '@mui/material/Select/Select'
-import MenuItem from '@mui/material/MenuItem/MenuItem'
+import InputAdornment from '@mui/material/InputAdornment/InputAdornment'
 
 const cubeList: CubeType[] = [
   'SUSANG', 'JANGYIN', 'MYUNGJANG', 'RED', 'BLACK', 'ADDITIONAL'
@@ -189,11 +187,15 @@ const TableServerSide = (props: Props) => {
 
   // ** State
   const [pageSize, setPageSize] = useState<number>(10)
-  const [open, setOpen] = useState<boolean>(false)
+  const [itemOpen, setItemOpen] = useState<boolean>(false)
+  const [cubeOpen, setCubeOpen] = useState<boolean>(false)
+  const [option1Open, setOption1Open] = useState<boolean>(false)
+  const [option2Open, setOption2Open] = useState<boolean>(false)
+  const [option3Open, setOption3Open] = useState<boolean>(false)
 
   return (
     <Card>
-      <CardHeader title='큐브 사용 내역 (결과 최대 1000건)' />
+      <CardHeader title='큐브 사용 내역 (결과 최대 1000건, 2022/11/25~어제 데이터 조회가능)' />
       <CardContent>
         <Grid container spacing={6}>
           <Grid item sm={12} md={6} xs={6}>
@@ -201,12 +203,12 @@ const TableServerSide = (props: Props) => {
               <Autocomplete
                 fullWidth
                 size='small'
-                open={open}
+                open={itemOpen}
                 options={props.itemList}
                 onChange={(e, newSelected) => props.setItem(newSelected ?? "")}
-                onOpen={() => setOpen(true)}
-                onClose={() => setOpen(false)}
-                id='autocomplete-asynchronous-request'
+                onOpen={() => setItemOpen(true)}
+                onClose={() => setItemOpen(false)}
+                id='autocomplete-item'
                 isOptionEqualToValue={(option, value) => option === value}
                 renderInput={params => (
                   <TextField
@@ -222,46 +224,51 @@ const TableServerSide = (props: Props) => {
           </Grid>
           <Grid item sm={12} md={6} xs={6}>
             <FormControl fullWidth>
-              <InputLabel id='cube-select'>큐브</InputLabel>
-              <Select size='small'
+              <Autocomplete
                 fullWidth
-                value={props.cube}
-                id='select-cube'
-                label='큐브 '
-                labelId='cube-select'
-                onChange={(e) => props.setCube(e.target.value)}
-                inputProps={{ placeholder: '큐브' }}
-              >
-                <MenuItem key={`cube_`} value=''>큐브</MenuItem>
-                {
-                  cubeList.map((data, index) => (
-                    <MenuItem key={`cube_${index}`} value={data} sx={{ whiteSpace: 'break-spaces' }}>
-                      {getCubeInfo(data).korean}
-                    </MenuItem>
-                  ))
-                }
-              </Select>
+                size='small'
+                open={cubeOpen}
+                options={cubeList}
+                onChange={(e, newSelected) => props.setCube(newSelected ?? "")}
+                onOpen={() => setCubeOpen(true)}
+                onClose={() => setCubeOpen(false)}
+                id='autocomplete-cube'
+                isOptionEqualToValue={(option, value) => option === value}
+                renderInput={params => (
+                  <TextField
+                    {...params}
+                    label='큐브'
+                    InputProps={{
+                      ...params.InputProps,
+                    }}
+                  />
+                )}
+                getOptionLabel={(option: CubeType) => getCubeInfo(option).korean}
+              />
             </FormControl>
           </Grid>
           <Grid item sm={12} md={6} xs={6}>
             <FormControl fullWidth>
-              <InputLabel id='option1-select'>잠재옵션 첫째줄(결과)</InputLabel>
-              <Select size='small'
+              <Autocomplete
                 fullWidth
-                value={props.option1}
-                id='select-option1'
-                label='잠재옵션 첫째줄(결과)'
-                labelId='option1-select'
-                onChange={(e) => props.setOption1(e.target.value)}
-                inputProps={{ placeholder: '잠재옵션 첫째줄(결과)' }}
-              >
-                <MenuItem key={`option1_`} value=''>잠재옵션 첫째줄(결과)</MenuItem>
-                {
-                  optionList.map((data, index) => (
-                    <MenuItem key={`option1_${index}`} value={data}>{data}</MenuItem>
-                  ))
-                }
-              </Select>
+                size='small'
+                open={option1Open}
+                options={optionList}
+                onChange={(e, newSelected) => props.setOption1(newSelected ?? "")}
+                onOpen={() => setOption1Open(true)}
+                onClose={() => setOption1Open(false)}
+                id='autocomplete-option1'
+                isOptionEqualToValue={(option, value) => option === value}
+                renderInput={params => (
+                  <TextField
+                    {...params}
+                    label='잠재옵션 첫째줄(결과)'
+                    InputProps={{
+                      ...params.InputProps,
+                    }}
+                  />
+                )}
+              />
             </FormControl>
           </Grid>
           <Grid item sm={12} md={6} xs={6}>
@@ -269,30 +276,34 @@ const TableServerSide = (props: Props) => {
               <TextField size='small'
                 type={'number'}
                 id='optionValue1'
-                label='첫째줄 옵션 값'
+                label='첫째줄 옵션 값(x%이상)'
                 onChange={(e) => props.setOptionValue1(+e.target.value)}
+                InputProps={{endAdornment: <InputAdornment position='end'>%</InputAdornment>}}
               />
             </FormControl>
           </Grid>
           <Grid item sm={12} md={6} xs={6}>
             <FormControl fullWidth>
-              <InputLabel id='option2-select'>잠재옵션 둘째줄(결과)</InputLabel>
-              <Select size='small'
+              <Autocomplete
                 fullWidth
-                value={props.option2}
-                id='select-option2'
-                label='잠재옵션 둘째줄(결과)'
-                labelId='option2-select'
-                onChange={(e) => props.setOption2(e.target.value)}
-                inputProps={{ placeholder: '잠재옵션 둘째줄(결과)' }}
-              >
-                <MenuItem key={`option2_`} value=''>잠재옵션 둘째줄(결과)</MenuItem>
-                {
-                  optionList.map((data, index) => (
-                    <MenuItem key={`option2_${index}`} value={data}>{data}</MenuItem>
-                  ))
-                }
-              </Select>
+                size='small'
+                open={option2Open}
+                options={optionList}
+                onChange={(e, newSelected) => props.setOption2(newSelected ?? "")}
+                onOpen={() => setOption2Open(true)}
+                onClose={() => setOption2Open(false)}
+                id='autocomplete-option2'
+                isOptionEqualToValue={(option, value) => option === value}
+                renderInput={params => (
+                  <TextField
+                    {...params}
+                    label='잠재옵션 둘째줄(결과)'
+                    InputProps={{
+                      ...params.InputProps,
+                    }}
+                  />
+                )}
+              />
             </FormControl>
           </Grid>
           <Grid item sm={12} md={6} xs={6}>
@@ -300,30 +311,34 @@ const TableServerSide = (props: Props) => {
               <TextField size='small'
                 type={'number'}
                 id='optionValue2'
-                label='둘째줄 옵션 값'
+                label='둘째줄 옵션 값(x%이상)'
                 onChange={(e) => props.setOptionValue2(+e.target.value)}
+                InputProps={{endAdornment: <InputAdornment position='end'>%</InputAdornment>}}
               />
             </FormControl>
           </Grid>
           <Grid item sm={12} md={6} xs={6}>
             <FormControl fullWidth>
-              <InputLabel id='option3-select'>잠재옵션 셋째줄(결과)</InputLabel>
-              <Select size='small'
+              <Autocomplete
                 fullWidth
-                value={props.option3}
-                id='select-option3'
-                label='잠재옵션 셋째줄(결과)'
-                labelId='option3-select'
-                onChange={(e) => props.setOption3(e.target.value)}
-                inputProps={{ placeholder: '잠재옵션 셋째줄(결과)' }}
-              >
-                <MenuItem key={`option3_`} value=''>잠재옵션 셋째줄(결과)</MenuItem>
-                {
-                  optionList.map((data, index) => (
-                    <MenuItem key={`option3_${index}`} value={data}>{data}</MenuItem>
-                  ))
-                }
-              </Select>
+                size='small'
+                open={option3Open}
+                options={optionList}
+                onChange={(e, newSelected) => props.setOption3(newSelected ?? "")}
+                onOpen={() => setOption3Open(true)}
+                onClose={() => setOption3Open(false)}
+                id='autocomplete-option3'
+                isOptionEqualToValue={(option, value) => option === value}
+                renderInput={params => (
+                  <TextField
+                    {...params}
+                    label='잠재옵션 셋째줄(결과)'
+                    InputProps={{
+                      ...params.InputProps,
+                    }}
+                  />
+                )}
+              />
             </FormControl>
           </Grid>
           <Grid item sm={12} md={6} xs={6}>
@@ -331,8 +346,9 @@ const TableServerSide = (props: Props) => {
               <TextField size='small'
                 type={'number'}
                 id='optionValue3'
-                label='셋째줄 옵션 값'
+                label='셋째줄 옵션 값(x%이상)'
                 onChange={(e) => props.setOptionValue3(+e.target.value)}
+                InputProps={{endAdornment: <InputAdornment position='end'>%</InputAdornment>}}
               />
             </FormControl>
           </Grid>
