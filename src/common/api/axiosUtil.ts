@@ -36,9 +36,12 @@ MsBackendAxios.interceptors.request.use(
       })
     }
 
-    config.headers = {
-      Authorization: "Bearer " + myCookie.backendAccessCookie.getToken(),
+    if (myCookie.backendAccessCookie.getToken() !== null) {
+      config.headers = {
+        Authorization: "Bearer " + myCookie.backendAccessCookie.getToken(),
+      }
     }
+    
 
     return config;
   }
