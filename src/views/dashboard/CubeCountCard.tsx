@@ -91,7 +91,7 @@ const CubeCountCard = (props: Props) => {
                   </Box>
                   <Box sx={{ display: 'flex', alignItems: 'center' }}>
                     <Typography variant='body2'>
-                      {`${o.count} 회`}
+                      {`${o.count.toLocaleString()} 회`}
                     </Typography>
                   </Box>
                 </Box>
