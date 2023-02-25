@@ -139,7 +139,7 @@ const NotificationDropdown = (props: Props) => {
     (profile !== undefined && profile.notificationFlg) ? '/notifications' : null,
     GetNotifications,
     {
-      refreshInterval: 1000 * 5,
+      refreshInterval: 1000 * 60,
       refreshWhenHidden: false,
       refreshWhenOffline: false,
     }
