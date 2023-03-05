@@ -1,7 +1,7 @@
 export interface CubeHistoryResponse {
     id: string
     targetItem: string
-    cubeType: CubeType
+    cubeType: string
     beforeOption1: string
     beforeOption2: string
     beforeOption3: string
@@ -14,7 +14,7 @@ export interface CubeHistoryResponse {
 
 export interface CubeEventRecordResponse {
     category: string
-    cubeType: CubeType
+    cubeType: string
     count: number
 }
 

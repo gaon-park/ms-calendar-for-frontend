@@ -112,6 +112,7 @@ const RecordDashboardCommon = () => {
                 { name: "블랙 큐브", data: black },
                 { name: "에디셔널 큐브", data: additional }
             ])
+            console.log(res)
         }
     }, [wholeData])
 
