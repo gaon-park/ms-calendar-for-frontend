@@ -74,7 +74,7 @@ const RecordDashboardCommon = () => {
   const [options, setOptions] = useState<ApexOptions>(initialData)
   const [series, setSeries] = useState<SeryType[]>([])
 
-  const url = '/dashboards/record/personal'
+  const url = '/dashboards/analytics/personal'
 
   const swrOptions = {
     revalidateIfStale: false,

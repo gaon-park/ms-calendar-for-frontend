@@ -18,10 +18,6 @@ const navigation = (): VerticalNavItemsType => {
           path: '/dashboards/analytics/personal'
         },
         {
-          title: '전체 데이터 검색',
-          path: '/dashboards/record/common'
-        },
-        {
           title: '내 데이터 검색',
           path: '/dashboards/record/personal'
         },

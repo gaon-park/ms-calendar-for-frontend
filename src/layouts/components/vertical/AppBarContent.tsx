@@ -26,7 +26,7 @@ const shortcuts: ShortcutsType[] = [
     url: '/',
     title: '대시보드',
     icon: 'mdi:chart-pie',
-    subtitle: '큐브 이벤트 검색'
+    subtitle: '큐브 이벤트 대시보드'
   },
   {
     title: '캘린더',

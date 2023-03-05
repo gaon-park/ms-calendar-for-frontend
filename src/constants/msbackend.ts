@@ -34,7 +34,6 @@ const PUT_API_SCHEDULE_REFUSE = "/api/schedule/refuse" as const;
 const PUT_API_SCHEDULE_DELETE = "/api/schedule/delete" as const;
 const PUT_API_SCHEDULE_ACCEPT = "/api/schedule/accept" as const;
 
-const GET_DASHBOARD_FOR_ITEM_TABLE = "/api/dashboard/for-item" as const;
 const GET_DASHBOARD_FOR_ITEM_TABLE_PERSONAL = "/api/dashboard/personal/for-item" as const;
 
 const GET_ITEM_FILTER_OPTIONS = "/api/dashboard/item-options" as const;
@@ -82,7 +81,6 @@ export const MS_BACKEND_API_PATH = {
   PUT_API_SCHEDULE_DELETE,
   PUT_API_SCHEDULE_ACCEPT,
 
-  GET_DASHBOARD_FOR_ITEM_TABLE,
   GET_DASHBOARD_FOR_ITEM_TABLE_PERSONAL,
 
   GET_ITEM_FILTER_OPTIONS,

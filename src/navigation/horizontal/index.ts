@@ -18,11 +18,6 @@ const navigation = (): HorizontalNavItemsType => {
           path: '/dashboards/analytics/personal'
         },
         {
-          title: '전체 데이터 검색',
-          icon: 'mdi:chart-donut',
-          path: '/dashboards/record/common'
-        },
-        {
           title: '내 데이터 검색',
           icon: 'mdi:chart-donut',
           path: '/dashboards/record/personal'

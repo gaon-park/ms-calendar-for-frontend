@@ -37,15 +37,6 @@ export interface ItemDashboardRequest {
     optionValue3: number
 }
 
-export const GetItemDashboard = (req: ItemDashboardRequest) => {
-    return MsBackendAxios.get<CubeHistoryResponse[]>(
-        MS_BACKEND_API_PATH.GET_DASHBOARD_FOR_ITEM_TABLE,
-        {
-            params: req
-        }
-    )
-}
-
 export const GetItemDashboardPersonal = (req: ItemDashboardRequest) => {
     return MsBackendAxios.get<CubeHistoryResponse[]>(
         MS_BACKEND_API_PATH.GET_DASHBOARD_FOR_ITEM_TABLE_PERSONAL,

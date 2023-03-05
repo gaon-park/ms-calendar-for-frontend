@@ -81,7 +81,7 @@ const RecordDashboardCommon = () => {
         revalidateOnReconnect: true
     }
 
-    const url = '/dashboards/record/common'
+    const url = '/dashboards/analytics/common'
 
     const { data: wholeData } = useSWR(
         { url, startDate, endDate },
@@ -118,7 +118,7 @@ const RecordDashboardCommon = () => {
     const [cubeOverview, setCubeOverview] = useState<CubeOverviewResponse>()
 
     const { data: cubeCounts } = useSWR(
-        'dashboards/record/common/cubeOverview',
+        'dashboards/analytics/common/cubeOverview',
         GetCubeOverview,
         swrOptions
     )

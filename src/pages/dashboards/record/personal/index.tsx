@@ -22,7 +22,7 @@ const DashboardPersonal = () => {
   const [optionValue2, setOptionValue2] = useState<number>(0)
   const [optionValue3, setOptionValue3] = useState<number>(0)
 
-  const url = '/dashboards/analytics/personal'
+  const url = '/dashboards/record/personal'
 
   const { data } = useSWR(
     { url, item, cube, option1, option2, option3, optionValue1, optionValue2, optionValue3 },
