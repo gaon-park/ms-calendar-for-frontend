@@ -1,10 +1,9 @@
 // ** React Imports
-import { forwardRef, useEffect, useState } from 'react'
+import { forwardRef, useState } from 'react'
 
 // ** MUI Imports
 import Card from '@mui/material/Card'
 import TextField from '@mui/material/TextField'
-import { useTheme } from '@mui/material/styles'
 import CardHeader from '@mui/material/CardHeader'
 import CardContent from '@mui/material/CardContent'
 import InputAdornment from '@mui/material/InputAdornment'
@@ -84,9 +83,6 @@ const ApexBarChart = (mainProps: Props) => {
   const [itemOpen, setItemOpen] = useState<boolean>(false)
 
   const { itemList, setItem, startDate, endDate, setStartDate, setEndDate, actualData, expectedData } = mainProps
-
-  // ** Hook
-  const theme = useTheme()
 
   const CustomInput = forwardRef((props: PickerProps, ref) => {
     const startDate = props.start !== null ? format(props.start, 'MM/dd/yyyy') : ''
