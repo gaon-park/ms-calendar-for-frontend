@@ -39,3 +39,13 @@ export interface CubeOverviewResponse {
     registeredApiKeyCount: number | null
     counts: CubeCount
 }
+
+export interface GradeUpDashboard {
+    actualRed: number
+    actualBlack: number
+    actualAdditional: number
+
+    expectedRed: number
+    expectedBlack: number
+    expectedAdditional: number
+}

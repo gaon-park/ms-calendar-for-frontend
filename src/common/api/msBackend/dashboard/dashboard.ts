@@ -1,6 +1,6 @@
 import { MsBackendAxios } from "../../axiosUtil";
 import { MS_BACKEND_API_PATH } from "src/constants/msbackend";
-import { CubeOverviewResponse, CubeHistoryResponse, WholeRecordDashboardResponse } from "src/model/dashboard/dashboard";
+import { CubeOverviewResponse, CubeHistoryResponse, WholeRecordDashboardResponse, GradeUpDashboard } from "src/model/dashboard/dashboard";
 
 export const GetCubeOverview = () => {
     return MsBackendAxios.get<CubeOverviewResponse>(
@@ -63,6 +63,35 @@ export const GetWholeRecordDashboard = (req: GetWholeRecordDashboardRequest) => 
 export const GetWholeRecordDashboardPersonal = (req: GetWholeRecordDashboardRequest) => {
     return MsBackendAxios.get<WholeRecordDashboardResponse>(
         MS_BACKEND_API_PATH.GET_WHOLE_RECORD_DASHBOARD_PERSONAL,
+        {
+            params: req
+        }
+    )
+}
+
+interface GradeUpDashboardRequest {
+    startDate: string
+    endDate: string
+}
+
+export const GetGradeUpDashboard = (req: GradeUpDashboardRequest) => {
+    return MsBackendAxios.get<GradeUpDashboard>(
+        MS_BACKEND_API_PATH.GET_GRADE_UP_DASHBOARD,
+        {
+            params: req
+        }
+    )
+}
+
+interface GradeUpDashboardPersonalRequest {
+    item: string
+    startDate: string
+    endDate: string
+}
+
+export const GetGradeUpDashboardPersonal = (req: GradeUpDashboardPersonalRequest) => {
+    return MsBackendAxios.get<GradeUpDashboard>(
+        MS_BACKEND_API_PATH.GET_GRADE_UP_DASHBOARD_PERSONAL,
         {
             params: req
         }

@@ -44,6 +44,9 @@ const GET_WHOLE_RECORD_DASHBOARD_PERSONAL = "/api/dashboard/personal/whole-recor
 const GET_CUBE_OVERVIEW = "/api/dashboard/cube-overview" as const;
 const GET_CUBE_OVERVIEW_PERSONAL = "/api/dashboard/personal/cube-overview" as const;
 
+const GET_GRADE_UP_DASHBOARD = "/api/dashboard/grade-up" as const;
+const GET_GRADE_UP_DASHBOARD_PERSONAL = "/api/dashboard/personal/grade-up" as const;
+
 export const MS_BACKEND_API_PATH = {
   GET_OAUTH2_GOOGLE,
   POST_REISSUE_TOKEN,
@@ -89,4 +92,7 @@ export const MS_BACKEND_API_PATH = {
   GET_WHOLE_RECORD_DASHBOARD_PERSONAL,
   GET_CUBE_OVERVIEW,
   GET_CUBE_OVERVIEW_PERSONAL,
+
+  GET_GRADE_UP_DASHBOARD,
+  GET_GRADE_UP_DASHBOARD_PERSONAL,
 };

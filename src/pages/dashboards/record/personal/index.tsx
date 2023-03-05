@@ -23,17 +23,18 @@ const DashboardPersonal = () => {
   const [optionValue3, setOptionValue3] = useState<number>(0)
 
   const url = '/dashboards/record/personal'
+  const swrOptions = {
+    revalidateIfStale: false,
+    revalidateOnFocus: true,
+    revalidateOnReconnect: true
+  }
 
   const { data } = useSWR(
     { url, item, cube, option1, option2, option3, optionValue1, optionValue2, optionValue3 },
     () => GetItemDashboardPersonal({
       item, cube, option1, option2, option3, optionValue1, optionValue2, optionValue3
     }),
-    {
-      revalidateIfStale: false,
-      revalidateOnFocus: true,
-      revalidateOnReconnect: true
-    }
+    swrOptions
   )
 
   useEffect(() => {
@@ -41,12 +42,6 @@ const DashboardPersonal = () => {
       setRows(data.data)
     }
   }, [data])
-
-  const swrOptions = {
-    revalidateIfStale: false,
-    revalidateOnFocus: true,
-    revalidateOnReconnect: true
-  }
 
   const {data: itemListData} = useSWR(
     url,

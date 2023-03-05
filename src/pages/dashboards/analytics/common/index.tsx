@@ -4,7 +4,7 @@ import { useTheme } from '@mui/material/styles'
 import { ApexOptions } from 'apexcharts'
 import { useEffect, useState } from 'react'
 import ApexChartWrapper from 'src/@core/styles/libs/react-apexcharts'
-import { GetCubeOverview, GetWholeRecordDashboard } from 'src/common/api/msBackend/dashboard/dashboard'
+import { GetCubeOverview, GetGradeUpDashboard, GetWholeRecordDashboard } from 'src/common/api/msBackend/dashboard/dashboard'
 import { useProfile } from 'src/hooks/useProfile'
 import { CubeOverviewResponse } from 'src/model/dashboard/dashboard'
 import ApexBarChart from 'src/views/dashboard/ApexBarChart'
@@ -129,6 +129,31 @@ const RecordDashboardCommon = () => {
         }
     }, [cubeCounts])
 
+    const [startDateForGradeUp, setStartDateForGradeUp] = useState<Date>(new Date('2022-11-25'))
+    const [endDateForGradeUp, setEndDateForGradeUp] = useState<Date>(new Date())
+    const [actualGradeData, setActualGradeData] = useState<number[]>([])
+    const [expectedGradeData, setExpectedGradeData] = useState<number[]>([])
+
+    const gradeUpUrl = '/dashboards/analytics/common/gradeUp'
+    const { data: gradeUpData } = useSWR(
+        { gradeUpUrl, startDateForGradeUp, endDateForGradeUp },
+        () => GetGradeUpDashboard(
+            {
+                startDate: startDateForGradeUp.toISOString().split("T")[0],
+                endDate: endDateForGradeUp.toISOString().split("T")[0]
+            }
+        ),
+        swrOptions
+    )
+
+    useEffect(() => {
+        if (typeof gradeUpData !== 'undefined') {
+            const data = gradeUpData.data
+            setActualGradeData([data.actualRed, data.actualBlack, data.actualAdditional])
+            setExpectedGradeData([data.expectedRed, data.expectedBlack, data.expectedAdditional])
+        }
+    }, [gradeUpData])
+
     return (
         <Grid container spacing={6}>
             <Grid item xs={12}>
@@ -138,7 +163,14 @@ const RecordDashboardCommon = () => {
                 /> : null}
             </Grid>
             <Grid item xs={12}>
-                <ApexBarChart />
+                <ApexBarChart
+                    startDate={startDateForGradeUp}
+                    endDate={endDateForGradeUp}
+                    setStartDate={setStartDateForGradeUp}
+                    setEndDate={setEndDateForGradeUp}
+                    actualData={actualGradeData}
+                    expectedData={expectedGradeData}
+                />
             </Grid>
             <Grid item xs={12}>
                 <ApexChartWrapper>
