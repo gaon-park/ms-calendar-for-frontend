@@ -7,9 +7,9 @@ import ApexChartWrapper from 'src/@core/styles/libs/react-apexcharts'
 import { GetCubeOverview, GetWholeRecordDashboard } from 'src/common/api/msBackend/dashboard/dashboard'
 import { useProfile } from 'src/hooks/useProfile'
 import { CubeOverviewResponse } from 'src/model/dashboard/dashboard'
+import ApexBarChart from 'src/views/dashboard/ApexBarChart'
 import ApexLineChart from 'src/views/dashboard/ApexLineChart'
 import CubeCountCard from 'src/views/dashboard/CubeCountCard'
-import LegandaryGradeUpChart from 'src/views/dashboard/LegendaryGardeUpChart'
 import { SeryType } from 'src/views/pages/user-profile/profile/AboutOverivew'
 
 import useSWR from "swr"
@@ -118,7 +118,7 @@ const RecordDashboardCommon = () => {
     const [cubeOverview, setCubeOverview] = useState<CubeOverviewResponse>()
 
     const { data: cubeCounts } = useSWR(
-        'dashboards/analytics/common/cubeOverview',
+        url + '/cubeOverview',
         GetCubeOverview,
         swrOptions
     )
@@ -138,6 +138,9 @@ const RecordDashboardCommon = () => {
                 /> : null}
             </Grid>
             <Grid item xs={12}>
+                <ApexBarChart />
+            </Grid>
+            <Grid item xs={12}>
                 <ApexChartWrapper>
                     <ApexLineChart
                         startDate={startDate}
@@ -148,9 +151,6 @@ const RecordDashboardCommon = () => {
                         series={series}
                     />
                 </ApexChartWrapper>
-            </Grid>
-            <Grid item xs={12}>
-                <LegandaryGradeUpChart />
             </Grid>
         </Grid>
     )

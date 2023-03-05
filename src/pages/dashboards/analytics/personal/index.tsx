@@ -7,6 +7,7 @@ import ApexChartWrapper from 'src/@core/styles/libs/react-apexcharts'
 import { GetCubeOverviewPersonal, GetWholeRecordDashboardPersonal } from 'src/common/api/msBackend/dashboard/dashboard'
 import { useProfile } from 'src/hooks/useProfile'
 import { CubeOverviewResponse } from 'src/model/dashboard/dashboard'
+import ApexBarChart from 'src/views/dashboard/ApexBarChart'
 import ApexLineChart from 'src/views/dashboard/ApexLineChart'
 import CubeCountCard from 'src/views/dashboard/CubeCountCard'
 import { SeryType } from 'src/views/pages/user-profile/profile/AboutOverivew'
@@ -117,7 +118,7 @@ const RecordDashboardCommon = () => {
   const [cubeOverview, setCubeOverview] = useState<CubeOverviewResponse>()
 
   const { data: cubeCounts } = useSWR(
-    'dashboards/record/personal/cubeOverview',
+    url,
     GetCubeOverviewPersonal,
     swrOptions
   )
@@ -135,6 +136,9 @@ const RecordDashboardCommon = () => {
           cc={cubeOverview.counts}
           registeredApiKeyCount={cubeOverview.registeredApiKeyCount}
         /> : null}
+      </Grid>
+      <Grid item xs={12}>
+        <ApexBarChart />
       </Grid>
       <Grid item xs={12}>
         <ApexChartWrapper>

@@ -30,12 +30,7 @@ interface PickerProps {
   end: Date | number
 }
 
-interface Props {
-  title: string
-  barColor: string
-}
-
-const ApexBarChart = (mainProps: Props) => {
+const ApexBarChart = () => {
   // ** States
   const [endDate, setEndDate] = useState<DateType>(null)
   const [startDate, setStartDate] = useState<DateType>(null)
@@ -45,58 +40,39 @@ const ApexBarChart = (mainProps: Props) => {
 
   const options: ApexOptions = {
     chart: {
-      parentHeightOffset: 0,
-      toolbar: { show: false }
-    },
-    colors: [mainProps.barColor],
-    dataLabels: {
-      formatter: (val: number, opt) => {
-        const goals =
-          opt.w.config.series[opt.seriesIndex].data[opt.dataPointIndex]
-            .goals
-
-        if (goals && goals.length) {
-          return `${val} / ${goals[0].value}`
-        }
-        return val
-      }
+      type: 'bar',
+      height: 430
     },
     plotOptions: {
       bar: {
-        borderRadius: 8,
-        barHeight: '30%',
         horizontal: true,
-        startingShape: 'rounded'
+        dataLabels: {
+          position: 'top',
+        },
       }
     },
-    grid: {
-      borderColor: theme.palette.divider,
-      xaxis: {
-        lines: { show: false }
-      },
-      padding: {
-        top: -10
+    dataLabels: {
+      enabled: true,
+      offsetX: -6,
+      style: {
+        fontSize: '12px',
+        colors: ['#fff']
       }
     },
-    yaxis: {
-      labels: {
-        style: { colors: theme.palette.text.disabled }
-      }
+    stroke: {
+      show: true,
+      width: 1,
+      colors: ['#fff']
+    },
+    tooltip: {
+      shared: true,
+      intersect: false
     },
     xaxis: {
-      axisBorder: { show: false },
-      axisTicks: { color: theme.palette.divider },
-      labels: {
-        style: { colors: theme.palette.text.disabled }
-      }
+      categories: ['레드 큐브', '블랙 큐브', '에디셔널 큐브'],
     },
     legend: {
       show: true,
-      showForSingleSeries: true,
-      customLegendItems: ['Actual', 'Expected'],
-      markers: {
-        fillColors: [mainProps.barColor, '#00E396']
-      }
     }
   }
 
@@ -137,7 +113,7 @@ const ApexBarChart = (mainProps: Props) => {
   return (
     <Card>
       <CardHeader
-        title={mainProps.title}
+        title='레전드리 등급업 확률'
         subheader='아이템 선택 시 해당 아이템에 대한 확률'
         sx={{
           flexDirection: ['column', 'row'],
@@ -147,16 +123,16 @@ const ApexBarChart = (mainProps: Props) => {
         }}
         action={
           <DatePickerWrapper>
-          <DatePicker
-            selectsRange
-            endDate={endDate}
-            id='apexchart-bar'
-            selected={startDate}
-            startDate={startDate}
-            onChange={handleOnChange}
-            placeholderText='Click to select a date'
-            customInput={<CustomInput start={startDate as Date | number} end={endDate as Date | number} />}
-          />
+            <DatePicker
+              selectsRange
+              endDate={endDate}
+              id='apexchart-bar'
+              selected={startDate}
+              startDate={startDate}
+              onChange={handleOnChange}
+              placeholderText='Click to select a date'
+              customInput={<CustomInput start={startDate as Date | number} end={endDate as Date | number} />}
+            />
           </DatePickerWrapper>
         }
       />
@@ -184,52 +160,13 @@ const ApexBarChart = (mainProps: Props) => {
           type='bar'
           height={400}
           options={options}
-          series={[
-            {
-              name: 'Actual',
-              data: [
-                {
-                  x: '2022/11',
-                  y: 44,
-                  goals: [
-                    {
-                      name: 'Expected',
-                      value: 54,
-                      strokeWidth: 5,
-                      strokeHeight: 10,
-                      strokeColor: '#00E396'
-                    }
-                  ]
-                },
-                {
-                  x: '2022/12',
-                  y: 44,
-                  goals: [
-                    {
-                      name: 'Expected',
-                      value: 54,
-                      strokeWidth: 5,
-                      strokeHeight: 10,
-                      strokeColor: '#00E396'
-                    }
-                  ]
-                },
-                {
-                  x: '2023/01',
-                  y: 44,
-                  goals: [
-                    {
-                      name: 'Expected',
-                      value: 54,
-                      strokeWidth: 5,
-                      strokeHeight: 10,
-                      strokeColor: '#00E396'
-                    }
-                  ]
-                },
-              ]
-            }
-          ]}
+          series={[{
+            name: '실제 확률',
+            data: [44, 55, 41]
+          }, {
+            name: '설정 확률',
+            data: [53, 32, 33]
+          }]}
         />
       </CardContent>
     </Card>

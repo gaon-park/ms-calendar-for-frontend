@@ -49,7 +49,7 @@ const DashboardPersonal = () => {
   }
 
   const {data: itemListData} = useSWR(
-    'dashboards/analytics/personal',
+    url,
     GetItemFilterOptionsPersonal,
     swrOptions
   )
