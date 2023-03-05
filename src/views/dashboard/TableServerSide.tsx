@@ -12,20 +12,16 @@ import Autocomplete from '@mui/material/Autocomplete/Autocomplete';
 import ServerSideToolbar from './ServerSideToolbar'
 
 // ** Utils Import
-import { CubeHistoryResponse, CubeType } from 'src/model/dashboard/dashboard'
+import { CubeHistoryResponse } from 'src/model/dashboard/dashboard'
 import CardContent from '@mui/material/CardContent/CardContent'
 import Grid from '@mui/material/Grid/Grid'
 import FormControl from '@mui/material/FormControl/FormControl'
 import TextField from '@mui/material/TextField/TextField'
 import InputAdornment from '@mui/material/InputAdornment/InputAdornment'
 
-const cubeList: CubeType[] = [
-  'SUSANG', 'JANGYIN', 'MYUNGJANG', 'RED', 'BLACK', 'ADDITIONAL'
+const cubeList: string[] = [
+  '수상한 큐브', '장인의 큐브', '명장의 큐브', '레드 큐브', '블랙 큐브', '에디셔널 큐브'
 ]
-
-interface CubeInfo {
-  korean: string
-}
 
 const columns: GridColumns = [
   {
@@ -53,11 +49,11 @@ const columns: GridColumns = [
     headerName: '큐브 종류',
     renderCell: (params: GridRenderCellParams) => (
       <Typography noWrap variant='body2' sx={{ color: 'text.primary', fontWeight: 600 }}>
-        {getCubeInfo(params.row.cubeType).korean}
+        {params.row.cubeType}
       </Typography>
     ),
     valueGetter: (params: GridValueGetterParams) => {
-      return getCubeInfo(params.row.cubeType).korean
+      return params.row.cubeType
     }
   },
   {
@@ -101,12 +97,9 @@ const columns: GridColumns = [
     field: 'item_grade',
     renderCell: (params: GridRenderCellParams) => (
       <Typography variant='body2' sx={{ color: 'text.primary' }}>
-        {getGradeInfo(params.row.potentialOptionGrade)}
+        {params.row.potentialOptionGrade}
       </Typography>
     ),
-    valueGetter: (params: GridValueGetterParams) => {
-      return getGradeInfo(params.row.potentialOptionGrade)
-    }
   },
   {
     flex: 0.05,
@@ -123,41 +116,6 @@ const columns: GridColumns = [
     }
   },
 ]
-
-const getCubeInfo = (type: CubeType): CubeInfo => {
-  let res: CubeInfo
-  if (type === 'SUSANG') res = {
-    korean: '수상한 큐브'
-  }
-  else if (type === 'JANGYIN') res = {
-    korean: '장인의 큐브'
-  }
-  else if (type === 'MYUNGJANG') res = {
-    korean: '명장의 큐브'
-  }
-  else if (type === 'RED') res = {
-    korean: '레드 큐브'
-  }
-  else if (type === 'BLACK') res = {
-    korean: '블랙 큐브'
-  }
-  else res = {
-    korean: '에디셔널 큐브'
-  }
-
-  return res
-}
-
-const getGradeInfo = (value: 'RARE' | 'NORMAL' | 'EPIC' | 'UNIQUE' | 'LEGENDARY') => {
-  let res
-  if (value === 'RARE') res = '레어'
-  else if (value === 'NORMAL') res = '노말'
-  else if (value === 'EPIC') res = '에픽'
-  else if (value === 'UNIQUE') res = '유니크'
-  else res = '레전드리'
-
-  return res
-}
 
 const optionList = [
   'STR', 'DEX', 'LUK', 'INT', '올스탯', '최대 HP', '공격력', '마력', '크리티컬 확률', '데미지', '보스 몬스터 공격 시 데미지', '몬스터 방어율 무시',
@@ -243,7 +201,6 @@ const TableServerSide = (props: Props) => {
                     }}
                   />
                 )}
-                getOptionLabel={(option: CubeType) => getCubeInfo(option).korean}
               />
             </FormControl>
           </Grid>

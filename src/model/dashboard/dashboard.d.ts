@@ -1,5 +1,3 @@
-export type CubeType = 'SUSANG' | 'JANGYIN' | 'MYUNGJANG' | 'RED' | 'BLACK' | 'ADDITIONAL'
-
 export interface CubeHistoryResponse {
     id: string
     targetItem: string
@@ -10,7 +8,7 @@ export interface CubeHistoryResponse {
     afterOption1: string
     afterOption2: string
     afterOption3: string
-    potentialOptionGrade: 'RARE' | 'NORMAL' | 'EPIC' | 'UNIQUE' | 'LEGENDARY'
+    potentialOptionGrade: string
     itemUpgrade: boolean
 }
 

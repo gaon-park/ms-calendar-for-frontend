@@ -103,9 +103,9 @@ const RecordDashboardCommon = () => {
 
             const res = wholeData.data.data
 
-            const red = res.filter((o) => o.cubeType === 'RED').map((o) => o.count)
-            const black = res.filter((o) => o.cubeType === 'BLACK').map((o) => o.count)
-            const additional = res.filter((o) => o.cubeType === 'ADDITIONAL').map((o) => o.count)
+            const red = res.filter((o) => o.cubeType === '레드 큐브').map((o) => o.count)
+            const black = res.filter((o) => o.cubeType === '블랙 큐브').map((o) => o.count)
+            const additional = res.filter((o) => o.cubeType === '에디셔널 큐브').map((o) => o.count)
 
             setSeries([
                 { name: "레드 큐브", data: red },
