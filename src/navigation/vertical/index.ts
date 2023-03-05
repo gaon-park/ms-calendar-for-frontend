@@ -10,20 +10,20 @@ const navigation = (): VerticalNavItemsType => {
       badgeColor: 'error',
       children: [
         {
-          title: '전체 데이터 누적',
-          path: '/dashboards/record/common'
-        },
-        {
-          title: '내 데이터 누적',
-          path: '/dashboards/record/personal'
-        },
-        {
-          title: '전체 큐브 데이터 검색',
+          title: '전체 큐브 데이터 분석',
           path: '/dashboards/analytics/common'
         },
         {
-          title: '내 큐브 데이터 검색',
+          title: '내 큐브 데이터 분석',
           path: '/dashboards/analytics/personal'
+        },
+        {
+          title: '전체 데이터 검색',
+          path: '/dashboards/record/common'
+        },
+        {
+          title: '내 데이터 검색',
+          path: '/dashboards/record/personal'
         },
       ]
     },
