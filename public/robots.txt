@@ -6,4 +6,4 @@ Allow: /
 Host: https://ms-hero.kr
 
 # Sitemaps
-Sitemap: https://ms-hero.kr/sitemap-0.xml
+Sitemap: https://ms-hero.kr/sitemap.xml
