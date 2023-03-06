@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:news="http://www.google.com/schemas/sitemap-news/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml" xmlns:mobile="http://www.google.com/schemas/sitemap-mobile/1.0" xmlns:image="http://www.google.com/schemas/sitemap-image/1.1" xmlns:video="http://www.google.com/schemas/sitemap-video/1.1">
+<url><loc>https://ms-hero.kr/</loc><lastmod>2023-03-06T04:43:15.010Z</lastmod><changefreq>daily</changefreq><priority>0.7</priority></url>
+<url><loc>https://ms-hero.kr/401/</loc><lastmod>2023-03-06T04:43:15.010Z</lastmod><changefreq>daily</changefreq><priority>0.7</priority></url>
+<url><loc>https://ms-hero.kr/apps/calendar/</loc><lastmod>2023-03-06T04:43:15.010Z</lastmod><changefreq>daily</changefreq><priority>0.7</priority></url>
+<url><loc>https://ms-hero.kr/apps/user/list/</loc><lastmod>2023-03-06T04:43:15.010Z</lastmod><changefreq>daily</changefreq><priority>0.7</priority></url>
+<url><loc>https://ms-hero.kr/auth/callback/google/</loc><lastmod>2023-03-06T04:43:15.010Z</lastmod><changefreq>daily</changefreq><priority>0.7</priority></url>
+<url><loc>https://ms-hero.kr/dashboards/analytics/common/</loc><lastmod>2023-03-06T04:43:15.010Z</lastmod><changefreq>daily</changefreq><priority>0.7</priority></url>
+<url><loc>https://ms-hero.kr/dashboards/analytics/personal/</loc><lastmod>2023-03-06T04:43:15.010Z</lastmod><changefreq>daily</changefreq><priority>0.7</priority></url>
+<url><loc>https://ms-hero.kr/dashboards/record/personal/</loc><lastmod>2023-03-06T04:43:15.010Z</lastmod><changefreq>daily</changefreq><priority>0.7</priority></url>
+<url><loc>https://ms-hero.kr/help/</loc><lastmod>2023-03-06T04:43:15.010Z</lastmod><changefreq>daily</changefreq><priority>0.7</priority></url>
+<url><loc>https://ms-hero.kr/login/</loc><lastmod>2023-03-06T04:43:15.010Z</lastmod><changefreq>daily</changefreq><priority>0.7</priority></url>
+<url><loc>https://ms-hero.kr/misc/401-not-authorized/</loc><lastmod>2023-03-06T04:43:15.010Z</lastmod><changefreq>daily</changefreq><priority>0.7</priority></url>
+<url><loc>https://ms-hero.kr/misc/404-not-found/</loc><lastmod>2023-03-06T04:43:15.010Z</lastmod><changefreq>daily</changefreq><priority>0.7</priority></url>
+<url><loc>https://ms-hero.kr/misc/500-server-error/</loc><lastmod>2023-03-06T04:43:15.010Z</lastmod><changefreq>daily</changefreq><priority>0.7</priority></url>
+<url><loc>https://ms-hero.kr/misc/under-maintenance/</loc><lastmod>2023-03-06T04:43:15.010Z</lastmod><changefreq>daily</changefreq><priority>0.7</priority></url>
+<url><loc>https://ms-hero.kr/account-settings/account/</loc><lastmod>2023-03-06T04:43:15.010Z</lastmod><changefreq>daily</changefreq><priority>0.7</priority></url>
+<url><loc>https://ms-hero.kr/account-settings/security/</loc><lastmod>2023-03-06T04:43:15.010Z</lastmod><changefreq>daily</changefreq><priority>0.7</priority></url>
+<url><loc>https://ms-hero.kr/user-profile/profile/</loc><lastmod>2023-03-06T04:43:15.010Z</lastmod><changefreq>daily</changefreq><priority>0.7</priority></url>
+<url><loc>https://ms-hero.kr/user-profile/follow/</loc><lastmod>2023-03-06T04:43:15.010Z</lastmod><changefreq>daily</changefreq><priority>0.7</priority></url>
+<url><loc>https://ms-hero.kr/user-profile/follower/</loc><lastmod>2023-03-06T04:43:15.010Z</lastmod><changefreq>daily</changefreq><priority>0.7</priority></url>
+</urlset>

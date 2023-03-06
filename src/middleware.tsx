@@ -16,6 +16,8 @@ export function middleware(req: NextRequest) {
     req.nextUrl.pathname.startsWith("/auth/callback/google"),
     req.nextUrl.pathname.startsWith("/dashboards/analytics/common"),
     req.nextUrl.pathname.startsWith("/misc/under-maintenance"),
+    req.nextUrl.pathname.startsWith("/sitemap.xml"),
+    req.nextUrl.pathname.startsWith("/sitemap-0.xml"),
     req.nextUrl.pathname === "/"
   ].some((value) => { return value; })
   if (

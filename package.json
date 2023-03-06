@@ -5,6 +5,7 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
+    "postbuild": "next-sitemap",
     "start": "next start",
     "export": "next export",
     "lint": "eslint --fix \"src/**/*.{js,jsx,ts,tsx}\"",
@@ -50,6 +51,7 @@
     "jwt-check-expiry": "^1.0.10",
     "keen-slider": "6.8.3",
     "next": "13.0.0",
+    "next-sitemap": "^4.0.2",
     "nprogress": "0.2.0",
     "payment": "2.4.6",
     "prismjs": "1.29.0",
