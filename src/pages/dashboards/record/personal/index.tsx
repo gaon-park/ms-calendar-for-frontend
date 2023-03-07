@@ -1,7 +1,7 @@
 // ** MUI Imports
 import Grid from '@mui/material/Grid'
 import { useEffect, useState } from 'react'
-import { GetItemDashboardPersonal, GetItemFilterOptionsPersonal } from 'src/common/api/msBackend/dashboard/dashboard'
+import { GetItemDashboardPersonal, GetItemFilterOptionsForSearch } from 'src/common/api/msBackend/dashboard/dashboard'
 import { useProfile } from 'src/hooks/useProfile'
 import { CubeHistoryResponse } from 'src/model/dashboard/dashboard'
 import TableServerSide from 'src/views/dashboard/TableServerSide'
@@ -45,7 +45,7 @@ const DashboardPersonal = () => {
 
   const {data: itemListData} = useSWR(
     url,
-    GetItemFilterOptionsPersonal,
+    GetItemFilterOptionsForSearch,
     swrOptions
   )
 

@@ -4,7 +4,7 @@ import { useTheme } from '@mui/material/styles'
 import { ApexOptions } from 'apexcharts'
 import { useEffect, useState } from 'react'
 import ApexChartWrapper from 'src/@core/styles/libs/react-apexcharts'
-import { GetCubeOverviewPersonal, GetGradeUpDashboardPersonal, GetItemFilterOptionsPersonal, GetWholeRecordDashboardPersonal } from 'src/common/api/msBackend/dashboard/dashboard'
+import { GetCubeOverviewPersonal, GetGradeUpDashboardPersonal, GetItemFilterOptions, GetWholeRecordDashboardPersonal } from 'src/common/api/msBackend/dashboard/dashboard'
 import { useProfile } from 'src/hooks/useProfile'
 import { CubeOverviewResponse } from 'src/model/dashboard/dashboard'
 import ApexBarChart from 'src/views/dashboard/ApexBarChart'
@@ -138,7 +138,7 @@ const RecordDashboardCommon = () => {
 
   const { data: itemListData } = useSWR(
     url + '/item-list',
-    GetItemFilterOptionsPersonal,
+    GetItemFilterOptions,
     swrOptions
   )
 

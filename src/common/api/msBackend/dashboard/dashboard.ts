@@ -14,15 +14,15 @@ export const GetCubeOverviewPersonal = () => {
     )
 }
 
-export const GetItemFilterOptions = () => {
+export const GetItemFilterOptionsForSearch = () => {
     return MsBackendAxios.get<string[]>(
-        MS_BACKEND_API_PATH.GET_ITEM_FILTER_OPTIONS,
+        MS_BACKEND_API_PATH.GET_ITEM_FILTER_OPTIONS_FOR_SEARCH,
     )
 }
 
-export const GetItemFilterOptionsPersonal = () => {
+export const GetItemFilterOptions = () => {
     return MsBackendAxios.get<string[]>(
-        MS_BACKEND_API_PATH.GET_ITEM_FILTER_OPTIONS_PERSONAL,
+        MS_BACKEND_API_PATH.GET_ITEM_FILTER_OPTIONS,
     )
 }
 
