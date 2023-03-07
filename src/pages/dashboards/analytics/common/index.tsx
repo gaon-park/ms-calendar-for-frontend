@@ -4,7 +4,7 @@ import { useTheme } from '@mui/material/styles'
 import { ApexOptions } from 'apexcharts'
 import { useEffect, useState } from 'react'
 import ApexChartWrapper from 'src/@core/styles/libs/react-apexcharts'
-import { GetCubeOverview, GetGradeUpDashboard, GetWholeRecordDashboard } from 'src/common/api/msBackend/dashboard/dashboard'
+import { GetCubeOverview, GetGradeUpDashboardLegendary, GetGradeUpDashboardUnique, GetWholeRecordDashboard } from 'src/common/api/msBackend/dashboard/dashboard'
 import { useProfile } from 'src/hooks/useProfile'
 import { CubeOverviewResponse } from 'src/model/dashboard/dashboard'
 import ApexBarChart from 'src/views/dashboard/ApexBarChart'
@@ -70,8 +70,14 @@ const RecordDashboardCommon = () => {
         }
     }
 
-    const [startDate, setStartDate] = useState<Date>(new Date('2022-11-25'))
-    const [endDate, setEndDate] = useState<Date>(new Date())
+    const now = new Date()
+    const start = new Date(now)
+    start.setMonth(now.getMonth() - 1)
+    const end = new Date(now)
+    end.setDate(now.getDate() - 1)
+
+    const [startDate, setStartDate] = useState<Date>(start)
+    const [endDate, setEndDate] = useState<Date>(end)
     const [options, setOptions] = useState<ApexOptions>(initialData)
     const [series, setSeries] = useState<SeryType[]>([])
 
@@ -112,7 +118,6 @@ const RecordDashboardCommon = () => {
                 { name: "블랙 큐브", data: black },
                 { name: "에디셔널 큐브", data: additional }
             ])
-            console.log(res)
         }
     }, [wholeData])
 
@@ -130,30 +135,57 @@ const RecordDashboardCommon = () => {
         }
     }, [cubeCounts])
 
-    const [startDateForGradeUp, setStartDateForGradeUp] = useState<Date>(new Date('2022-11-25'))
-    const [endDateForGradeUp, setEndDateForGradeUp] = useState<Date>(new Date())
-    const [actualGradeData, setActualGradeData] = useState<number[]>([])
-    const [expectedGradeData, setExpectedGradeData] = useState<number[]>([])
+    const [startDateForGradeUpL, setStartDateForGradeUpL] = useState<Date>(start)
+    const [endDateForGradeUpL, setEndDateForGradeUpL] = useState<Date>(end)
+    const [actualGradeDataL, setActualGradeDataL] = useState<number[]>([])
+    const [expectedGradeDataL, setExpectedGradeDataL] = useState<number[]>([])
 
-    const gradeUpUrl = '/dashboards/analytics/common/gradeUp'
-    const { data: gradeUpData } = useSWR(
-        { gradeUpUrl, startDateForGradeUp, endDateForGradeUp },
-        () => GetGradeUpDashboard(
+    const gradeUpUrlL = '/dashboards/analytics/common/gradeUp/l'
+    const { data: gradeUpDataL } = useSWR(
+        { gradeUpUrlL, startDateForGradeUpL, endDateForGradeUpL },
+        () => GetGradeUpDashboardLegendary(
             {
-                startDate: startDateForGradeUp.toISOString().split("T")[0],
-                endDate: endDateForGradeUp.toISOString().split("T")[0]
+                startDate: startDateForGradeUpL.toISOString().split("T")[0],
+                endDate: endDateForGradeUpL.toISOString().split("T")[0]
             }
         ),
         swrOptions
     )
 
     useEffect(() => {
-        if (typeof gradeUpData !== 'undefined') {
-            const data = gradeUpData.data
-            setActualGradeData([data.actualRed, data.actualBlack, data.actualAdditional])
-            setExpectedGradeData([data.expectedRed, data.expectedBlack, data.expectedAdditional])
+        if (typeof gradeUpDataL !== 'undefined') {
+            const data = gradeUpDataL.data
+            setActualGradeDataL([data.actualRed, data.actualBlack, data.actualAdditional])
+            setExpectedGradeDataL([data.expectedRed, data.expectedBlack, data.expectedAdditional])
+
+            console.log(actualGradeDataL)
         }
-    }, [gradeUpData])
+    }, [gradeUpDataL])
+
+    const [startDateForGradeUpU, setStartDateForGradeUpU] = useState<Date>(start)
+    const [endDateForGradeUpU, setEndDateForGradeUpU] = useState<Date>(end)
+    const [actualGradeDataU, setActualGradeDataU] = useState<number[]>([])
+    const [expectedGradeDataU, setExpectedGradeDataU] = useState<number[]>([])
+
+    const gradeUpUrlU = '/dashboards/analytics/common/gradeUp/u'
+    const { data: gradeUpDataU } = useSWR(
+        { gradeUpUrlU, startDateForGradeUpU, endDateForGradeUpU },
+        () => GetGradeUpDashboardUnique(
+            {
+                startDate: startDateForGradeUpU.toISOString().split("T")[0],
+                endDate: endDateForGradeUpU.toISOString().split("T")[0]
+            }
+        ),
+        swrOptions
+    )
+
+    useEffect(() => {
+        if (typeof gradeUpDataU !== 'undefined') {
+            const data = gradeUpDataU.data
+            setActualGradeDataU([data.actualRed, data.actualBlack, data.actualAdditional])
+            setExpectedGradeDataU([data.expectedRed, data.expectedBlack, data.expectedAdditional])
+        }
+    }, [gradeUpDataU])
 
     return (
         <Grid container spacing={6}>
@@ -163,14 +195,26 @@ const RecordDashboardCommon = () => {
                     registeredApiKeyCount={cubeOverview.registeredApiKeyCount}
                 /> : null}
             </Grid>
-            <Grid item xs={12}>
+            <Grid item xs={6}>
                 <ApexBarChart
-                    startDate={startDateForGradeUp}
-                    endDate={endDateForGradeUp}
-                    setStartDate={setStartDateForGradeUp}
-                    setEndDate={setEndDateForGradeUp}
-                    actualData={actualGradeData}
-                    expectedData={expectedGradeData}
+                    title={'레전드리 등급업 확률'}
+                    startDate={startDateForGradeUpL}
+                    endDate={endDateForGradeUpL}
+                    setStartDate={setStartDateForGradeUpL}
+                    setEndDate={setEndDateForGradeUpL}
+                    actualData={actualGradeDataL}
+                    expectedData={expectedGradeDataL}
+                />
+            </Grid>
+            <Grid item xs={6}>
+                <ApexBarChart
+                    title={'유니크 등급업 확률'}
+                    startDate={startDateForGradeUpU}
+                    endDate={endDateForGradeUpU}
+                    setStartDate={setStartDateForGradeUpU}
+                    setEndDate={setEndDateForGradeUpU}
+                    actualData={actualGradeDataU}
+                    expectedData={expectedGradeDataU}
                 />
             </Grid>
             <Grid item xs={12}>

@@ -5,7 +5,7 @@ import { useState } from 'react'
 import Card from '@mui/material/Card'
 import Typography from '@mui/material/Typography'
 import CardHeader from '@mui/material/CardHeader'
-import { DataGrid, GridColumns, GridRenderCellParams, GridRowClassNameParams, GridRowParams, GridValueGetterParams } from '@mui/x-data-grid'
+import { DataGrid, GridColumns, GridRenderCellParams, GridRowClassNameParams, GridValueGetterParams } from '@mui/x-data-grid'
 import Autocomplete from '@mui/material/Autocomplete/Autocomplete';
 
 // ** Custom Components

@@ -68,6 +68,7 @@ const options: ApexOptions = {
 }
 
 interface Props {
+  title: string
   itemList?: string[]
   setItem?: (o: string) => void
   startDate: Date
@@ -121,7 +122,7 @@ const ApexBarChart = (mainProps: Props) => {
   return (
     <Card>
       <CardHeader
-        title='레전드리 등급업 확률'
+        title={mainProps.title}
         subheader={setItem !== undefined ? '아이템 선택 시 해당 아이템에 대한 확률' : null}
         sx={{
           flexDirection: ['column', 'row'],
