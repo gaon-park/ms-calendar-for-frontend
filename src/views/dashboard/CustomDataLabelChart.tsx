@@ -72,7 +72,7 @@ const ApexDonutChart = (mainProps: Props) => {
   return (
     <Card>
       <CardHeader
-        title={cubeType + '이벤트'}
+        title={cubeType + ' 이벤트'}
         subheader={'상위 5개 아이템'}
         subheaderTypographyProps={{ sx: { color: theme => `${theme.palette.text.disabled} !important` } }}
         action={
