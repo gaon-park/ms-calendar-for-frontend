@@ -75,6 +75,12 @@ const ApexDonutChart = (mainProps: Props) => {
         title={`${cubeType} 이벤트`}
         subheader={'상위 5개 아이템'}
         subheaderTypographyProps={{ sx: { color: theme => `${theme.palette.text.disabled} !important` } }}
+        sx={{
+          flexDirection: ['column', 'row'],
+          alignItems: ['flex-start', 'center'],
+          '& .MuiCardHeader-action': { mb: 0 },
+          '& .MuiCardHeader-content': { mb: [2, 0] }
+        }}
         action={
           <DatePickerWrapper>
             <DatePicker
