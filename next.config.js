@@ -16,7 +16,7 @@ module.exports = withTM({
   trailingSlash: true,
   reactStrictMode: false,
   experimental: {
-    esmExternals: false
+    esmExternals: true
   },
   webpack: config => {
     config.resolve.alias = {
