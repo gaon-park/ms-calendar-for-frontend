@@ -49,6 +49,9 @@ const GET_GRADE_UP_DASHBOARD_UNIQUE = "/api/dashboard/grade-up/unique" as const;
 const GET_GRADE_UP_DASHBOARD_PERSONAL_LEGENDARY = "/api/dashboard/personal/grade-up/legendary" as const;
 const GET_GRADE_UP_DASHBOARD_PERSONAL_UNIQUE = "/api/dashboard/personal/grade-up/unique" as const;
 
+const GET_TOP_FIVE = "/api/dashboard/top-five" as const;
+const GET_TOP_FIVE_PERSONAL = "/api/dashboard/personal/top-five" as const;
+
 export const MS_BACKEND_API_PATH = {
   GET_OAUTH2_GOOGLE,
   POST_REISSUE_TOKEN,
@@ -98,5 +101,8 @@ export const MS_BACKEND_API_PATH = {
   GET_GRADE_UP_DASHBOARD_LEGENDARY,
   GET_GRADE_UP_DASHBOARD_UNIQUE,
   GET_GRADE_UP_DASHBOARD_PERSONAL_LEGENDARY,
-  GET_GRADE_UP_DASHBOARD_PERSONAL_UNIQUE
+  GET_GRADE_UP_DASHBOARD_PERSONAL_UNIQUE,
+
+  GET_TOP_FIVE,
+  GET_TOP_FIVE_PERSONAL,
 };

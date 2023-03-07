@@ -47,3 +47,8 @@ export interface GradeUpDashboard {
     expectedBlack: number
     expectedAdditional: number
 }
+
+export interface ItemCount {
+    item: string
+    count: number
+}

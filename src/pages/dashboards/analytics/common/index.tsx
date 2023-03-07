@@ -4,12 +4,13 @@ import { useTheme } from '@mui/material/styles'
 import { ApexOptions } from 'apexcharts'
 import { useEffect, useState } from 'react'
 import ApexChartWrapper from 'src/@core/styles/libs/react-apexcharts'
-import { GetCubeOverview, GetGradeUpDashboardLegendary, GetGradeUpDashboardUnique, GetWholeRecordDashboard } from 'src/common/api/msBackend/dashboard/dashboard'
+import { GetCubeOverview, GetGradeUpDashboardLegendary, GetGradeUpDashboardUnique, GetTopFive, GetWholeRecordDashboard } from 'src/common/api/msBackend/dashboard/dashboard'
 import { useProfile } from 'src/hooks/useProfile'
 import { CubeOverviewResponse } from 'src/model/dashboard/dashboard'
 import ApexBarChart from 'src/views/dashboard/ApexBarChart'
 import ApexLineChart from 'src/views/dashboard/ApexLineChart'
 import CubeCountCard from 'src/views/dashboard/CubeCountCard'
+import ItemCountChart from 'src/views/dashboard/ItemCountChart'
 import { SeryType } from 'src/views/pages/user-profile/profile/AboutOverivew'
 
 import useSWR from "swr"
@@ -157,8 +158,6 @@ const RecordDashboardCommon = () => {
             const data = gradeUpDataL.data
             setActualGradeDataL([data.actualRed, data.actualBlack, data.actualAdditional])
             setExpectedGradeDataL([data.expectedRed, data.expectedBlack, data.expectedAdditional])
-
-            console.log(actualGradeDataL)
         }
     }, [gradeUpDataL])
 
@@ -215,6 +214,12 @@ const RecordDashboardCommon = () => {
                     setEndDate={setEndDateForGradeUpU}
                     actualData={actualGradeDataU}
                     expectedData={expectedGradeDataU}
+                />
+            </Grid>
+            <Grid item xs={12} md={12}>
+                <ItemCountChart 
+                    urlBase='/dashboard/analytics/common'
+                    apiCall={GetTopFive}
                 />
             </Grid>
             <Grid item xs={12}>

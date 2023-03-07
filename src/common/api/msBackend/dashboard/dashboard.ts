@@ -1,6 +1,6 @@
 import { MsBackendAxios } from "../../axiosUtil";
 import { MS_BACKEND_API_PATH } from "src/constants/msbackend";
-import { CubeOverviewResponse, CubeHistoryResponse, WholeRecordDashboardResponse, GradeUpDashboard } from "src/model/dashboard/dashboard";
+import { CubeOverviewResponse, CubeHistoryResponse, WholeRecordDashboardResponse, GradeUpDashboard, ItemCount } from "src/model/dashboard/dashboard";
 
 export const GetCubeOverview = () => {
     return MsBackendAxios.get<CubeOverviewResponse>(
@@ -110,6 +110,30 @@ export const GetGradeUpDashboardPersonalLegendary = (req: GradeUpDashboardPerson
 export const GetGradeUpDashboardPersonalUnique = (req: GradeUpDashboardPersonalRequest) => {
     return MsBackendAxios.get<GradeUpDashboard>(
         MS_BACKEND_API_PATH.GET_GRADE_UP_DASHBOARD_PERSONAL_UNIQUE,
+        {
+            params: req
+        }
+    )
+}
+
+export interface TopFiveDashboardRequest {
+    cubeType: string
+    startDate: string
+    endDate: string
+}
+
+export const GetTopFive = (req: TopFiveDashboardRequest) => {
+    return MsBackendAxios.get<ItemCount[]>(
+        MS_BACKEND_API_PATH.GET_TOP_FIVE,
+        {
+            params: req
+        }
+    )
+}
+
+export const GetTopFivePersonal = (req: TopFiveDashboardRequest) => {
+    return MsBackendAxios.get<ItemCount[]>(
+        MS_BACKEND_API_PATH.GET_TOP_FIVE_PERSONAL,
         {
             params: req
         }
