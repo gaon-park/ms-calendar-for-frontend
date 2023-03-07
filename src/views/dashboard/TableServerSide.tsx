@@ -5,7 +5,7 @@ import { useState } from 'react'
 import Card from '@mui/material/Card'
 import Typography from '@mui/material/Typography'
 import CardHeader from '@mui/material/CardHeader'
-import { DataGrid, GridColumns, GridRenderCellParams, GridValueGetterParams } from '@mui/x-data-grid'
+import { DataGrid, GridColumns, GridRenderCellParams, GridRowClassNameParams, GridRowParams, GridValueGetterParams } from '@mui/x-data-grid'
 import Autocomplete from '@mui/material/Autocomplete/Autocomplete';
 
 // ** Custom Components
@@ -27,7 +27,6 @@ const columns: GridColumns = [
   {
     flex: 0.15,
     sortable: false,
-    filterable: false,
     minWidth: 120,
     field: 'item',
     headerName: '아이템',
@@ -43,7 +42,6 @@ const columns: GridColumns = [
   {
     flex: 0.05,
     sortable: false,
-    filterable: false,
     minWidth: 100,
     field: 'cube',
     headerName: '큐브 종류',
@@ -59,7 +57,6 @@ const columns: GridColumns = [
   {
     flex: 0.2,
     sortable: false,
-    filterable: false,
     minWidth: 200,
     field: 'before_option',
     headerName: '이전 옵션',
@@ -75,7 +72,6 @@ const columns: GridColumns = [
   {
     flex: 0.2,
     sortable: false,
-    filterable: false,
     field: 'after_option',
     minWidth: 200,
     headerName: '이후 옵션',
@@ -91,7 +87,6 @@ const columns: GridColumns = [
   {
     flex: 0.05,
     sortable: false,
-    filterable: false,
     minWidth: 100,
     headerName: '아이템 등급',
     field: 'item_grade',
@@ -121,7 +116,7 @@ const optionList = [
   'STR', 'DEX', 'LUK', 'INT', '올스탯', '최대 HP', '공격력', '마력', '크리티컬 확률', '데미지', '보스 몬스터 공격 시 데미지', '몬스터 방어율 무시',
   '크리티컬 데미지', '모든 스킬의 재사용 대기시간',
   '메소 획득량', '아이템 드롭률'
-]
+].sort()
 
 interface Props {
   rows: CubeHistoryResponse[]
@@ -152,8 +147,14 @@ const TableServerSide = (props: Props) => {
   const [option3Open, setOption3Open] = useState<boolean>(false)
 
   return (
-    <Card>
-      <CardHeader title='큐브 사용 내역 (결과 최대 1000건, 2022/11/25~어제 데이터 조회가능)' />
+    <Card sx={{
+      '& .cold': {
+        backgroundColor: '#b9d5ff91',
+        color: '#1a3e72',
+      },
+    }}>
+      <CardHeader title='큐브 사용 내역 (최대 1000건, 최대 3개월 전 ~ 어제 데이터 조회가능)'
+        subheader='각 열은 필터링이 가능합니다. 등급업 조회 시, o 필터를 걸어주세요' />
       <CardContent>
         <Grid container spacing={6}>
           <Grid item sm={12} md={6} xs={6}>
@@ -235,7 +236,7 @@ const TableServerSide = (props: Props) => {
                 id='optionValue1'
                 label='첫째줄 옵션 값(x%이상)'
                 onChange={(e) => props.setOptionValue1(+e.target.value)}
-                InputProps={{endAdornment: <InputAdornment position='end'>%</InputAdornment>}}
+                InputProps={{ endAdornment: <InputAdornment position='end'>%</InputAdornment> }}
               />
             </FormControl>
           </Grid>
@@ -270,7 +271,7 @@ const TableServerSide = (props: Props) => {
                 id='optionValue2'
                 label='둘째줄 옵션 값(x%이상)'
                 onChange={(e) => props.setOptionValue2(+e.target.value)}
-                InputProps={{endAdornment: <InputAdornment position='end'>%</InputAdornment>}}
+                InputProps={{ endAdornment: <InputAdornment position='end'>%</InputAdornment> }}
               />
             </FormControl>
           </Grid>
@@ -305,7 +306,7 @@ const TableServerSide = (props: Props) => {
                 id='optionValue3'
                 label='셋째줄 옵션 값(x%이상)'
                 onChange={(e) => props.setOptionValue3(+e.target.value)}
-                InputProps={{endAdornment: <InputAdornment position='end'>%</InputAdornment>}}
+                InputProps={{ endAdornment: <InputAdornment position='end'>%</InputAdornment> }}
               />
             </FormControl>
           </Grid>
@@ -327,6 +328,10 @@ const TableServerSide = (props: Props) => {
           baseButton: {
             variant: 'outlined'
           },
+        }}
+        getRowClassName={(params: GridRowClassNameParams<any>) => {
+          if (params.row.itemUpgrade) return 'cold'
+          else return ''
         }}
       />
     </Card>
