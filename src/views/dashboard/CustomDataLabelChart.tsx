@@ -18,7 +18,7 @@ import DatePicker from 'react-datepicker'
 import Icon from 'src/@core/components/icon'
 
 interface Props {
-  title: string
+  cubeType: string
   options: ApexOptions
   series: number[]
   startDate: Date
@@ -33,7 +33,7 @@ interface PickerProps {
 }
 
 const ApexDonutChart = (mainProps: Props) => {
-  const { title, options, series, startDate, endDate, setStartDate, setEndDate } = mainProps
+  const { cubeType, options, series, startDate, endDate, setStartDate, setEndDate } = mainProps
 
   const CustomInput = forwardRef((props: PickerProps, ref) => {
     const startDate = props.start !== null ? format(props.start, 'MM/dd/yyyy') : ''
@@ -72,7 +72,8 @@ const ApexDonutChart = (mainProps: Props) => {
   return (
     <Card>
       <CardHeader
-        title={title}
+        title={cubeType + '이벤트'}
+        subheader={'상위 5개 아이템'}
         subheaderTypographyProps={{ sx: { color: theme => `${theme.palette.text.disabled} !important` } }}
         action={
           <DatePickerWrapper>

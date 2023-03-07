@@ -151,7 +151,7 @@ const ItemCountChart = (mainProps: Props) => {
         (typeof labelForTopFiveR !== 'undefined' && labelForTopFiveR.length > 0)
           ? <Grid item xs={12} md={6}>
             <CustomDataLabelChart
-              title={'레드 큐브 시행 횟수 상위 5개 아이템'}
+              cubeType={'레드 큐브'}
               options={{ ...options, labels: labelForTopFiveR }}
               series={seriesForTopFiveR}
               startDate={startDateForTopFiveR}
@@ -166,7 +166,7 @@ const ItemCountChart = (mainProps: Props) => {
         (typeof labelForTopFiveB !== 'undefined' && labelForTopFiveB.length > 0)
           ? <Grid item xs={12} md={6}>
             <CustomDataLabelChart
-              title={'블랙 큐브 시행 횟수 상위 5개 아이템'}
+              cubeType={'블랙 큐브'}
               options={{ ...options, labels: labelForTopFiveB }}
               series={seriesForTopFiveB}
               startDate={startDateForTopFiveB}
@@ -181,7 +181,7 @@ const ItemCountChart = (mainProps: Props) => {
         (typeof labelForTopFiveA !== 'undefined' && labelForTopFiveA.length > 0)
           ? <Grid item xs={12} md={6}>
             <CustomDataLabelChart
-              title={'에디셔널 큐브 시행 횟수 상위 5개 아이템'}
+              cubeType={'에디셔널 큐브'}
               options={{ ...options, labels: labelForTopFiveA }}
               series={seriesForTopFiveA}
               startDate={startDateForTopFiveA}
