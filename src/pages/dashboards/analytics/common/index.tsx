@@ -195,7 +195,7 @@ const RecordDashboardCommon = () => {
                     registeredApiKeyCount={cubeOverview.registeredApiKeyCount}
                 /> : null}
             </Grid>
-            <Grid item xs={6}>
+            <Grid item xs={12} md={6}>
                 <ApexBarChart
                     title={'레전드리 등급업 확률'}
                     startDate={startDateForGradeUpL}
@@ -206,7 +206,7 @@ const RecordDashboardCommon = () => {
                     expectedData={expectedGradeDataL}
                 />
             </Grid>
-            <Grid item xs={6}>
+            <Grid item xs={12} md={6}>
                 <ApexBarChart
                     title={'유니크 등급업 확률'}
                     startDate={startDateForGradeUpU}
