@@ -153,7 +153,7 @@ const TableServerSide = (props: Props) => {
         color: '#1a3e72',
       },
     }}>
-      <CardHeader title='큐브 사용 내역 (최대 1000건, 최대 3개월 전 ~ 어제 데이터 조회가능)'
+      <CardHeader title='큐브 사용 내역 (최대 1000건, 최대 1개월 전 ~ 어제 데이터 조회가능)'
         subheader='각 열은 필터링이 가능합니다. 등급업 조회 시, o 필터를 걸어주세요' />
       <CardContent>
         <Grid container spacing={6}>
