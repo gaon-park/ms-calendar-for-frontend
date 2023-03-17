@@ -146,6 +146,8 @@ const TableServerSide = (props: Props) => {
   const [option2Open, setOption2Open] = useState<boolean>(false)
   const [option3Open, setOption3Open] = useState<boolean>(false)
 
+  const {option1, option2, option3} = props
+
   return (
     <Card sx={{
       '& .cold': {
@@ -154,7 +156,7 @@ const TableServerSide = (props: Props) => {
       },
     }}>
       <CardHeader title='큐브 사용 내역 (최대 1000건, 최대 1개월 전 ~ 어제 데이터 조회가능)'
-        subheader='각 열은 필터링이 가능합니다. 등급업 조회 시, o 필터를 걸어주세요' />
+        subheader='검색 예시: 공격력 9% 보공 80% 지정, 등급업 조회 필터링 값: o' />
       <CardContent>
         <Grid container spacing={6}>
           <Grid item sm={12} md={6} xs={6}>
@@ -211,7 +213,7 @@ const TableServerSide = (props: Props) => {
                 fullWidth
                 size='small'
                 open={option1Open}
-                options={optionList}
+                options={optionList.filter(o => (o !== option2 && o !== option3))}
                 onChange={(e, newSelected) => props.setOption1(newSelected ?? "")}
                 onOpen={() => setOption1Open(true)}
                 onClose={() => setOption1Open(false)}
@@ -220,7 +222,7 @@ const TableServerSide = (props: Props) => {
                 renderInput={params => (
                   <TextField
                     {...params}
-                    label='잠재옵션 첫째줄(결과)'
+                    label='잠재옵션(결과)'
                     InputProps={{
                       ...params.InputProps,
                     }}
@@ -234,7 +236,7 @@ const TableServerSide = (props: Props) => {
               <TextField size='small'
                 type={'number'}
                 id='optionValue1'
-                label='첫째줄 옵션 값(x%이상)'
+                label='옵션 값(x%이상)'
                 onChange={(e) => props.setOptionValue1(+e.target.value)}
                 InputProps={{ endAdornment: <InputAdornment position='end'>%</InputAdornment> }}
               />
@@ -246,7 +248,7 @@ const TableServerSide = (props: Props) => {
                 fullWidth
                 size='small'
                 open={option2Open}
-                options={optionList}
+                options={optionList.filter(o => (o !== option1 && o !== option3))}
                 onChange={(e, newSelected) => props.setOption2(newSelected ?? "")}
                 onOpen={() => setOption2Open(true)}
                 onClose={() => setOption2Open(false)}
@@ -255,7 +257,7 @@ const TableServerSide = (props: Props) => {
                 renderInput={params => (
                   <TextField
                     {...params}
-                    label='잠재옵션 둘째줄(결과)'
+                    label='잠재옵션(결과)'
                     InputProps={{
                       ...params.InputProps,
                     }}
@@ -269,7 +271,7 @@ const TableServerSide = (props: Props) => {
               <TextField size='small'
                 type={'number'}
                 id='optionValue2'
-                label='둘째줄 옵션 값(x%이상)'
+                label='옵션 값(x%이상)'
                 onChange={(e) => props.setOptionValue2(+e.target.value)}
                 InputProps={{ endAdornment: <InputAdornment position='end'>%</InputAdornment> }}
               />
@@ -281,7 +283,7 @@ const TableServerSide = (props: Props) => {
                 fullWidth
                 size='small'
                 open={option3Open}
-                options={optionList}
+                options={optionList.filter(o => (o !== option1 && o !== option2))}
                 onChange={(e, newSelected) => props.setOption3(newSelected ?? "")}
                 onOpen={() => setOption3Open(true)}
                 onClose={() => setOption3Open(false)}
@@ -290,7 +292,7 @@ const TableServerSide = (props: Props) => {
                 renderInput={params => (
                   <TextField
                     {...params}
-                    label='잠재옵션 셋째줄(결과)'
+                    label='잠재옵션(결과)'
                     InputProps={{
                       ...params.InputProps,
                     }}
@@ -304,7 +306,7 @@ const TableServerSide = (props: Props) => {
               <TextField size='small'
                 type={'number'}
                 id='optionValue3'
-                label='셋째줄 옵션 값(x%이상)'
+                label='옵션 값(x%이상)'
                 onChange={(e) => props.setOptionValue3(+e.target.value)}
                 InputProps={{ endAdornment: <InputAdornment position='end'>%</InputAdornment> }}
               />
