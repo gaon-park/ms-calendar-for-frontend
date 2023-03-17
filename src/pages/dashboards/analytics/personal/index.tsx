@@ -77,7 +77,7 @@ const RecordDashboardCommon = () => {
   const end = new Date(now)
   end.setDate(now.getDate() - 1)
 
-  const [startDate, setStartDate] = useState<Date>(start)
+  const [startDate, setStartDate] = useState<Date>(new Date(2022, 10, 25))
   const [endDate, setEndDate] = useState<Date>(end)
   const [options, setOptions] = useState<ApexOptions>(initialData)
   const [series, setSeries] = useState<SeryType[]>([])
