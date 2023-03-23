@@ -123,10 +123,18 @@ const RecordDashboardCommon = () => {
   }, [wholeData])
 
   const [cubeOverview, setCubeOverview] = useState<CubeOverviewResponse>()
+  const cubeOverviewUrl = url + '/personal/cubeOverview'
+  const [startDateForOverview, setStartDateForOverview] = useState<Date>(start)
+  const [endDateForOverview, setEndDateForOverview] = useState<Date>(end)
 
   const { data: cubeCounts } = useSWR(
-    url,
-    GetCubeOverviewPersonal,
+    { cubeOverviewUrl, startDateForOverview, endDateForOverview },
+    () => GetCubeOverviewPersonal(
+      {
+        startDate: startDateForOverview.toISOString().split("T")[0],
+        endDate: endDateForOverview.toISOString().split("T")[0]
+      }
+    ),
     swrOptions
   )
 
@@ -206,10 +214,15 @@ const RecordDashboardCommon = () => {
   return (
     <Grid container spacing={6}>
       <Grid item xs={12}>
-        {cubeOverview !== undefined ? <CubeCountCard
-          cc={cubeOverview.counts}
-          registeredApiKeyCount={cubeOverview.registeredApiKeyCount}
-        /> : null}
+        {cubeOverview !== undefined ?
+          <CubeCountCard
+            cc={cubeOverview.counts}
+            registeredApiKeyCount={cubeOverview.registeredApiKeyCount}
+            startDate={startDateForOverview}
+            endDate={endDateForOverview}
+            setStartDate={setStartDateForOverview}
+            setEndDate={setEndDateForOverview}
+          /> : null}
       </Grid>
       <Grid item xs={12} md={6}>
         <ApexBarChart

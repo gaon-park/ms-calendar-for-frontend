@@ -2,15 +2,26 @@ import { MsBackendAxios } from "../../axiosUtil";
 import { MS_BACKEND_API_PATH } from "src/constants/msbackend";
 import { CubeOverviewResponse, CubeHistoryResponse, WholeRecordDashboardResponse, GradeUpDashboard, ItemCount } from "src/model/dashboard/dashboard";
 
-export const GetCubeOverview = () => {
+export interface CubeOverviewRequest {
+    startDate: string
+    endDate: string
+}
+
+export const GetCubeOverview = (req: CubeOverviewRequest) => {
     return MsBackendAxios.get<CubeOverviewResponse>(
         MS_BACKEND_API_PATH.GET_CUBE_OVERVIEW,
+        {
+            params: req
+        }
     )
 }
 
-export const GetCubeOverviewPersonal = () => {
+export const GetCubeOverviewPersonal = (req: CubeOverviewRequest) => {
     return MsBackendAxios.get<CubeOverviewResponse>(
         MS_BACKEND_API_PATH.GET_CUBE_OVERVIEW_PERSONAL,
+        {
+            params: req
+        }
     )
 }
 
