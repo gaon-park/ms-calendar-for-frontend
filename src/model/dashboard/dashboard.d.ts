@@ -38,14 +38,18 @@ export interface CubeOverviewResponse {
     counts: CubeCount
 }
 
-export interface GradeUpDashboard {
-    actualRed: number
-    actualBlack: number
-    actualAdditional: number
+export interface GradeUp {
+    actual: number
+    expected: number
+}
 
-    expectedRed: number
-    expectedBlack: number
-    expectedAdditional: number
+export interface GradeUpDashboard {
+    susang: GradeUp
+    jangyin: GradeUp
+    myungjang: GradeUp
+    red: GradeUp
+    black: GradeUp
+    additional: GradeUp
 }
 
 export interface ItemCount {

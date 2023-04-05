@@ -187,8 +187,8 @@ const RecordDashboardCommon = () => {
   useEffect(() => {
     if (typeof gradeUpDataL !== 'undefined') {
       const data = gradeUpDataL.data
-      setActualGradeDataL([data.actualRed, data.actualBlack, data.actualAdditional])
-      setExpectedGradeDataL([data.expectedRed, data.expectedBlack, data.expectedAdditional])
+      setActualGradeDataL([data.myungjang.actual, data.red.actual, data.black.actual, data.additional.actual])
+      setExpectedGradeDataL([data.myungjang.expected, data.red.expected, data.black.expected, data.additional.expected])
     }
   }, [gradeUpDataL])
 
@@ -210,11 +210,40 @@ const RecordDashboardCommon = () => {
   useEffect(() => {
     if (typeof gradeUpDataU !== 'undefined') {
       const data = gradeUpDataU.data
-      setActualGradeDataU([data.actualRed, data.actualBlack, data.actualAdditional])
-      setExpectedGradeDataU([data.expectedRed, data.expectedBlack, data.expectedAdditional])
+      setActualGradeDataU([data.jangyin.actual, data.myungjang.actual, data.red.actual, data.black.actual, data.additional.actual])
+      setExpectedGradeDataU([data.jangyin.expected, data.myungjang.expected, data.red.expected, data.black.expected, data.additional.expected])
     }
   }, [gradeUpDataU])
 
+  const [itemE, setItemE] = useState<string>('')
+  const [startDateForGradeUpE, setStartDateForGradeUpE] = useState<Date>(start)
+  const [endDateForGradeUpE, setEndDateForGradeUpE] = useState<Date>(end)
+  const [actualGradeDataE, setActualGradeDataE] = useState<number[]>([])
+  const [expectedGradeDataE, setExpectedGradeDataE] = useState<number[]>([])
+
+  const gradeUpUrlE = '/dashboards/analytics/common/gradeUp/e'
+  const { data: gradeUpDataE } = useSWR(
+    { gradeUpUrlE, startDateForGradeUpE, endDateForGradeUpE },
+    () => GetGradeUpDashboardPersonal(
+      {
+        item: itemE,
+        startDate: startDateForGradeUpE.toISOString().split("T")[0],
+        endDate: endDateForGradeUpE.toISOString().split("T")[0],
+        grade: "레어",
+        nextGrade: "에픽"
+      }
+    ),
+    swrOptions
+  )
+
+  useEffect(() => {
+    if (typeof gradeUpDataE !== 'undefined') {
+      const data = gradeUpDataE.data
+      setActualGradeDataE([data.susang.actual, data.jangyin.actual, data.myungjang.actual, data.red.actual, data.black.actual, data.additional.actual])
+      setExpectedGradeDataE([data.susang.expected, data.jangyin.expected, data.myungjang.expected, data.red.expected, data.black.expected, data.additional.expected])
+    }
+  }, [gradeUpDataE])
+  
   return (
     <Grid container spacing={6}>
       <Grid item xs={12}>
@@ -237,6 +266,7 @@ const RecordDashboardCommon = () => {
           endDate={endDateForGradeUpL}
           setStartDate={setStartDateForGradeUpL}
           setEndDate={setEndDateForGradeUpL}
+          categories={['명장의 큐브', '레드 큐브', '블랙 큐브', '에디셔널 큐브']}
           actualData={actualGradeDataL}
           expectedData={expectedGradeDataL}
         />
@@ -250,8 +280,23 @@ const RecordDashboardCommon = () => {
           endDate={endDateForGradeUpU}
           setStartDate={setStartDateForGradeUpU}
           setEndDate={setEndDateForGradeUpU}
+          categories={['장인의 큐브', '명장의 큐브', '레드 큐브', '블랙 큐브', '에디셔널 큐브']}
           actualData={actualGradeDataU}
           expectedData={expectedGradeDataU}
+        />
+      </Grid>
+      <Grid item xs={12} md={12}>
+        <ApexBarChart
+          title={'에픽 등급업 확률'}
+          itemList={itemList}
+          setItem={setItemE}
+          startDate={startDateForGradeUpE}
+          endDate={endDateForGradeUpE}
+          setStartDate={setStartDateForGradeUpE}
+          setEndDate={setEndDateForGradeUpE}
+          categories={['수상한 큐브', '장인의 큐브', '명장의 큐브', '레드 큐브', '블랙 큐브', '에디셔널 큐브']}
+          actualData={actualGradeDataE}
+          expectedData={expectedGradeDataE}
         />
       </Grid>
       <Grid item xs={12} md={12}>

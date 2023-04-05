@@ -29,7 +29,7 @@ interface PickerProps {
 const options: ApexOptions = {
   chart: {
     type: 'bar',
-    height: 430
+    height: 800
   },
   plotOptions: {
     bar: {
@@ -41,13 +41,13 @@ const options: ApexOptions = {
   },
   dataLabels: {
     enabled: true,
-    offsetX: -6,
+    offsetX: 50,
     style: {
-      fontSize: '12px',
-      colors: ['#fff']
+      fontSize: '11px',
+      colors: ['#304758']
     },
     formatter: (val: number) => {
-      return val.toFixed(3) + '%'
+      return val.toFixed(4) + '%'
     },
   },
   stroke: {
@@ -60,7 +60,7 @@ const options: ApexOptions = {
     intersect: false
   },
   xaxis: {
-    categories: ['레드 큐브', '블랙 큐브', '에디셔널 큐브'],
+    categories: [],
   },
   legend: {
     show: true,
@@ -77,6 +77,7 @@ interface Props {
   setEndDate: (o: Date) => void
   actualData: number[]
   expectedData: number[]
+  categories: string[]
 }
 
 const ApexBarChart = (mainProps: Props) => {
@@ -170,7 +171,7 @@ const ApexBarChart = (mainProps: Props) => {
         <ReactApexcharts
           type='bar'
           height={400}
-          options={options}
+          options={{ ...options, xaxis: { categories: mainProps.categories } }}
           series={[{
             name: '실제 확률',
             data: actualData
