@@ -223,7 +223,7 @@ const RecordDashboardCommon = () => {
 
   const gradeUpUrlE = '/dashboards/analytics/common/gradeUp/e'
   const { data: gradeUpDataE } = useSWR(
-    { gradeUpUrlE, startDateForGradeUpE, endDateForGradeUpE },
+    { gradeUpUrlE, startDateForGradeUpE, endDateForGradeUpE, itemE },
     () => GetGradeUpDashboardPersonal(
       {
         item: itemE,
@@ -243,7 +243,7 @@ const RecordDashboardCommon = () => {
       setExpectedGradeDataE([data.susang.expected, data.jangyin.expected, data.myungjang.expected, data.red.expected, data.black.expected, data.additional.expected])
     }
   }, [gradeUpDataE])
-  
+
   return (
     <Grid container spacing={6}>
       <Grid item xs={12}>
