@@ -83,20 +83,13 @@ export const GetWholeRecordDashboardPersonal = (req: GetWholeRecordDashboardRequ
 interface GradeUpDashboardRequest {
     startDate: string
     endDate: string
+    grade: string
+    nextGrade: string
 }
 
-export const GetGradeUpDashboardLegendary = (req: GradeUpDashboardRequest) => {
+export const GetGradeUpDashboard = (req: GradeUpDashboardRequest) => {
     return MsBackendAxios.get<GradeUpDashboard>(
-        MS_BACKEND_API_PATH.GET_GRADE_UP_DASHBOARD_LEGENDARY,
-        {
-            params: req
-        }
-    )
-}
-
-export const GetGradeUpDashboardUnique = (req: GradeUpDashboardRequest) => {
-    return MsBackendAxios.get<GradeUpDashboard>(
-        MS_BACKEND_API_PATH.GET_GRADE_UP_DASHBOARD_UNIQUE,
+        MS_BACKEND_API_PATH.GET_GRADE_UP_DASHBOARD,
         {
             params: req
         }
@@ -107,20 +100,13 @@ interface GradeUpDashboardPersonalRequest {
     item: string
     startDate: string
     endDate: string
+    grade: string
+    nextGrade: string
 }
 
-export const GetGradeUpDashboardPersonalLegendary = (req: GradeUpDashboardPersonalRequest) => {
+export const GetGradeUpDashboardPersonal = (req: GradeUpDashboardPersonalRequest) => {
     return MsBackendAxios.get<GradeUpDashboard>(
-        MS_BACKEND_API_PATH.GET_GRADE_UP_DASHBOARD_PERSONAL_LEGENDARY,
-        {
-            params: req
-        }
-    )
-}
-
-export const GetGradeUpDashboardPersonalUnique = (req: GradeUpDashboardPersonalRequest) => {
-    return MsBackendAxios.get<GradeUpDashboard>(
-        MS_BACKEND_API_PATH.GET_GRADE_UP_DASHBOARD_PERSONAL_UNIQUE,
+        MS_BACKEND_API_PATH.GET_GRADE_UP_DASHBOARD_PERSONAL,
         {
             params: req
         }

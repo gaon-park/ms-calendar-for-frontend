@@ -4,7 +4,7 @@ import { useTheme } from '@mui/material/styles'
 import { ApexOptions } from 'apexcharts'
 import { useEffect, useState } from 'react'
 import ApexChartWrapper from 'src/@core/styles/libs/react-apexcharts'
-import { GetCubeOverview, GetGradeUpDashboardLegendary, GetGradeUpDashboardUnique, GetTopFive, GetWholeRecordDashboard } from 'src/common/api/msBackend/dashboard/dashboard'
+import { GetCubeOverview, GetGradeUpDashboard, GetTopFive, GetWholeRecordDashboard } from 'src/common/api/msBackend/dashboard/dashboard'
 import { useProfile } from 'src/hooks/useProfile'
 import { CubeOverviewResponse } from 'src/model/dashboard/dashboard'
 import ApexBarChart from 'src/views/dashboard/ApexBarChart'
@@ -153,10 +153,12 @@ const RecordDashboardCommon = () => {
     const gradeUpUrlL = '/dashboards/analytics/common/gradeUp/l'
     const { data: gradeUpDataL } = useSWR(
         { gradeUpUrlL, startDateForGradeUpL, endDateForGradeUpL },
-        () => GetGradeUpDashboardLegendary(
+        () => GetGradeUpDashboard(
             {
                 startDate: startDateForGradeUpL.toISOString().split("T")[0],
-                endDate: endDateForGradeUpL.toISOString().split("T")[0]
+                endDate: endDateForGradeUpL.toISOString().split("T")[0],
+                grade: "유니크",
+                nextGrade: "레전드리"
             }
         ),
         swrOptions
@@ -178,10 +180,12 @@ const RecordDashboardCommon = () => {
     const gradeUpUrlU = '/dashboards/analytics/common/gradeUp/u'
     const { data: gradeUpDataU } = useSWR(
         { gradeUpUrlU, startDateForGradeUpU, endDateForGradeUpU },
-        () => GetGradeUpDashboardUnique(
+        () => GetGradeUpDashboard(
             {
                 startDate: startDateForGradeUpU.toISOString().split("T")[0],
-                endDate: endDateForGradeUpU.toISOString().split("T")[0]
+                endDate: endDateForGradeUpU.toISOString().split("T")[0],
+                grade: "에픽",
+                nextGrade: "유니크"
             }
         ),
         swrOptions
