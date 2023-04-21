@@ -26,7 +26,6 @@ import { useProfile } from 'src/hooks/useProfile'
 const TabCubeInfo = () => {
   const [apiKey, setApiKey] = useState<ApiKeyResponse | null>(null)
   const { profile } = useProfile()
-
   const { data } = useSWR(
     'api-key', GetApiKey, {
     revalidateIfStale: false,

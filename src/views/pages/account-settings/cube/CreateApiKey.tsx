@@ -10,7 +10,7 @@ import FormControl from '@mui/material/FormControl'
 // ** Third Party Imports
 import Typography from '@mui/material/Typography/Typography'
 import Link from '@mui/material/Link/Link'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { PostApiKey } from 'src/common/api/msBackend/user/profile'
 import Dialog from '@mui/material/Dialog/Dialog'
 import DialogContent from '@mui/material/DialogContent/DialogContent'
@@ -19,15 +19,18 @@ import Icon from 'src/@core/components/icon'
 import Box from '@mui/material/Box/Box'
 import { useRouter } from 'next/router'
 
+// ** MUI Imports
+import CircularProgress from '@mui/material/CircularProgress'
+
 const CreateApiKeyCard = () => {
   const [apiKey, setApiKey] = useState<string>('')
   const [resultMessage, setResultMessage] = useState<string>('')
   const [result, setResult] = useState<boolean>(true)
+  const [isLoading, setIsLoading] = useState<boolean>(false)
   const [savedDialogOpen, setSavedDialogOpen] = useState<boolean>(false)
   const [btnDisable, setBtnDisable] = useState<boolean>(false)
 
   const router = useRouter()
-
   const onSubmit = async () => {
     setBtnDisable(true)
     await PostApiKey({ apiKey })
@@ -44,6 +47,14 @@ const CreateApiKeyCard = () => {
         setBtnDisable(false)
       })
   }
+
+  useEffect(() => {
+    if (btnDisable) {
+      setIsLoading(true)
+    } else {
+      setIsLoading(false)
+    }
+  }, [btnDisable])
 
   const handleSavedDialogClose = () => setSavedDialogOpen(false)
 
@@ -84,6 +95,14 @@ const CreateApiKeyCard = () => {
           </Grid>
         </CardContent>
       </Card>
+      <Grid item xs={12} sx={{ pt: theme => `${theme.spacing(4)} !important` }}>
+        {isLoading ? (
+          <Box sx={{ mt: 6, display: 'flex', alignItems: 'center', flexDirection: 'column' }}>
+            <CircularProgress sx={{ mb: 4 }} />
+            <Typography>등록중입니다....</Typography>
+          </Box>
+        ) : null}
+      </Grid>
       <Dialog fullWidth maxWidth='xs' open={savedDialogOpen} onClose={handleSavedDialogClose}>
         <DialogContent>
           <Box

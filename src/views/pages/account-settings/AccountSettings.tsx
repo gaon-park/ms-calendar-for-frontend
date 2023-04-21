@@ -43,7 +43,7 @@ const TabList = styled(MuiTabList)<TabListProps>(({ theme }) => ({
   }
 }))
 
-const AccountSettings = ({ tab }: { tab: string}) => {
+const AccountSettings = ({ tab }: { tab: string }) => {
   // ** State
   const [activeTab, setActiveTab] = useState<string>(tab)
   const [isLoading, setIsLoading] = useState<boolean>(false)
