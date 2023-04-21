@@ -223,7 +223,7 @@ const GradeUpChart = (mainProps: Props) => {
         <ReactApexcharts
           type='bar'
           height={400}
-          options={{ ...options, xaxis: { categories: mainProps.categories } }}
+          options={{ ...options, xaxis: { categories: categories } }}
           series={[{
             name: '실제 확률',
             data: actualData

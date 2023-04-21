@@ -1,7 +1,8 @@
 // ** React Imports
-import { forwardRef } from 'react'
+import { forwardRef, useEffect, useState } from 'react'
 
 // ** MUI Imports
+import { useTheme } from '@mui/material/styles'
 import Card from '@mui/material/Card'
 import TextField from '@mui/material/TextField'
 import CardHeader from '@mui/material/CardHeader'
@@ -19,6 +20,11 @@ import Icon from 'src/@core/components/icon'
 // ** Component Import
 import ReactApexcharts from 'src/@core/components/react-apexcharts'
 import DatePickerWrapper from 'src/@core/styles/libs/react-datepicker'
+import { GetWholeRecordDashboardRequest } from 'src/common/api/msBackend/dashboard/dashboard'
+
+import useSWR from "swr"
+import { AxiosResponse } from 'axios'
+import { WholeRecordDashboardResponse } from 'src/model/dashboard/dashboard'
 
 interface PickerProps {
   start: Date | number
@@ -31,15 +37,114 @@ interface SeryType {
 }
 
 interface MainProps {
-  startDate: Date
-  endDate: Date
-  setStartDate: (o: Date) => void
-  setEndDate: (o: Date) => void
-  options: ApexOptions
-  series: SeryType[]
+  url: string
+  api: (req: GetWholeRecordDashboardRequest) => Promise<AxiosResponse<WholeRecordDashboardResponse, any>>
+}
+
+const areaColors = {
+  red: '#FF8C90',
+  black: '#9C9FA4',
+  additional: '#93DD5C'
 }
 
 const ApexAreaChart = (mainProps: MainProps) => {
+  // ** Hook
+  const theme = useTheme()
+
+  const initialData: ApexOptions = {
+    chart: {
+      height: 350,
+      type: 'line',
+      zoom: {
+        enabled: false
+      },
+    },
+    dataLabels: {
+      enabled: false
+    },
+    legend: {
+      position: 'top',
+      horizontalAlign: 'left',
+      labels: { colors: theme.palette.text.secondary },
+      markers: {
+        offsetY: 1,
+        offsetX: -3
+      },
+      itemMargin: {
+        vertical: 3,
+        horizontal: 10
+      }
+    },
+    markers: {
+      size: 0,
+      hover: {
+        sizeOffset: 6
+      }
+    },
+    colors: [areaColors.red, areaColors.black, areaColors.additional],
+    xaxis: {
+      axisBorder: { show: false },
+      axisTicks: { color: theme.palette.divider },
+      crosshairs: {
+        stroke: { color: theme.palette.divider }
+      },
+      labels: {
+        style: { colors: theme.palette.text.disabled }
+      },
+      categories: []
+    }
+  }
+
+  const {url, api} = mainProps
+
+  const now = new Date()
+  const start = new Date(now)
+  start.setMonth(now.getMonth() - 1)
+  const end = new Date(now)
+  end.setDate(now.getDate() - 1)
+
+  const [startDate, setStartDate] = useState<Date>(new Date(2022, 11, 25))
+  const [endDate, setEndDate] = useState<Date>(end)
+  const [options, setOptions] = useState<ApexOptions>(initialData)
+  const [series, setSeries] = useState<SeryType[]>([])
+
+  const swrOptions = {
+    revalidateIfStale: false,
+    revalidateOnFocus: true,
+    revalidateOnReconnect: true
+  }
+
+  const { data } = useSWR(
+    { url, startDate, endDate },
+    () => api({
+      startDate: startDate.toISOString().split("T")[0],
+      endDate: endDate.toISOString().split("T")[0]
+    }),
+    swrOptions
+  )
+
+  useEffect(() => {
+    if (typeof data !== 'undefined') {
+      const categories = data.data.categories
+      setOptions({
+        ...initialData, xaxis: {
+          ...initialData.xaxis, categories: categories
+        }
+      })
+
+      const res = data.data.data
+
+      const red = res.filter((o) => o.cubeType === '레드 큐브').map((o) => o.count)
+      const black = res.filter((o) => o.cubeType === '블랙 큐브').map((o) => o.count)
+      const additional = res.filter((o) => o.cubeType === '에디셔널 큐브').map((o) => o.count)
+
+      setSeries([
+        { name: "레드 큐브", data: red },
+        { name: "블랙 큐브", data: black },
+        { name: "에디셔널 큐브", data: additional }
+      ])
+    }
+  }, [data])
 
   const CustomInput = forwardRef((props: PickerProps, ref) => {
     const startDate = props.start !== null ? format(props.start, 'MM/dd/yyyy') : ''
@@ -71,14 +176,14 @@ const ApexAreaChart = (mainProps: MainProps) => {
 
   const handleOnChange = (dates: any) => {
     const [start, end] = dates
-    mainProps.setStartDate(start)
-    mainProps.setEndDate(end)
+    setStartDate(start)
+    setEndDate(end)
   }
 
   return (
     <Card>
       <CardHeader
-        title='전체 기록'
+        title='선형 그래프'
         subheader='2022/11/25부터 어제까지의 집계된 모든 큐브 데이터 검색 가능(선택 기간이 4개월 이상인 경우, 달별 데이터로 조회합니다)'
         subheaderTypographyProps={{ sx: { color: theme => `${theme.palette.text.disabled} !important` } }}
         sx={{
@@ -91,19 +196,19 @@ const ApexAreaChart = (mainProps: MainProps) => {
           <DatePickerWrapper>
             <DatePicker
               selectsRange
-              endDate={mainProps.endDate}
+              endDate={endDate}
               id='apexchart-area'
-              selected={mainProps.startDate}
-              startDate={mainProps.startDate}
+              selected={startDate}
+              startDate={startDate}
               onChange={handleOnChange}
               placeholderText='기간 선택'
-              customInput={<CustomInput start={mainProps.startDate as Date | number} end={mainProps.endDate as Date | number} />}
+              customInput={<CustomInput start={startDate as Date | number} end={endDate as Date | number} />}
             />
           </DatePickerWrapper>
         }
       />
       <CardContent>
-        <ReactApexcharts type='line' height={400} options={mainProps.options} series={mainProps.series} />
+        <ReactApexcharts type='line' height={400} options={options} series={series} />
       </CardContent>
     </Card>
   )

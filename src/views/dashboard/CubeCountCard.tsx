@@ -3,7 +3,7 @@ import Card from "@mui/material/Card/Card"
 import CardContent from "@mui/material/CardContent/CardContent"
 import Avatar from '@mui/material/Avatar'
 import Typography from "@mui/material/Typography/Typography"
-import { CubeCount, CubeOverviewResponse } from "src/model/dashboard/dashboard"
+import { CubeOverviewResponse } from "src/model/dashboard/dashboard"
 import Grid from "@mui/material/Grid/Grid"
 import { CardHeader } from "@mui/material"
 import { forwardRef, useEffect, useState } from "react"
