@@ -4,12 +4,11 @@ import { useTheme } from '@mui/material/styles'
 import { ApexOptions } from 'apexcharts'
 import { useEffect, useState } from 'react'
 import ApexChartWrapper from 'src/@core/styles/libs/react-apexcharts'
-import { GetCubeOverview, GetGradeUpDashboard, GetTopFive, GetWholeRecordDashboard } from 'src/common/api/msBackend/dashboard/dashboard'
+import { GetGradeUpDashboard, GetTopFive, GetWholeRecordDashboard, GradeUpDashboardRequest } from 'src/common/api/msBackend/dashboard/dashboard'
 import { useProfile } from 'src/hooks/useProfile'
-import { CubeOverviewResponse } from 'src/model/dashboard/dashboard'
-import ApexBarChart from 'src/views/dashboard/ApexBarChart'
 import ApexLineChart from 'src/views/dashboard/ApexLineChart'
 import CubeCountCard from 'src/views/dashboard/CubeCountCard'
+import GradeUpChart from 'src/views/dashboard/GradeUpChart'
 import ItemCountChart from 'src/views/dashboard/ItemCountChart'
 import { SeryType } from 'src/views/pages/user-profile/profile/AboutOverivew'
 
@@ -122,159 +121,75 @@ const RecordDashboardCommon = () => {
         }
     }, [wholeData])
 
-    const [cubeOverview, setCubeOverview] = useState<CubeOverviewResponse>()
-
-    const cubeOverviewUrl = url + '/cubeOverview'
-    const [startDateForOverview, setStartDateForOverview] = useState<Date>(start)
-    const [endDateForOverview, setEndDateForOverview] = useState<Date>(end)
-
-    const { data: cubeCounts } = useSWR(
-        { cubeOverviewUrl, startDateForOverview, endDateForOverview },
-        () => GetCubeOverview(
-            {
-                startDate: startDateForOverview.toISOString().split("T")[0],
-                endDate: endDateForOverview.toISOString().split("T")[0]
-            }
-        ),
-        swrOptions
-    )
-
-    useEffect(() => {
-        if (typeof cubeCounts !== 'undefined') {
-            setCubeOverview(cubeCounts.data)
-        }
-    }, [cubeCounts])
-
-    const [startDateForGradeUpL, setStartDateForGradeUpL] = useState<Date>(start)
-    const [endDateForGradeUpL, setEndDateForGradeUpL] = useState<Date>(end)
-    const [actualGradeDataL, setActualGradeDataL] = useState<number[]>([])
-    const [expectedGradeDataL, setExpectedGradeDataL] = useState<number[]>([])
-
-    const gradeUpUrlL = '/dashboards/analytics/common/gradeUp/l'
-    const { data: gradeUpDataL } = useSWR(
-        { gradeUpUrlL, startDateForGradeUpL, endDateForGradeUpL },
-        () => GetGradeUpDashboard(
-            {
-                startDate: startDateForGradeUpL.toISOString().split("T")[0],
-                endDate: endDateForGradeUpL.toISOString().split("T")[0],
-                grade: "유니크",
-                nextGrade: "레전드리"
-            }
-        ),
-        swrOptions
-    )
-
-    useEffect(() => {
-        if (typeof gradeUpDataL !== 'undefined') {
-            const data = gradeUpDataL.data
-            setActualGradeDataL([data.myungjang.actual, data.red.actual, data.black.actual, data.additional.actual])
-            setExpectedGradeDataL([data.myungjang.expected, data.red.expected, data.black.expected, data.additional.expected])
-        }
-    }, [gradeUpDataL])
-
-    const [startDateForGradeUpU, setStartDateForGradeUpU] = useState<Date>(start)
-    const [endDateForGradeUpU, setEndDateForGradeUpU] = useState<Date>(end)
-    const [actualGradeDataU, setActualGradeDataU] = useState<number[]>([])
-    const [expectedGradeDataU, setExpectedGradeDataU] = useState<number[]>([])
-
-    const gradeUpUrlU = '/dashboards/analytics/common/gradeUp/u'
-    const { data: gradeUpDataU } = useSWR(
-        { gradeUpUrlU, startDateForGradeUpU, endDateForGradeUpU },
-        () => GetGradeUpDashboard(
-            {
-                startDate: startDateForGradeUpU.toISOString().split("T")[0],
-                endDate: endDateForGradeUpU.toISOString().split("T")[0],
-                grade: "에픽",
-                nextGrade: "유니크"
-            }
-        ),
-        swrOptions
-    )
-
-    useEffect(() => {
-        if (typeof gradeUpDataU !== 'undefined') {
-            const data = gradeUpDataU.data
-            setActualGradeDataU([data.jangyin.actual, data.myungjang.actual, data.red.actual, data.black.actual, data.additional.actual])
-            setExpectedGradeDataU([data.jangyin.expected, data.myungjang.expected, data.red.expected, data.black.expected, data.additional.expected])
-        }
-    }, [gradeUpDataU])
-
-    const [startDateForGradeUpE, setStartDateForGradeUpE] = useState<Date>(start)
-    const [endDateForGradeUpE, setEndDateForGradeUpE] = useState<Date>(end)
-    const [actualGradeDataE, setActualGradeDataE] = useState<number[]>([])
-    const [expectedGradeDataE, setExpectedGradeDataE] = useState<number[]>([])
-
-    const gradeUpUrlE = '/dashboards/analytics/common/gradeUp/e'
-    const { data: gradeUpDataE } = useSWR(
-        { gradeUpUrlE, startDateForGradeUpE, endDateForGradeUpE },
-        () => GetGradeUpDashboard(
-            {
-                startDate: startDateForGradeUpE.toISOString().split("T")[0],
-                endDate: endDateForGradeUpE.toISOString().split("T")[0],
-                grade: "레어",
-                nextGrade: "에픽"
-            }
-        ),
-        swrOptions
-    )
-
-    useEffect(() => {
-        if (typeof gradeUpDataE !== 'undefined') {
-            const data = gradeUpDataE.data
-            setActualGradeDataE([data.susang.actual, data.jangyin.actual, data.myungjang.actual, data.red.actual, data.black.actual, data.additional.actual])
-            setExpectedGradeDataE([data.susang.expected, data.jangyin.expected, data.myungjang.expected, data.red.expected, data.black.expected, data.additional.expected])
-        }
-    }, [gradeUpDataE])
-
     return (
         <Grid container spacing={6}>
             <Grid item xs={12}>
-                {cubeOverview !== undefined ?
-                    <CubeCountCard
-                        cc={cubeOverview.counts}
-                        registeredApiKeyCount={cubeOverview.registeredApiKeyCount}
-                        startDate={startDateForOverview}
-                        endDate={endDateForOverview}
-                        setStartDate={setStartDateForOverview}
-                        setEndDate={setEndDateForOverview}
-                    /> : null}
+                <CubeCountCard />
             </Grid>
             <Grid item xs={12} md={6}>
-                <ApexBarChart
-                    title={'레전드리 등급업 확률'}
-                    startDate={startDateForGradeUpL}
-                    endDate={endDateForGradeUpL}
-                    setStartDate={setStartDateForGradeUpL}
-                    setEndDate={setEndDateForGradeUpL}
-                    categories={['명장의 큐브', '레드 큐브', '블랙 큐브', '에디셔널 큐브']}
-                    actualData={actualGradeDataL}
-                    expectedData={expectedGradeDataL}
+                <GradeUpChart
+                    title={'수상한 큐브 등급업 확률'}
+                    categories={['에픽']}
+                    cubeType={'수상한 큐브'}
+                    swrUrl={'/dashboards/analytics/common/susang'}
+                    api={(req: GradeUpDashboardRequest) => GetGradeUpDashboard(req)}
                 />
             </Grid>
             <Grid item xs={12} md={6}>
-                <ApexBarChart
-                    title={'유니크 등급업 확률'}
-                    startDate={startDateForGradeUpU}
-                    endDate={endDateForGradeUpU}
-                    setStartDate={setStartDateForGradeUpU}
-                    setEndDate={setEndDateForGradeUpU}
-                    categories={['장인의 큐브', '명장의 큐브', '레드 큐브', '블랙 큐브', '에디셔널 큐브']}
-                    actualData={actualGradeDataU}
-                    expectedData={expectedGradeDataU}
+                <GradeUpChart
+                    title={'수상한 에디셔널 큐브 등급업 확률'}
+                    categories={['에픽']}
+                    cubeType={'수상한 에디셔널 큐브'}
+                    swrUrl={'/dashboards/analytics/common/susangAddi'}
+                    api={(req: GradeUpDashboardRequest) => GetGradeUpDashboard(req)}
                 />
             </Grid>
-            <Grid item xs={12} md={12}>
-                <ApexBarChart
-                    title={'에픽 등급업 확률'}
-                    startDate={startDateForGradeUpE}
-                    endDate={endDateForGradeUpE}
-                    setStartDate={setStartDateForGradeUpE}
-                    setEndDate={setEndDateForGradeUpE}
-                    categories={['수상한 큐브', '장인의 큐브', '명장의 큐브', '레드 큐브', '블랙 큐브', '에디셔널 큐브']}
-                    actualData={actualGradeDataE}
-                    expectedData={expectedGradeDataE}
+            <Grid item xs={12} md={6}>
+                <GradeUpChart
+                    title={'장인의 큐브 등급업 확률'}
+                    categories={['에픽', '유니크']}
+                    cubeType={'장인의 큐브'}
+                    swrUrl={'/dashboards/analytics/common/jangyin'}
+                    api={(req: GradeUpDashboardRequest) => GetGradeUpDashboard(req)}
                 />
             </Grid>
+            <Grid item xs={12} md={6}>
+                <GradeUpChart
+                    title={'명장의 큐브 등급업 확률'}
+                    categories={['에픽', '유니크', '레전드리']}
+                    cubeType={'명장의 큐브'}
+                    swrUrl={'/dashboards/analytics/common/myungjang'}
+                    api={(req: GradeUpDashboardRequest) => GetGradeUpDashboard(req)}
+                />
+            </Grid>
+            <Grid item xs={12} md={6}>
+                <GradeUpChart
+                    title={'레드 큐브 등급업 확률'}
+                    categories={['에픽', '유니크', '레전드리']}
+                    cubeType={'레드 큐브'}
+                    swrUrl={'/dashboards/analytics/common/red'}
+                    api={(req: GradeUpDashboardRequest) => GetGradeUpDashboard(req)}
+                />
+            </Grid>
+            <Grid item xs={12} md={6}>
+                <GradeUpChart
+                    title={'블랙 큐브 등급업 확률'}
+                    categories={['에픽', '유니크', '레전드리']}
+                    cubeType={'블랙 큐브'}
+                    swrUrl={'/dashboards/analytics/common/black'}
+                    api={(req: GradeUpDashboardRequest) => GetGradeUpDashboard(req)}
+                />
+            </Grid>
+            <Grid item xs={12} md={6}>
+                <GradeUpChart
+                    title={'에디셔널 큐브 등급업 확률'}
+                    categories={['에픽', '유니크', '레전드리']}
+                    cubeType={'에디셔널 큐브'}
+                    swrUrl={'/dashboards/analytics/common/additional'}
+                    api={(req: GradeUpDashboardRequest) => GetGradeUpDashboard(req)}
+                />
+            </Grid>
+
             <Grid item xs={12} md={12}>
                 <ItemCountChart
                     urlBase='/dashboard/analytics/common'

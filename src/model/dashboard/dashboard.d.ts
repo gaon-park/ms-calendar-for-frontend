@@ -45,12 +45,9 @@ export interface GradeUp {
 }
 
 export interface GradeUpDashboard {
-    susang: GradeUp
-    jangyin: GradeUp
-    myungjang: GradeUp
-    red: GradeUp
-    black: GradeUp
-    additional: GradeUp
+    epic: GradeUp
+    unique: GradeUp
+    legendary: GradeUp
 }
 
 export interface ItemCount {

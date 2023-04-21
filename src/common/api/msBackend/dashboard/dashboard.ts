@@ -80,11 +80,11 @@ export const GetWholeRecordDashboardPersonal = (req: GetWholeRecordDashboardRequ
     )
 }
 
-interface GradeUpDashboardRequest {
+export interface GradeUpDashboardRequest {
     startDate: string
     endDate: string
-    grade: string
-    nextGrade: string
+    cubeType: string
+    item: string | null
 }
 
 export const GetGradeUpDashboard = (req: GradeUpDashboardRequest) => {
@@ -96,15 +96,7 @@ export const GetGradeUpDashboard = (req: GradeUpDashboardRequest) => {
     )
 }
 
-interface GradeUpDashboardPersonalRequest {
-    item: string
-    startDate: string
-    endDate: string
-    grade: string
-    nextGrade: string
-}
-
-export const GetGradeUpDashboardPersonal = (req: GradeUpDashboardPersonalRequest) => {
+export const GetGradeUpDashboardPersonal = (req: GradeUpDashboardRequest) => {
     return MsBackendAxios.get<GradeUpDashboard>(
         MS_BACKEND_API_PATH.GET_GRADE_UP_DASHBOARD_PERSONAL,
         {

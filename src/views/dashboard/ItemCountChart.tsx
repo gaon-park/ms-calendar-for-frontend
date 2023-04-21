@@ -66,7 +66,7 @@ const ItemCountChart = (mainProps: Props) => {
 
   const now = new Date()
   const start = new Date(now)
-  start.setMonth(now.getMonth() - 1)
+  start.setMonth(now.getMonth() - 3)
   const end = new Date(now)
   end.setDate(now.getDate() - 1)
 

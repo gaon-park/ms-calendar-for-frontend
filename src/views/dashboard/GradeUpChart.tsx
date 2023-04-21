@@ -1,5 +1,5 @@
 // ** React Imports
-import { forwardRef, useState } from 'react'
+import { forwardRef, useEffect, useState } from 'react'
 
 // ** MUI Imports
 import Card from '@mui/material/Card'
@@ -20,6 +20,11 @@ import Icon from 'src/@core/components/icon'
 import ReactApexcharts from 'src/@core/components/react-apexcharts'
 import Autocomplete from '@mui/material/Autocomplete/Autocomplete'
 import DatePickerWrapper from 'src/@core/styles/libs/react-datepicker'
+
+import useSWR from "swr"
+import { GradeUpDashboardRequest } from 'src/common/api/msBackend/dashboard/dashboard'
+import { GradeUpDashboard } from 'src/model/dashboard/dashboard'
+import { AxiosResponse } from 'axios'
 
 interface PickerProps {
   start: Date | number
@@ -70,21 +75,68 @@ const options: ApexOptions = {
 interface Props {
   title: string
   itemList?: string[]
-  setItem?: (o: string) => void
-  startDate: Date
-  endDate: Date
-  setStartDate: (o: Date) => void
-  setEndDate: (o: Date) => void
-  actualData: number[]
-  expectedData: number[]
   categories: string[]
+  swrUrl: string
+  api: (req: GradeUpDashboardRequest) => Promise<AxiosResponse<GradeUpDashboard, any>>
+  cubeType: string
 }
 
-const ApexBarChart = (mainProps: Props) => {
+const GradeUpChart = (mainProps: Props) => {
+  const { itemList, categories, swrUrl, api, cubeType } = mainProps
+  const swrOptions = {
+    revalidateIfStale: false,
+    revalidateOnFocus: true,
+    revalidateOnReconnect: true
+  }
+
   // ** States
   const [itemOpen, setItemOpen] = useState<boolean>(false)
 
-  const { itemList, setItem, startDate, endDate, setStartDate, setEndDate, actualData, expectedData } = mainProps
+  const now = new Date()
+  const initStart = new Date(now)
+  initStart.setMonth(now.getMonth() - 3)
+  const initEnd = new Date(now)
+  initEnd.setDate(now.getDate() - 1)
+
+  const [item, setItem] = useState<string>('')
+  const [start, setStart] = useState<Date>(initStart)
+  const [end, setEnd] = useState<Date>(initEnd)
+  const [actualData, setActualData] = useState<number[]>([])
+  const [expectedData, setExpectedData] = useState<number[]>([])
+
+  const { data } = useSWR(
+    { swrUrl, start, end },
+    () => api(
+      {
+        startDate: start.toISOString().split("T")[0],
+        endDate: end.toISOString().split("T")[0],
+        cubeType: cubeType,
+        item: item
+      }
+    ),
+    swrOptions
+  )
+
+  useEffect(() => {
+    if (typeof data !== 'undefined') {
+      const actual = []
+      const expected = []
+      if (data.data.epic.expected > 0) {
+        actual.push(data.data.epic.actual)
+        expected.push(data.data.epic.expected)
+      }
+      if (data.data.unique.expected > 0) {
+        actual.push(data.data.unique.actual)
+        expected.push(data.data.unique.expected)
+      }
+      if (data.data.legendary.expected > 0) {
+        actual.push(data.data.legendary.actual)
+        expected.push(data.data.legendary.expected)
+      }
+      setActualData(actual)
+      setExpectedData(expected)
+    }
+  }, [data])
 
   const CustomInput = forwardRef((props: PickerProps, ref) => {
     const startDate = props.start !== null ? format(props.start, 'MM/dd/yyyy') : ''
@@ -116,15 +168,15 @@ const ApexBarChart = (mainProps: Props) => {
 
   const handleOnChange = (dates: any) => {
     const [start, end] = dates
-    setStartDate(start)
-    setEndDate(end)
+    setStart(start)
+    setEnd(end)
   }
 
   return (
     <Card>
       <CardHeader
         title={mainProps.title}
-        subheader={setItem !== undefined ? '아이템 선택 시 해당 아이템에 대한 확률' : null}
+        subheader={itemList !== undefined ? '아이템 선택 시 해당 아이템에 대한 확률' : null}
         sx={{
           flexDirection: ['column', 'row'],
           alignItems: ['flex-start', 'center'],
@@ -135,13 +187,13 @@ const ApexBarChart = (mainProps: Props) => {
           <DatePickerWrapper>
             <DatePicker
               selectsRange
-              endDate={endDate}
+              endDate={end}
               id='apexchart-bar'
-              selected={startDate}
-              startDate={startDate}
+              selected={start}
+              startDate={start}
               onChange={handleOnChange}
               placeholderText='기간 선택'
-              customInput={<CustomInput start={startDate as Date | number} end={endDate as Date | number} />}
+              customInput={<CustomInput start={start as Date | number} end={end as Date | number} />}
             />
           </DatePickerWrapper>
         }
@@ -185,4 +237,4 @@ const ApexBarChart = (mainProps: Props) => {
   )
 }
 
-export default ApexBarChart
+export default GradeUpChart
