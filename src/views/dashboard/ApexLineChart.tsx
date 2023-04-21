@@ -98,12 +98,10 @@ const ApexAreaChart = (mainProps: MainProps) => {
   const {url, api} = mainProps
 
   const now = new Date()
-  const start = new Date(now)
-  start.setMonth(now.getMonth() - 1)
   const end = new Date(now)
   end.setDate(now.getDate() - 1)
 
-  const [startDate, setStartDate] = useState<Date>(new Date(2022, 11, 25))
+  const [startDate, setStartDate] = useState<Date>(new Date(2022, 10, 25))
   const [endDate, setEndDate] = useState<Date>(end)
   const [options, setOptions] = useState<ApexOptions>(initialData)
   const [series, setSeries] = useState<SeryType[]>([])

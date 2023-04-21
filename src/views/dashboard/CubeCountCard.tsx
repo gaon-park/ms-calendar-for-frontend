@@ -61,7 +61,7 @@ const CubeCountCard = () => {
 
   const now = new Date()
   const initStart = new Date(now)
-  initStart.setMonth(now.getMonth() - 3)
+  initStart.setMonth(now.getMonth() - 1)
   const initEnd = new Date(now)
   initEnd.setDate(now.getDate() - 1)
 
