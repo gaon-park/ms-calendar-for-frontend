@@ -1,35 +1,25 @@
 // ** React Imports
-import { forwardRef, useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 
 // ** MUI Imports
 import Card from '@mui/material/Card'
 import TextField from '@mui/material/TextField'
 import CardHeader from '@mui/material/CardHeader'
 import CardContent from '@mui/material/CardContent'
-import InputAdornment from '@mui/material/InputAdornment'
 
 // ** Third Party Imports
-import format from 'date-fns/format'
 import { ApexOptions } from 'apexcharts'
-import DatePicker from 'react-datepicker'
-
-// ** Icon Imports
-import Icon from 'src/@core/components/icon'
 
 // ** Component Import
 import ReactApexcharts from 'src/@core/components/react-apexcharts'
 import Autocomplete from '@mui/material/Autocomplete/Autocomplete'
-import DatePickerWrapper from 'src/@core/styles/libs/react-datepicker'
 
 import useSWR from "swr"
 import { GradeUpDashboardRequest } from 'src/common/api/msBackend/dashboard/dashboard'
 import { GradeUpDashboard } from 'src/model/dashboard/dashboard'
 import { AxiosResponse } from 'axios'
-
-interface PickerProps {
-  start: Date | number
-  end: Date | number
-}
+import { DateOption, dateOptions } from 'src/types/reactDatepickerTypes'
+import { getStartDate } from 'src/common/getStartDateByDateOptions'
 
 const options: ApexOptions = {
   chart: {
@@ -100,16 +90,15 @@ const GradeUpChart = (mainProps: Props) => {
 
   const [item, setItem] = useState<string>('')
   const [start, setStart] = useState<Date>(initStart)
-  const [end, setEnd] = useState<Date>(initEnd)
   const [actualData, setActualData] = useState<number[]>([])
   const [expectedData, setExpectedData] = useState<number[]>([])
 
   const { data } = useSWR(
-    { swrUrl, start, end },
+    { swrUrl, start },
     () => api(
       {
         startDate: start.toISOString().split("T")[0],
-        endDate: end.toISOString().split("T")[0],
+        endDate: initEnd.toISOString().split("T")[0],
         cubeType: cubeType,
         item: item
       }
@@ -138,38 +127,12 @@ const GradeUpChart = (mainProps: Props) => {
     }
   }, [data])
 
-  const CustomInput = forwardRef((props: PickerProps, ref) => {
-    const startDate = props.start !== null ? format(props.start, 'MM/dd/yyyy') : ''
-    const endDate = props.end !== null ? ` - ${format(props.end, 'MM/dd/yyyy')}` : null
+  const [dateOptionOpen, setDateOptionOpen] = useState<boolean>(false)
+  const [dateOption, setDateOption] = useState<DateOption>('최근 한 달')
 
-    const value = `${startDate}${endDate !== null ? endDate : ''}`
-
-    return (
-      <TextField
-        {...props}
-        size='small'
-        value={value}
-        inputRef={ref}
-        InputProps={{
-          startAdornment: (
-            <InputAdornment position='start'>
-              <Icon icon='mdi:bell-outline' />
-            </InputAdornment>
-          ),
-          endAdornment: (
-            <InputAdornment position='end'>
-              <Icon icon='mdi:chevron-down' />
-            </InputAdornment>
-          )
-        }}
-      />
-    )
-  })
-
-  const handleOnChange = (dates: any) => {
-    const [start, end] = dates
-    setStart(start)
-    setEnd(end)
+  const handleOnChange = (dateOption: DateOption) => {
+    setDateOption(dateOption)
+    setStart(getStartDate(dateOption))
   }
 
   return (
@@ -184,18 +147,26 @@ const GradeUpChart = (mainProps: Props) => {
           '& .MuiCardHeader-content': { mb: [2, 0] }
         }}
         action={
-          <DatePickerWrapper>
-            <DatePicker
-              selectsRange
-              endDate={end}
-              id='apexchart-bar'
-              selected={start}
-              startDate={start}
-              onChange={handleOnChange}
-              placeholderText='기간 선택'
-              customInput={<CustomInput start={start as Date | number} end={end as Date | number} />}
-            />
-          </DatePickerWrapper>
+          <Autocomplete
+            sx={{ width: 300 }}
+            open={dateOptionOpen}
+            options={dateOptions}
+            value={dateOption}
+            onChange={(e, newSelected) => handleOnChange(newSelected ?? '최근 한 달')}
+            onOpen={() => setDateOptionOpen(true)}
+            onClose={() => setDateOptionOpen(false)}
+            id='autocomplete-item'
+            isOptionEqualToValue={(option, value) => option === value}
+            renderInput={params => (
+              <TextField
+                {...params}
+                label='검색 기간'
+                InputProps={{
+                  ...params.InputProps,
+                }}
+              />
+            )}
+          />
         }
       />
       <CardContent>

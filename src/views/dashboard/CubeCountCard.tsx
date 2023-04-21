@@ -6,18 +6,16 @@ import Typography from "@mui/material/Typography/Typography"
 import { CubeOverviewResponse } from "src/model/dashboard/dashboard"
 import Grid from "@mui/material/Grid/Grid"
 import { CardHeader } from "@mui/material"
-import { forwardRef, useEffect, useState } from "react"
-import format from 'date-fns/format'
+import { useEffect, useState } from "react"
 import TextField from '@mui/material/TextField'
-import InputAdornment from '@mui/material/InputAdornment'
-import DatePicker from 'react-datepicker'
-import DatePickerWrapper from 'src/@core/styles/libs/react-datepicker'
+import Autocomplete from '@mui/material/Autocomplete/Autocomplete'
 
-// ** Icon Imports
-import Icon from 'src/@core/components/icon'
-import { GetCubeOverview } from "src/common/api/msBackend/dashboard/dashboard"
+import { getStartDate } from 'src/common/getStartDateByDateOptions'
 
 import useSWR from "swr"
+import { DateOption, dateOptions } from "src/types/reactDatepickerTypes"
+import { CubeOverviewRequest } from "src/common/api/msBackend/dashboard/dashboard"
+import { AxiosResponse } from "axios"
 
 interface DataType {
   title: string
@@ -25,39 +23,13 @@ interface DataType {
   count: number
 }
 
-interface PickerProps {
-  start: Date | number
-  end: Date | number
+interface Props {
+  url: string
+  api: (req: CubeOverviewRequest) => Promise<AxiosResponse<CubeOverviewResponse, any>>
 }
 
-const CubeCountCard = () => {
-  const CustomInput = forwardRef((props: PickerProps, ref) => {
-    const startDate = props.start !== null ? format(props.start, 'MM/dd/yyyy') : ''
-    const endDate = props.end !== null ? ` - ${format(props.end, 'MM/dd/yyyy')}` : null
-
-    const value = `${startDate}${endDate !== null ? endDate : ''}`
-
-    return (
-      <TextField
-        {...props}
-        size='small'
-        value={value}
-        inputRef={ref}
-        InputProps={{
-          startAdornment: (
-            <InputAdornment position='start'>
-              <Icon icon='mdi:bell-outline' />
-            </InputAdornment>
-          ),
-          endAdornment: (
-            <InputAdornment position='end'>
-              <Icon icon='mdi:chevron-down' />
-            </InputAdornment>
-          )
-        }}
-      />
-    )
-  })
+const CubeCountCard = (props: Props) => {
+  const {url, api} = props
 
   const now = new Date()
   const initStart = new Date(now)
@@ -71,18 +43,16 @@ const CubeCountCard = () => {
     revalidateOnReconnect: true
   }
 
-  const cubeOverviewUrl = '/dashboards/analytics/common/cubeCount'
   const [start, setStart] = useState<Date>(initStart)
-  const [end, setEnd] = useState<Date>(initEnd)
   const [cc, setCC] = useState<CubeOverviewResponse>()
   const [ccData, setCCData] = useState<DataType[]>([])
 
   const { data } = useSWR(
-    { cubeOverviewUrl, start, end },
-    () => GetCubeOverview(
+    { url, start },
+    () => api(
       {
         startDate: start.toISOString().split("T")[0],
-        endDate: end.toISOString().split("T")[0]
+        endDate: initEnd.toISOString().split("T")[0]
       }
     ),
     swrOptions
@@ -133,10 +103,13 @@ const CubeCountCard = () => {
     }
   }, [data])
 
-  const handleOnChange = (dates: any) => {
-    const [start, end] = dates
-    setStart(start)
-    setEnd(end)
+
+  const [dateOptionOpen, setDateOptionOpen] = useState<boolean>(false)
+  const [dateOption, setDateOption] = useState<DateOption>('최근 한 달')
+
+  const handleOnChange = (dateOption: DateOption) => {
+    setDateOption(dateOption)
+    setStart(getStartDate(dateOption))
   }
 
   return (
@@ -150,18 +123,26 @@ const CubeCountCard = () => {
           '& .MuiCardHeader-content': { mb: [2, 0] }
         }}
         action={
-          <DatePickerWrapper>
-            <DatePicker
-              selectsRange
-              endDate={end}
-              id='apexchart-bar'
-              selected={start}
-              startDate={start}
-              onChange={handleOnChange}
-              placeholderText='기간 선택'
-              customInput={<CustomInput start={start as Date | number} end={end as Date | number} />}
-            />
-          </DatePickerWrapper>
+          <Autocomplete
+            sx={{ width: 300 }}
+            open={dateOptionOpen}
+            options={dateOptions}
+            value={dateOption}
+            onChange={(e, newSelected) => handleOnChange(newSelected ?? '최근 한 달')}
+            onOpen={() => setDateOptionOpen(true)}
+            onClose={() => setDateOptionOpen(false)}
+            id='autocomplete-item'
+            isOptionEqualToValue={(option, value) => option === value}
+            renderInput={params => (
+              <TextField
+                {...params}
+                label='검색 기간'
+                InputProps={{
+                  ...params.InputProps,
+                }}
+              />
+            )}
+          />
         }
       />
       <CardContent>

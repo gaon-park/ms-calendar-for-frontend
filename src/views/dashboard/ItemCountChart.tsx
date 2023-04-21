@@ -71,17 +71,14 @@ const ItemCountChart = (mainProps: Props) => {
   end.setDate(now.getDate() - 1)
 
   const [startDateForTopFiveR, setStartDateForTopFiveR] = useState<Date>(start)
-  const [endDateForTopFiveR, setEndDateForTopFiveR] = useState<Date>(end)
   const [seriesForTopFiveR, setSeriesForTopFiveR] = useState<number[]>([])
   const [labelForTopFiveR, setLabelForTopFiveR] = useState<string[]>()
 
   const [startDateForTopFiveB, setStartDateForTopFiveB] = useState<Date>(start)
-  const [endDateForTopFiveB, setEndDateForTopFiveB] = useState<Date>(end)
   const [seriesForTopFiveB, setSeriesForTopFiveB] = useState<number[]>([])
   const [labelForTopFiveB, setLabelForTopFiveB] = useState<string[]>()
 
   const [startDateForTopFiveA, setStartDateForTopFiveA] = useState<Date>(start)
-  const [endDateForTopFiveA, setEndDateForTopFiveA] = useState<Date>(end)
   const [seriesForTopFiveA, setSeriesForTopFiveA] = useState<number[]>([])
   const [labelForTopFiveA, setLabelForTopFiveA] = useState<string[]>()
 
@@ -93,11 +90,11 @@ const ItemCountChart = (mainProps: Props) => {
 
   const redUrl = urlBase + '/red'
   const { data: red } = useSWR(
-    { redUrl, startDateForTopFiveR, endDateForTopFiveR },
+    { redUrl, startDateForTopFiveR },
     () => apiCall({
       cubeType: '레드 큐브',
       startDate: startDateForTopFiveR.toISOString().split("T")[0],
-      endDate: endDateForTopFiveR.toISOString().split("T")[0]
+      endDate: end.toISOString().split("T")[0]
     }),
     swrOptions
   )
@@ -111,11 +108,11 @@ const ItemCountChart = (mainProps: Props) => {
 
   const blackUrl = urlBase + '/black'
   const { data: black } = useSWR(
-    { blackUrl, startDateForTopFiveB, endDateForTopFiveB },
+    { blackUrl, startDateForTopFiveB },
     () => apiCall({
       cubeType: '블랙 큐브',
       startDate: startDateForTopFiveB.toISOString().split("T")[0],
-      endDate: endDateForTopFiveB.toISOString().split("T")[0]
+      endDate: end.toISOString().split("T")[0]
     }),
     swrOptions
   )
@@ -129,11 +126,11 @@ const ItemCountChart = (mainProps: Props) => {
 
   const additionalUrl = urlBase + '/additional'
   const { data: additional } = useSWR(
-    { additionalUrl, startDateForTopFiveA, endDateForTopFiveA },
+    { additionalUrl, startDateForTopFiveA },
     () => apiCall({
       cubeType: '에디셔널 큐브',
       startDate: startDateForTopFiveA.toISOString().split("T")[0],
-      endDate: endDateForTopFiveA.toISOString().split("T")[0]
+      endDate: end.toISOString().split("T")[0]
     }),
     swrOptions
   )
@@ -154,10 +151,7 @@ const ItemCountChart = (mainProps: Props) => {
               cubeType={'레드 큐브'}
               options={{ ...options, labels: labelForTopFiveR }}
               series={seriesForTopFiveR}
-              startDate={startDateForTopFiveR}
-              endDate={endDateForTopFiveR}
               setStartDate={(date: Date) => setStartDateForTopFiveR(date)}
-              setEndDate={(date: Date) => setEndDateForTopFiveR(date)}
             />
           </Grid>
           : null
@@ -169,10 +163,7 @@ const ItemCountChart = (mainProps: Props) => {
               cubeType={'블랙 큐브'}
               options={{ ...options, labels: labelForTopFiveB }}
               series={seriesForTopFiveB}
-              startDate={startDateForTopFiveB}
-              endDate={endDateForTopFiveB}
               setStartDate={(date: Date) => setStartDateForTopFiveB(date)}
-              setEndDate={(date: Date) => setEndDateForTopFiveB(date)}
             />
           </Grid>
           : null
@@ -184,10 +175,7 @@ const ItemCountChart = (mainProps: Props) => {
               cubeType={'에디셔널 큐브'}
               options={{ ...options, labels: labelForTopFiveA }}
               series={seriesForTopFiveA}
-              startDate={startDateForTopFiveA}
-              endDate={endDateForTopFiveA}
               setStartDate={(date: Date) => setStartDateForTopFiveA(date)}
-              setEndDate={(date: Date) => setEndDateForTopFiveA(date)}
             />
           </Grid>
           : null

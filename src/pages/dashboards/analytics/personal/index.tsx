@@ -2,7 +2,7 @@
 import Grid from '@mui/material/Grid'
 import { useEffect, useState } from 'react'
 import ApexChartWrapper from 'src/@core/styles/libs/react-apexcharts'
-import { GetGradeUpDashboardPersonal, GetItemFilterOptions, GetTopFivePersonal, GetWholeRecordDashboardPersonal, GetWholeRecordDashboardRequest, GradeUpDashboardRequest } from 'src/common/api/msBackend/dashboard/dashboard'
+import { CubeOverviewRequest, GetCubeOverviewPersonal, GetGradeUpDashboardPersonal, GetItemFilterOptions, GetTopFivePersonal, GetWholeRecordDashboardPersonal, GetWholeRecordDashboardRequest, GradeUpDashboardRequest } from 'src/common/api/msBackend/dashboard/dashboard'
 import { useProfile } from 'src/hooks/useProfile'
 import ApexLineChart from 'src/views/dashboard/ApexLineChart'
 import CubeCountCard from 'src/views/dashboard/CubeCountCard'
@@ -38,7 +38,10 @@ const RecordDashboardCommon = () => {
   return (
     <Grid container spacing={6}>
       <Grid item xs={12}>
-        <CubeCountCard />
+        <CubeCountCard 
+          url={'/dashboards/analytics/personal/cubeCount'}
+          api={(req: CubeOverviewRequest) => GetCubeOverviewPersonal(req)}
+        />
       </Grid>
       <Grid item xs={12} md={6}>
         <GradeUpChart

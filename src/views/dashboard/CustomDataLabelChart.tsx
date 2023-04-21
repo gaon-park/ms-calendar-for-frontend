@@ -1,4 +1,4 @@
-import { forwardRef } from 'react'
+import { useState } from 'react'
 
 // ** MUI Imports
 import Card from '@mui/material/Card'
@@ -6,67 +6,31 @@ import CardHeader from '@mui/material/CardHeader'
 import CardContent from '@mui/material/CardContent'
 
 // ** Third Party Imports
-import format from 'date-fns/format'
 import { ApexOptions } from 'apexcharts'
 import ReactApexcharts from 'src/@core/components/react-apexcharts'
-import DatePickerWrapper from 'src/@core/styles/libs/react-datepicker'
 import TextField from '@mui/material/TextField/TextField'
-import InputAdornment from '@mui/material/InputAdornment/InputAdornment'
-import DatePicker from 'react-datepicker'
+import { getStartDate } from 'src/common/getStartDateByDateOptions'
 
 // ** Icon Imports
-import Icon from 'src/@core/components/icon'
+import Autocomplete from '@mui/material/Autocomplete/Autocomplete'
+import { DateOption, dateOptions } from 'src/types/reactDatepickerTypes'
 
 interface Props {
   cubeType: string
   options: ApexOptions
   series: number[]
-  startDate: Date
-  endDate: Date
   setStartDate: (date: Date) => void
-  setEndDate: (date: Date) => void
-}
-
-interface PickerProps {
-  start: Date | number
-  end: Date | number
 }
 
 const ApexDonutChart = (mainProps: Props) => {
-  const { cubeType, options, series, startDate, endDate, setStartDate, setEndDate } = mainProps
+  const { cubeType, options, series, setStartDate } = mainProps
 
-  const CustomInput = forwardRef((props: PickerProps, ref) => {
-    const startDate = props.start !== null ? format(props.start, 'MM/dd/yyyy') : ''
-    const endDate = props.end !== null ? ` - ${format(props.end, 'MM/dd/yyyy')}` : null
+  const [dateOptionOpen, setDateOptionOpen] = useState<boolean>(false)
+  const [dateOption, setDateOption] = useState<DateOption>('최근 한 달')
 
-    const value = `${startDate}${endDate !== null ? endDate : ''}`
-
-    return (
-      <TextField
-        {...props}
-        size='small'
-        value={value}
-        inputRef={ref}
-        InputProps={{
-          startAdornment: (
-            <InputAdornment position='start'>
-              <Icon icon='mdi:bell-outline' />
-            </InputAdornment>
-          ),
-          endAdornment: (
-            <InputAdornment position='end'>
-              <Icon icon='mdi:chevron-down' />
-            </InputAdornment>
-          )
-        }}
-      />
-    )
-  })
-
-  const handleOnChange = (dates: any) => {
-    const [start, end] = dates
-    setStartDate(start)
-    setEndDate(end)
+  const handleOnChange = (dateOption: DateOption) => {
+    setDateOption(dateOption)
+    setStartDate(getStartDate(dateOption))
   }
 
   return (
@@ -82,18 +46,26 @@ const ApexDonutChart = (mainProps: Props) => {
           '& .MuiCardHeader-content': { mb: [2, 0] }
         }}
         action={
-          <DatePickerWrapper>
-            <DatePicker
-              selectsRange
-              endDate={endDate}
-              id='apexchart-bar'
-              selected={startDate}
-              startDate={startDate}
-              onChange={handleOnChange}
-              placeholderText='기간 선택'
-              customInput={<CustomInput start={startDate as Date | number} end={endDate as Date | number} />}
-            />
-          </DatePickerWrapper>
+          <Autocomplete
+            sx={{ width: 300 }}
+            open={dateOptionOpen}
+            options={dateOptions}
+            value={dateOption}
+            onChange={(e, newSelected) => handleOnChange(newSelected ?? '최근 한 달')}
+            onOpen={() => setDateOptionOpen(true)}
+            onClose={() => setDateOptionOpen(false)}
+            id='autocomplete-item'
+            isOptionEqualToValue={(option, value) => option === value}
+            renderInput={params => (
+              <TextField
+                {...params}
+                label='검색 기간'
+                InputProps={{
+                  ...params.InputProps,
+                }}
+              />
+            )}
+          />
         }
       />
       <CardContent>

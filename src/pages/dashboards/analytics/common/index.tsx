@@ -1,7 +1,7 @@
 // ** MUI Imports
 import Grid from '@mui/material/Grid'
 import ApexChartWrapper from 'src/@core/styles/libs/react-apexcharts'
-import { GetGradeUpDashboard, GetTopFive, GetWholeRecordDashboard, GetWholeRecordDashboardRequest, GradeUpDashboardRequest } from 'src/common/api/msBackend/dashboard/dashboard'
+import { CubeOverviewRequest, GetCubeOverview, GetGradeUpDashboard, GetTopFive, GetWholeRecordDashboard, GetWholeRecordDashboardRequest, GradeUpDashboardRequest } from 'src/common/api/msBackend/dashboard/dashboard'
 import { useProfile } from 'src/hooks/useProfile'
 import ApexLineChart from 'src/views/dashboard/ApexLineChart'
 import CubeCountCard from 'src/views/dashboard/CubeCountCard'
@@ -14,7 +14,10 @@ const RecordDashboardCommon = () => {
     return (
         <Grid container spacing={6}>
             <Grid item xs={12}>
-                <CubeCountCard />
+                <CubeCountCard
+                    url={'/dashboards/analytics/common/cubeCount'}
+                    api={(req: CubeOverviewRequest) => GetCubeOverview(req)}
+                />
             </Grid>
             <Grid item xs={12} md={6}>
                 <GradeUpChart

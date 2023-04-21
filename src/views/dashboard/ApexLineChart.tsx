@@ -1,5 +1,5 @@
 // ** React Imports
-import { forwardRef, useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 
 // ** MUI Imports
 import { useTheme } from '@mui/material/styles'
@@ -7,29 +7,20 @@ import Card from '@mui/material/Card'
 import TextField from '@mui/material/TextField'
 import CardHeader from '@mui/material/CardHeader'
 import CardContent from '@mui/material/CardContent'
-import InputAdornment from '@mui/material/InputAdornment'
 
 // ** Third Party Imports
-import format from 'date-fns/format'
 import { ApexOptions } from 'apexcharts'
-import DatePicker from 'react-datepicker'
-
-// ** Icon Imports
-import Icon from 'src/@core/components/icon'
 
 // ** Component Import
 import ReactApexcharts from 'src/@core/components/react-apexcharts'
-import DatePickerWrapper from 'src/@core/styles/libs/react-datepicker'
 import { GetWholeRecordDashboardRequest } from 'src/common/api/msBackend/dashboard/dashboard'
 
 import useSWR from "swr"
 import { AxiosResponse } from 'axios'
 import { WholeRecordDashboardResponse } from 'src/model/dashboard/dashboard'
-
-interface PickerProps {
-  start: Date | number
-  end: Date | number
-}
+import Autocomplete from '@mui/material/Autocomplete/Autocomplete'
+import { DateOption, dateOptions } from 'src/types/reactDatepickerTypes'
+import { getStartDate } from 'src/common/getStartDateByDateOptions'
 
 interface SeryType {
   name: string
@@ -95,14 +86,15 @@ const ApexAreaChart = (mainProps: MainProps) => {
     }
   }
 
-  const {url, api} = mainProps
+  const { url, api } = mainProps
 
   const now = new Date()
+  const start = new Date(now)
+  start.setMonth(now.getMonth() - 1)
   const end = new Date(now)
   end.setDate(now.getDate() - 1)
 
-  const [startDate, setStartDate] = useState<Date>(new Date(2022, 10, 25))
-  const [endDate, setEndDate] = useState<Date>(end)
+  const [startDate, setStartDate] = useState<Date>(start)
   const [options, setOptions] = useState<ApexOptions>(initialData)
   const [series, setSeries] = useState<SeryType[]>([])
 
@@ -113,10 +105,10 @@ const ApexAreaChart = (mainProps: MainProps) => {
   }
 
   const { data } = useSWR(
-    { url, startDate, endDate },
+    { url, startDate },
     () => api({
       startDate: startDate.toISOString().split("T")[0],
-      endDate: endDate.toISOString().split("T")[0]
+      endDate: end.toISOString().split("T")[0]
     }),
     swrOptions
   )
@@ -144,45 +136,19 @@ const ApexAreaChart = (mainProps: MainProps) => {
     }
   }, [data])
 
-  const CustomInput = forwardRef((props: PickerProps, ref) => {
-    const startDate = props.start !== null ? format(props.start, 'MM/dd/yyyy') : ''
-    const endDate = props.end !== null ? ` - ${format(props.end, 'MM/dd/yyyy')}` : null
+  const [dateOptionOpen, setDateOptionOpen] = useState<boolean>(false)
+  const [dateOption, setDateOption] = useState<DateOption>('최근 한 달')
 
-    const value = `${startDate}${endDate !== null ? endDate : ''}`
-
-    return (
-      <TextField
-        {...props}
-        size='small'
-        value={value}
-        inputRef={ref}
-        InputProps={{
-          startAdornment: (
-            <InputAdornment position='start'>
-              <Icon icon='mdi:bell-outline' />
-            </InputAdornment>
-          ),
-          endAdornment: (
-            <InputAdornment position='end'>
-              <Icon icon='mdi:chevron-down' />
-            </InputAdornment>
-          )
-        }}
-      />
-    )
-  })
-
-  const handleOnChange = (dates: any) => {
-    const [start, end] = dates
-    setStartDate(start)
-    setEndDate(end)
+  const handleOnChange = (dateOption: DateOption) => {
+    setDateOption(dateOption)
+    setStartDate(getStartDate(dateOption))
   }
 
   return (
     <Card>
       <CardHeader
         title='선형 그래프'
-        subheader='2022/11/25부터 어제까지의 집계된 모든 큐브 데이터 검색 가능(선택 기간이 4개월 이상인 경우, 달별 데이터로 조회합니다)'
+        subheader='2022/11/25부터 어제까지의 집계된 모든 큐브 데이터 검색 가능(전체 기간을 선택하는 경우, 달별 데이터로 조회)'
         subheaderTypographyProps={{ sx: { color: theme => `${theme.palette.text.disabled} !important` } }}
         sx={{
           flexDirection: ['column', 'row'],
@@ -191,18 +157,26 @@ const ApexAreaChart = (mainProps: MainProps) => {
           '& .MuiCardHeader-content': { mb: [2, 0] }
         }}
         action={
-          <DatePickerWrapper>
-            <DatePicker
-              selectsRange
-              endDate={endDate}
-              id='apexchart-area'
-              selected={startDate}
-              startDate={startDate}
-              onChange={handleOnChange}
-              placeholderText='기간 선택'
-              customInput={<CustomInput start={startDate as Date | number} end={endDate as Date | number} />}
-            />
-          </DatePickerWrapper>
+          <Autocomplete
+            sx={{ width: 300 }}
+            open={dateOptionOpen}
+            options={dateOptions}
+            value={dateOption}
+            onChange={(e, newSelected) => handleOnChange(newSelected ?? '최근 한 달')}
+            onOpen={() => setDateOptionOpen(true)}
+            onClose={() => setDateOptionOpen(false)}
+            id='autocomplete-item'
+            isOptionEqualToValue={(option, value) => option === value}
+            renderInput={params => (
+              <TextField
+                {...params}
+                label='검색 기간'
+                InputProps={{
+                  ...params.InputProps,
+                }}
+              />
+            )}
+          />
         }
       />
       <CardContent>
