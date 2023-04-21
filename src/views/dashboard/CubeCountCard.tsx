@@ -29,8 +29,6 @@ interface DataType {
   title: string
   imgSrc: string
   count: number
-  imgWidth: number
-  imgHeight: number
 }
 
 interface PickerProps {
@@ -45,45 +43,38 @@ const CubeCountCard = (mainProps: Props) => {
   const data: DataType[] = [
     {
       title: '수상한 큐브',
-      imgSrc: '/images/cube/susang.png',
-      count: cc.susangCount,
-      imgWidth: 30,
-      imgHeight: 30,
+      imgSrc: 'https://lwi.nexon.com/maplestory/common/guide/cube/cube_icon04.png',
+      count: cc.susangCount
+    },
+    {
+      title: '수상한 에디셔널 큐브',
+      imgSrc: 'https://lwi.nexon.com/maplestory/common/guide/cube/cube_icon_2730002.png',
+      count: cc.susangAdditionalCount
     },
     {
       title: '장인의 큐브',
-      imgSrc: '/images/cube/jangyin.png',
-      count: cc.jangyinCount,
-      imgWidth: 30,
-      imgHeight: 30,
+      imgSrc: 'https://lwi.nexon.com/maplestory/common/guide/cube/cube_icon05.png',
+      count: cc.jangyinCount
     },
     {
       title: '명장의 큐브',
-      imgSrc: '/images/cube/myungjang.png',
-      count: cc.myungjangCount,
-      imgWidth: 30,
-      imgHeight: 30,
+      imgSrc: 'https://lwi.nexon.com/maplestory/common/guide/cube/cube_icon06.png',
+      count: cc.myungjangCount
     },
     {
       title: '레드 큐브',
-      imgSrc: '/images/cube/red.png',
-      count: cc.redCount,
-      imgWidth: 35,
-      imgHeight: 30,
+      imgSrc: 'https://lwi.nexon.com/maplestory/common/guide/cube/cube_icon01.png',
+      count: cc.redCount
     },
     {
       title: '블랙 큐브',
-      imgSrc: '/images/cube/black.png',
-      count: cc.blackCount,
-      imgWidth: 35,
-      imgHeight: 30,
+      imgSrc: 'https://lwi.nexon.com/maplestory/common/guide/cube/cube_icon02.png',
+      count: cc.blackCount
     },
     {
       title: '에디셔널 큐브',
-      imgSrc: '/images/cube/additional.png',
-      count: cc.additionalCount,
-      imgWidth: 35,
-      imgHeight: 30,
+      imgSrc: 'https://lwi.nexon.com/maplestory/common/guide/cube/cube_icon03.png',
+      count: cc.additionalCount
     }
   ]
 
@@ -156,7 +147,7 @@ const CubeCountCard = (mainProps: Props) => {
                     <Box key={index}
                       sx={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', justifyContent: 'space-between' }}>
                       <Box sx={{ mr: 2, display: 'flex', alignItems: 'center' }}>
-                        <Avatar variant='square' alt='Mary Vaughn' src={o.imgSrc} sx={{ width: o.imgWidth, height: o.imgHeight, mr: 2.75 }} />
+                        <Avatar variant='square' alt='Mary Vaughn' src={o.imgSrc} sx={{ mr: 2.75 }} />
                         <Typography>
                           {o.title}
                         </Typography>

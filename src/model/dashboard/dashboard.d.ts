@@ -31,6 +31,7 @@ export interface CubeCount {
     redCount: number
     blackCount: number
     additionalCount: number
+    susangAdditionalCount: number
 }
 
 export interface CubeOverviewResponse {
